@@ -1,0 +1,224 @@
+# Extract Population Data {#prep}
+
+```{r load_raster,cache=TRUE,include=FALSE}
+kenya_population <- raster("../../WorldPop/Kenya~/KEN_popmap15adj_v2b.tif")
+malawi_population <- raster("../../WorldPop/Malawi~/MWI_ppp_2015_adj_v2.tif")
+tanzania_population <- raster("../../WorldPop/United~/TZA_popmap15adj_v2b.tif")
+zambia_population <- raster("../../WorldPop/Zambia~/ZMB_ppp_v2c_2015_UNadj.tif")
+```
+
+To extract the population data, the sampling areas need to unified first. In the next step, the data gets extracted via the `prepare_raster_of_sampling_area`. Here, we make use of the `fasterize` package which is much faster in turning `SpatialPolygons` into raster files than the original `rasterize` function of the `raster` package. Finally, we aggregate the extracted data to a 1 and a 5 kilometer grid. The 5 km grid is shown in the following graphs.  
+
+
+```{r popextractaggr,cache=TRUE}
+# unify
+dar_unified <- gUnaryUnion(dar_bins_6)
+
+lusaka_unified <- gUnaryUnion(lusaka_bins)
+
+nairobi_unified <- gUnaryUnion(nairobi_bins)
+
+kenya_unified <- gUnaryUnion(kenya_sampling_bins)
+
+northern_tanzania_unified <- gUnaryUnion(northern_tanzania_sampling_bins)
+
+southern_tanzania_unified <- gUnaryUnion(southern_tanzania_sampling_bins)
+
+malawi_unified <- gUnaryUnion(maw_sampling_bin)
+
+zambia_unified <- gUnaryUnion(zambia_sampling_bin)
+
+# extract
+dar_population <- 
+  prepare_raster_of_sampling_area(tanzania_population,dar_unified)
+
+luska_population <- 
+  prepare_raster_of_sampling_area(zambia_population,lusaka_unified)
+
+nairobi_population <- 
+  prepare_raster_of_sampling_area(kenya_population,nairobi_unified)
+
+kenya_population <- 
+  prepare_raster_of_sampling_area(kenya_population,kenya_unified)
+
+northern_tanzania_population <- 
+  prepare_raster_of_sampling_area(tanzania_population,
+                                  northern_tanzania_unified)
+
+southern_tanzania_population <- 
+  prepare_raster_of_sampling_area(tanzania_population,
+                                  southern_tanzania_unified)
+
+malawi_population <- 
+  prepare_raster_of_sampling_area(malawi_population,malawi_unified)
+
+zambia_population <- 
+  prepare_raster_of_sampling_area(zambia_population,zambia_unified)
+
+# aggregate
+dar_population_1k <- aggregate(dar_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+dar_population_5k <- aggregate(dar_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+luska_population_1k <- aggregate(luska_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+luska_population_5k <- aggregate(luska_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+nairobi_population_1k <- aggregate(nairobi_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+nairobi_population_5k <- aggregate(nairobi_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+kenya_population_1k <- aggregate(kenya_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+kenya_population_5k <- aggregate(kenya_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+northern_tanzania_population_1k <- 
+  aggregate(northern_tanzania_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+northern_tanzania_population_5k <- 
+  aggregate(northern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+southern_tanzania_population_1k <- 
+  aggregate(southern_tanzania_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+southern_tanzania_population_5k <- 
+  aggregate(southern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km 
+
+malawi_population_1k <- aggregate(malawi_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+malawi_population_5k <- aggregate(malawi_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+zambia_population_1k <- aggregate(zambia_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+zambia_population_5k <- aggregate(zambia_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+
+
+```
+
+
+
+```{r rasterggplotfunction,out.width="100%",echo=FALSE}
+
+
+values_vector<-c(1,6,21,51,101,201)
+values_vector<-log(c(0,100,seq(1000,100000,length.out = 5))+1)
+
+values_vector<-log(c(0,100,1000,10000,20000,50000,100000,250000)+1)
+
+ggplot_raster<-function(raster,title,values_vector,legend=FALSE,poly=NULL) {
+
+  raster<-getValues(raster) %>% 
+  data.frame(values=.) %>% 
+  mutate(values=sapply(log(values),function(x) {
+    if (is.na(x)) return(NA)
+    t1 <- (x < values_vector)
+    if (all(!t1)) return((values_vector %>% 
+    max() %>% 
+    exp()*2) %>% 
+  log)
+    values_vector[which(t1) %>% min]
+  })) %>% 
+    unlist() %>% 
+  setValues(raster,.) 
+  
+  
+values_vector_label <- 
+  c(0,
+    paste0("<",(exp(values_vector[2:length(values_vector)])-1)/1e3),
+    paste0(">=",max((exp(values_vector)-1)/1e3)))
+  
+  g1 <- gplot(raster) +
+    geom_raster(aes(fill=value),interpolate = FALSE) +
+    # scale_fill_viridis_c() +
+    coord_equal() +
+    theme_map() +
+    ggtitle(title) + 
+  scale_fill_gradientn(name="Population in 1,000",
+                       breaks = c(values_vector,(values_vector %>% 
+                                                   max() %>% 
+                                                   exp()*2) %>% 
+                                    log),
+                       colors=c("#8c510a",'#d73027','#fdae61','#fee090',
+                                '#ffffbf','#e0f3f8','#abd9e9','#74add1',"#1a9850") %>% rev,
+                       # mid = "#ffffbf",
+                       # low ="#4575b4",
+                       # high = '#7f0000',
+                       labels=values_vector_label) +
+  guides(fill = guide_legend(reverse=TRUE))
+  
+  if (!is.null(poly)) {
+    poly$id<-1:length(poly)
+    g1 <- g1 + 
+    geom_polygon(data = poly %>% 
+                   fortify(region="id"),
+                 aes(x=long,y=lat,group=group),
+                 fill=NA,color="black",alpha=0.5)
+  }
+  if (legend) return(g1)
+  
+  g1 + 
+    guides(fill=FALSE)
+}
+
+
+  
+
+
+
+```
+
+```{r cityraster1,echo=FALSE,out.width="100%",fig.cap="Population in a 5 kilometer grid."}
+grid.arrange(
+  ggplot_raster(dar_population_5k,"Dar es Salaam",values_vector,poly=dar_bins_6),
+  ggplot_raster(luska_population_5k,"Lusaka",values_vector,poly=lusaka_bins),
+  cowplot::get_legend(
+    ggplot_raster(nairobi_population_5k,
+                  "",
+                  values_vector,
+                  TRUE) +
+      guides(fill=guide_legend(direction = "horizontal",
+                               title.position = "top"))),
+  layout_matrix=matrix(c(rep(c(1,2),4),3,3),ncol=2,byrow=TRUE))
+```
+
+
+
+```{r citiesraster2,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid."}
+grid.arrange(
+  ggplot_raster(nairobi_population_5k,"Nairobi",values_vector,poly=nairobi_bins),
+  ggplot_raster(zambia_population_5k,"Zambia",values_vector,poly=zambia_sampling_bin),
+  cowplot::get_legend(ggplot_raster(nairobi_population_5k,"",values_vector,TRUE) +
+                      guides(fill=guide_legend(direction = "horizontal",
+                                               title.position = "top"))),
+  
+  layout_matrix=matrix(c(rep(c(1,2),4),3,3),ncol=2,byrow=TRUE))
+```
+
+
+```{r borderraster1,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid."}
+grid.arrange(
+  ggplot_raster(kenya_population_5k,"Kenya",values_vector,poly=kenya_sampling_bins),
+  ggplot_raster(northern_tanzania_population_5k,"Northern Tanzania",values_vector,
+                poly=northern_tanzania_sampling_bins),
+cowplot::get_legend(
+  ggplot_raster(nairobi_population_5k,
+                "",
+                values_vector,
+                TRUE) +
+    guides(fill=guide_legend(direction = "horizontal",
+                             title.position = "top"))),
+layout_matrix=matrix(c(rep(c(1,2),4),3,3),ncol=2,byrow=TRUE))
+
+```
+
+```{r borderraster2,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid."}
+grid.arrange(
+  ggplot_raster(southern_tanzania_population_5k,"Southern Tanzania",values_vector,
+                poly = southern_tanzania_sampling_bins),
+  ggplot_raster(malawi_population_5k,"Malawi",values_vector,
+                poly = maw_sampling_bin),
+cowplot::get_legend(
+  ggplot_raster(nairobi_population_5k,
+                "",
+                values_vector,
+                TRUE) +
+    guides(fill=guide_legend(direction = "horizontal",
+                             title.position = "top"))),
+layout_matrix=matrix(c(rep(c(1,2),4),3,3),ncol=2,byrow=TRUE))
+
+```
+
+
+
