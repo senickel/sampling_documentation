@@ -5,20 +5,30 @@ The figures \@ref(fig:indust1) to \@ref(fig:indust4) seem to not be populated bu
 
 
 ```{r examppic,echo=FALSE,fig.cap="Populated site.",fig.margin=FALSE}
+
+# # create the license thing
+# webshot("temp.html",
+#         file = "license.png",
+#         cliprect=c(730,240,750,20),zoom = 1.5)
+
+
+# id <- "Nairobi@1@1"
 make_pic <- function(id) {
   p2<-suppressWarnings(leaflet() %>% 
     addProviderTiles("Esri.WorldImagery") %>% 
     addPolygons(data = nairobi_sample_non_pair[
       nairobi_sample_non_pair$Name==id,],fillOpacity = 0))
   
-  suppressWarnings(saveWidget(p2,"output/temp.html",selfcontained = FALSE))
-  suppressWarnings(webshot("output/temp.html",
-                           file = "output/p3.png",
+  p3 <- suppressWarnings(saveWidget(p2,"temp.html",selfcontained = FALSE))
+  p4 <- suppressWarnings(webshot("temp.html",
+                           file = "p3.png",
                            cliprect=c(165,290,410,410),zoom = 3))
+  sat<-image_read("p3.png")
+  lic <- image_read("license.png")
+  image_composite(sat,lic)
 }
 
 make_pic("Nairobi@1@1")
-
 
 ```
 
