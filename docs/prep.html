@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-09-14" />
+<meta name="date" content="2018-09-19" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -134,6 +134,10 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="areas.html#summarising-sampling-border-areas"><span class="toc-section-number">2.4</span> Summarising: Sampling border areas</a></li>
 </ul></li>
 <li><a href="prep.html#prep"><span class="toc-section-number">3</span> Extract Population Data</a></li>
+<li class="has-sub"><a href="sampling.html#sampling"><span class="toc-section-number">4</span> Sampling</a><ul>
+<li><a href="sampling.html#nairobi-and-lusaka"><span class="toc-section-number">4.1</span> Nairobi and Lusaka</a></li>
+</ul></li>
+<li><a href="evaluating-the-sample.html#evaluating-the-sample"><span class="toc-section-number">5</span> Evaluating the Sample</a></li>
 </ul>
 </div>
 </div>
@@ -215,6 +219,33 @@ malawi_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</s
 
 zambia_population_1k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(zambia_population,<span class="dt">fact=</span><span class="dv">10</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 1 km </span>
 zambia_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(zambia_population,<span class="dt">fact=</span><span class="dv">50</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 5 km</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">add_population &lt;-<span class="st"> </span><span class="cf">function</span>(poly,raster) {
+  poly<span class="op">$</span>pop &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(poly),<span class="cf">function</span>(x) {
+    db1 &lt;-<span class="st"> </span>poly[x,]
+    db1 <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span>st_as_sf <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span>fasterize<span class="op">::</span><span class="kw">fasterize</span>(raster) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">mask</span>(raster,.) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">getValues</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">sum</span>(<span class="dt">na.rm=</span><span class="ot">TRUE</span>)
+  })
+  poly<span class="op">$</span>prob &lt;-<span class="st">  </span>poly<span class="op">$</span>pop<span class="op">/</span><span class="kw">sum</span>(poly<span class="op">$</span>pop)
+  poly
+}
+
+
+
+dar_bins_<span class="dv">6</span> &lt;-<span class="st"> </span><span class="kw">add_population</span>(dar_bins_<span class="dv">6</span>,dar_population)
+lusaka_bins &lt;-<span class="st"> </span><span class="kw">add_population</span>(lusaka_bins,luska_population)
+nairobi_bins &lt;-<span class="st"> </span><span class="kw">add_population</span>(nairobi_bins,nairobi_population)
+
+kenya_bins &lt;-<span class="st"> </span><span class="kw">add_population</span>(kenya_sampling_bins,kenya_population)
+northern_tanzania_sampling_bins &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">add_population</span>(northern_tanzania_sampling_bins,northern_tanzania_population)
+southern_tanzania_sampling_bins &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">add_population</span>(southern_tanzania_sampling_bins,southern_tanzania_population)
+maw_sampling_bin &lt;-<span class="st"> </span><span class="kw">add_population</span>(maw_sampling_bin,malawi_population)
+zambia_sampling_bin &lt;-<span class="st"> </span><span class="kw">add_population</span>(zambia_sampling_bin,zambia_population)</code></pre></div>
 <div class="figure"><span id="fig:cityraster1"></span>
 <p class="caption marginnote shownote">
 Figure 3.1: Population in a 5 kilometer grid.
@@ -243,6 +274,7 @@ Figure 3.4: Population in a 5 kilometer grid.
 </div>
 <p style="text-align: center;">
 <a href="areas.html"><button class="btn btn-default">Previous</button></a>
+<a href="sampling.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>

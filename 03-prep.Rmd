@@ -88,8 +88,48 @@ zambia_population_5k <- aggregate(zambia_population,fact=50,fun=sum,na.rm=TRUE) 
 ```
 
 
+```{r extract,cache=TRUE}
+add_population <- function(poly,raster) {
+  poly$pop <- sapply(1:length(poly),function(x) {
+    db1 <- poly[x,]
+    db1 %>% 
+      st_as_sf %>% 
+      fasterize::fasterize(raster) %>% 
+      mask(raster,.) %>% 
+      getValues() %>% 
+      sum(na.rm=TRUE)
+  })
+  poly$prob <-  poly$pop/sum(poly$pop)
+  poly
+}
 
-```{r rasterggplotfunction,out.width="100%",echo=FALSE}
+
+
+dar_bins_6 <- add_population(dar_bins_6,dar_population)
+lusaka_bins <- add_population(lusaka_bins,luska_population)
+nairobi_bins <- add_population(nairobi_bins,nairobi_population)
+
+kenya_bins <- add_population(kenya_sampling_bins,kenya_population)
+northern_tanzania_sampling_bins <- 
+  add_population(northern_tanzania_sampling_bins,northern_tanzania_population)
+southern_tanzania_sampling_bins <- 
+  add_population(southern_tanzania_sampling_bins,southern_tanzania_population)
+maw_sampling_bin <- add_population(maw_sampling_bin,malawi_population)
+zambia_sampling_bin <- add_population(zambia_sampling_bin,zambia_population)
+
+
+
+
+
+
+
+
+
+```
+
+
+
+```{r rasterggplotfunction,out.width="100%",echo=FALSE,cache=TRUE}
 
 
 values_vector<-c(1,6,21,51,101,201)
@@ -159,7 +199,7 @@ values_vector_label <-
 
 ```
 
-```{r cityraster1,echo=FALSE,out.width="100%",fig.cap="Population in a 5 kilometer grid."}
+```{r cityraster1,echo=FALSE,out.width="100%",fig.cap="Population in a 5 kilometer grid.",cache=TRUE}
 grid.arrange(
   ggplot_raster(dar_population_5k,"Dar es Salaam",values_vector,poly=dar_bins_6),
   ggplot_raster(luska_population_5k,"Lusaka",values_vector,poly=lusaka_bins),
@@ -175,7 +215,7 @@ grid.arrange(
 
 
 
-```{r citiesraster2,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid."}
+```{r citiesraster2,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid.",cache=TRUE}
 grid.arrange(
   ggplot_raster(nairobi_population_5k,"Nairobi",values_vector,poly=nairobi_bins),
   ggplot_raster(zambia_population_5k,"Zambia",values_vector,poly=zambia_sampling_bin),
@@ -187,7 +227,7 @@ grid.arrange(
 ```
 
 
-```{r borderraster1,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid."}
+```{r borderraster1,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid.",cache=TRUE}
 grid.arrange(
   ggplot_raster(kenya_population_5k,"Kenya",values_vector,poly=kenya_sampling_bins),
   ggplot_raster(northern_tanzania_population_5k,"Northern Tanzania",values_vector,
@@ -203,7 +243,7 @@ layout_matrix=matrix(c(rep(c(1,2),4),3,3),ncol=2,byrow=TRUE))
 
 ```
 
-```{r borderraster2,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid."}
+```{r borderraster2,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid.",cache=TRUE}
 grid.arrange(
   ggplot_raster(southern_tanzania_population_5k,"Southern Tanzania",values_vector,
                 poly = southern_tanzania_sampling_bins),

@@ -1,0 +1,56 @@
+# Sampling
+The project aims to not only research respondent but communities, villages in rural and neighborhoods in urban areas. In total, 1,300 communities a 20 respondents are going to be selected, which totals in 26,000 interviews. Since there is no sufficient information about where villages are located and how many people are living in them, we take a geographic approach. A unit is defined as a 1 kilometer square in which we pick in a later step one or more 100 meter units, depending on whether twenty or more people are living in the first 100 meter unit. All units are selected by probability proportional sampling.  
+  
+The risk of sampling "empty" units should be rather small because of the probability proportinal sampling method that favors areas with a higher populationg and areas with a low population have a lower change to be drawn. Furthermore, the WorldPop data is using an sophisticated algorithm to predict population numbers that are the foundation of the sampling approach. However, there is still a risk that units with a lower population get selected and the WorldPop algorithm predictions are not perfect. Hence, there is a need to oversample to be able to replace "empty" units at a later stage.  
+  
+Another issue important for the sampling are traveling costs. The question is whether those costs can be reduced by sampling in pairs: instead of picking the 1 km units freely, 5 km units are picked first. In each of the 5 km units two 1 km units are picked. This way the travel time and thus the cost can be reduced. However, the question remains whether this alternative method who yield different results -- this issue will be discussed in the next chapter.  
+
+
+## Nairobi and Lusaka
+
+```{r sampling,cache=TRUE,include=TRUE,message=FALSE}
+
+nairobi_sample_non_pair <- oversample_wrapper_non_pair(name = "Nairobi",
+                            bins = nairobi_bins,
+                            raster_1 = nairobi_population,
+                            raster_2 = nairobi_population_1k,
+                            random_number = 680,
+                            original_min_unit2=2,
+                            original_sample_unit2=100,
+                            by_factor=1.1,
+                            verbose=2)
+
+lusaka_sample_non_pair <- oversample_wrapper_non_pair(name = "Lusaka",
+                            bins = lusaka_bins,
+                            raster_1 = luska_population,
+                            raster_2 = luska_population_1k,
+                            random_number = 680,
+                            original_min_unit2=2,
+                            original_sample_unit2=100,
+                            by_factor=1.1,
+                            verbose=2)
+
+```
+
+```{r plotdarstrategies,cache=TRUE,include=FALSE}
+writeOGR(nairobi_sample_non_pair[nairobi_sample_non_pair$pick=="Sample",],
+         "output/nairobi_sample.kml",
+         driver="KML",layer="nairobi",
+         overwrite_layer = TRUE)
+
+
+# t1<-leaflet() %>%
+#   addProviderTiles("Esri.WorldImagery") %>% 
+#   addPolygons(data=nairobi_sample_non_pair,opacity = 1,fillOpacity = 0) %>%
+#   addPolygons(data = 
+#                 nairobi_sample_non_pair[
+#                   nairobi_sample_non_pair$type=="Unit_2"&
+#                     nairobi_sample_non_pair$pick=="Sample",],
+#               fillColor = "red",color = "red",opacity = 0.5) %>% 
+#   addPolygons(data=lusaka_sample_non_pair,opacity = 1,fillOpacity = 0) %>%
+#   addPolygons(data= lusaka_sample_non_pair[lusaka_sample_non_pair$type=="Unit_2"&
+#                                              lusaka_sample_non_pair$pick=="Sample",],
+#               fillColor = "red",color = "red",opacity = 0.5) 
+
+
+```

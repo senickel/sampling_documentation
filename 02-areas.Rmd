@@ -12,6 +12,9 @@ library(raster)
 library(leaflet)
 library(gridExtra)
 library(bookdown)
+library(webshot)
+library(htmlwidgets)
+# knitr::opts_chunk$set(fig.align="center")
 options(stringsAsFactors = FALSE)
 ```
 
@@ -1124,7 +1127,7 @@ zambia_sampling_bin <- prepare_sampling_bins(a = zam_border_area_0_to_50,
 
 
 
-```{r zambiasampling,fig.margin=TRUE,echo=FALSE,fig.cap="Sampling area in Zambia."}
+```{r zambiasampling,cache=TRUE,fig.margin=TRUE,echo=FALSE,fig.cap="Sampling area in Zambia."}
 
 sampl_area3_zamb <- zambia_sampling_bin %>%
   st_as_sf() %>%
@@ -1205,7 +1208,7 @@ zambia_sampling_bin <- prepare_sampling_bins(a = zam_border_area_0_to_50,
 
 ## Summarising: Sampling border areas  
 
-```{r leafletmap,fig.cap="Sampling border areas in the four countries."}
+```{r leafletmap,cache=TRUE,fig.cap="Sampling border areas in the four countries."}
 leaflet() %>% 
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>% 
   addPolygons(data=southern_tanzania_sampling_bins) %>% 

@@ -144,44 +144,57 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Geographic sampling</h1>
-<h4 class="author"><em>Sebastian Nickel</em></h4>
-<h4 class="date"><em>September 19, 2018</em></h4>
+<div id="evaluating-the-sample" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Evaluating the Sample</h1>
+<p>For the cities we do not implement the pair-wise approach, because we assume travel costs will be relatively low anyways.<br />
+The function <code>oversample_wrapper_non_pair</code> returns a <code>SpatialPolygonsDataFrame</code> with the sampled units and replacements units. The sampled units are controlled by zooming into satelitte images to determine if there are actually people living in those units. For example, Figure <a href="evaluating-the-sample.html#fig:examppic">5.1</a> shows a clearly populated site.<br />
+The figures <a href="evaluating-the-sample.html#fig:indust1">5.2</a> to <a href="evaluating-the-sample.html#fig:indust4">5.5</a> seem to not be populated but business/industrial sites. In contrast, Figure <a href="evaluating-the-sample.html#fig:empty1">5.6</a> and <a href="evaluating-the-sample.html#fig:empty2">5.7</a> seem to uninhabited.</p>
+<div class="figure"><span id="fig:examppic"></span>
+<p class="caption marginnote shownote">
+Figure 5.1: Populated site.
+</p>
+<img src="geosampling_files/figure-html/examppic-1.png" alt="Populated site." width="672"  />
 </div>
-<div id="prerequisites" class="section level1 unnumbered">
-<h1>Prerequisites</h1>
-<p>This document/website contains the methods used for sampling in <a href="http://gld.gu.se">The Program on Governance and Local Development’s</a> urbanization project.</p>
-<div id="study-area" class="section level2">
-<h2><span class="header-section-number">0.1</span> Study Area</h2>
-<p>The study includes the following areas:</p>
-<ul>
-<li>The border area between Kenya and Tanzania.<br />
-</li>
-<li>The border area between Malawi, Tanzania, and Zambia.<br />
-</li>
-<li>The three capitals Dar es Salaam, Lusaka, and Nairobi.</li>
-</ul>
+<div class="figure"><span id="fig:indust1"></span>
+<p class="caption marginnote shownote">
+Figure 5.2: Industrial site in Nairobi
+</p>
+<img src="geosampling_files/figure-html/indust1-1.png" alt="Industrial site in Nairobi" width="672"  />
 </div>
-<div id="data" class="section level2">
-<h2><span class="header-section-number">0.2</span> Data</h2>
-<p>To replicate the method described here, the following geospatial vector and raster files are necessary:</p>
-<ul>
-<li><a href="https://www.worldpop.org.uk/">WorldPop</a> raster data for Kenya, Malawi, Tanzania, and Zambia<br />
-</li>
-<li>Administrative spatial polygons for all four countries from <a href="https://gadm.org/">GADM</a></li>
-<li>Lakes spatial polygons from <a href="https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/">Natural Earth</a></li>
-</ul>
+<div class="figure"><span id="fig:indust2"></span>
+<p class="caption marginnote shownote">
+Figure 5.3: Industrial site in Nairobi
+</p>
+<img src="geosampling_files/figure-html/indust2-1.png" alt="Industrial site in Nairobi" width="672"  />
 </div>
-<div id="geosampling-package" class="section level2">
-<h2><span class="header-section-number">0.3</span> geosampling package</h2>
-<p>The geosampling package was created to simplify the process and has the necessary functions needed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;senickel/geosampling&quot;</span>)</code></pre></div>
+<div class="figure"><span id="fig:indust3"></span>
+<p class="caption marginnote shownote">
+Figure 5.4: Industrial site in Nairobi
+</p>
+<img src="geosampling_files/figure-html/indust3-1.png" alt="Industrial site in Nairobi" width="672"  />
+</div>
+<div class="figure"><span id="fig:indust4"></span>
+<p class="caption marginnote shownote">
+Figure 5.5: Industrial site in Nairobi
+</p>
+<img src="geosampling_files/figure-html/indust4-1.png" alt="Industrial site in Nairobi" width="672"  />
+</div>
+<div class="figure"><span id="fig:empty1"></span>
+<p class="caption marginnote shownote">
+Figure 5.6: A site in Nairobi where no one is living.
+</p>
+<img src="geosampling_files/figure-html/empty1-1.png" alt="A site in Nairobi where no one is living." width="672"  />
+</div>
+<div class="figure"><span id="fig:empty2"></span>
+<p class="caption marginnote shownote">
+Figure 5.7: A site in Nairobi where no one is living.
+</p>
+<img src="geosampling_files/figure-html/empty2-1.png" alt="A site in Nairobi where no one is living." width="672"  />
+</div>
 
 </div>
-</div>
 <p style="text-align: center;">
-<a href="introduction.html"><button class="btn btn-default">Next</button></a>
+<a href="sampling.html"><button class="btn btn-default">Previous</button></a>
 </p>
 </div>
 </div>

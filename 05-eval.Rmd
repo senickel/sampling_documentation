@@ -1,0 +1,60 @@
+# Evaluating the Sample
+For the cities we do not implement the pair-wise approach, because we assume travel costs will be relatively low anyways.  
+The function `oversample_wrapper_non_pair` returns a `SpatialPolygonsDataFrame` with the sampled units and replacements units. The sampled units are controlled by zooming into satelitte images to determine if there are actually people living in those units. For example, Figure \@ref(fig:examppic) shows a clearly populated site.  
+The figures \@ref(fig:indust1) to \@ref(fig:indust4) seem to not be populated but business/industrial sites. In contrast, Figure \@ref(fig:empty1) and \@ref(fig:empty2) seem to uninhabited.  
+
+
+```{r examppic,echo=FALSE,fig.cap="Populated site.",fig.margin=FALSE}
+make_pic <- function(id) {
+  p2<-suppressWarnings(leaflet() %>% 
+    addProviderTiles("Esri.WorldImagery") %>% 
+    addPolygons(data = nairobi_sample_non_pair[
+      nairobi_sample_non_pair$Name==id,],fillOpacity = 0))
+  
+  suppressWarnings(saveWidget(p2,"output/temp.html",selfcontained = FALSE))
+  suppressWarnings(webshot("output/temp.html",
+                           file = "output/p3.png",
+                           cliprect=c(165,290,410,410),zoom = 3))
+}
+
+make_pic("Nairobi@1@1")
+
+
+```
+
+
+```{r indust1,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
+make_pic("Nairobi@3@16")
+
+```
+
+```{r indust2,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
+make_pic("Nairobi@2@25")
+
+```
+
+
+```{r indust3,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
+make_pic("Nairobi@3@8")
+
+```
+
+
+```{r indust4,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
+make_pic("Nairobi@3@16")
+```
+
+
+```{r empty1,echo=FALSE,fig.cap="A site in Nairobi where no one is living.",fig.margin=FALSE,message=FALSE}
+make_pic("Nairobi@2@17")
+```
+
+```{r empty2,echo=FALSE,fig.cap="A site in Nairobi where no one is living.",fig.margin=FALSE,message=FALSE}
+make_pic("Nairobi@5@8")
+```
+
+
+
+
+
+
