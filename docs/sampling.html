@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-09-19" />
+<meta name="date" content="2018-09-20" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -147,11 +147,11 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <div id="sampling" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Sampling</h1>
 <p>The project aims to not only research respondent but communities, villages in rural and neighborhoods in urban areas. In total, 1,300 communities a 20 respondents are going to be selected, which totals in 26,000 interviews. Since there is no sufficient information about where villages are located and how many people are living in them, we take a geographic approach. A unit is defined as a 1 kilometer square in which we pick in a later step one or more 100 meter units, depending on whether twenty or more people are living in the first 100 meter unit. All units are selected by probability proportional sampling.</p>
-<p>The risk of sampling “empty” units should be rather small because of the probability proportinal sampling method that favors areas with a higher populationg and areas with a low population have a lower change to be drawn. Furthermore, the WorldPop data is using an sophisticated algorithm to predict population numbers that are the foundation of the sampling approach. However, there is still a risk that units with a lower population get selected and the WorldPop algorithm predictions are not perfect. Hence, there is a need to oversample to be able to replace “empty” units at a later stage.</p>
-<p>Another issue important for the sampling are traveling costs. The question is whether those costs can be reduced by sampling in pairs: instead of picking the 1 km units freely, 5 km units are picked first. In each of the 5 km units two 1 km units are picked. This way the travel time and thus the cost can be reduced. However, the question remains whether this alternative method who yield different results – this issue will be discussed in the next chapter.</p>
+<p>The risk of sampling “empty” units should be rather small because of the probability proportinal sampling method that favors areas with a higher population and areas with a low population have a lower change to be drawn. Furthermore, the WorldPop data is using an sophisticated algorithm to predict population numbers that are the foundation of the sampling approach. However, there is still a risk that units with a lower population get selected and the WorldPop algorithm predictions are not perfect. Hence, there is a need to oversample to be able to replace “empty” units at a later stage.</p>
+<p>Here, we focus on Nairobi first</p>
 <div id="nairobi-and-lusaka" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nairobi and Lusaka</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_sample_non_pair &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Nairobi&quot;</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_sample_<span class="dv">100</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Nairobi&quot;</span>,
                             <span class="dt">bins =</span> nairobi_bins,
                             <span class="dt">raster_1 =</span> nairobi_population,
                             <span class="dt">raster_2 =</span> nairobi_population_1k,
@@ -161,13 +161,13 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
                             <span class="dt">by_factor=</span><span class="fl">1.1</span>,
                             <span class="dt">verbose=</span><span class="dv">2</span>)
 
-lusaka_sample_non_pair &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Lusaka&quot;</span>,
-                            <span class="dt">bins =</span> lusaka_bins,
-                            <span class="dt">raster_1 =</span> luska_population,
-                            <span class="dt">raster_2 =</span> luska_population_1k,
+nairobi_sample_<span class="dv">150</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Nairobi&quot;</span>,
+                            <span class="dt">bins =</span> nairobi_bins,
+                            <span class="dt">raster_1 =</span> nairobi_population,
+                            <span class="dt">raster_2 =</span> nairobi_population_1k,
                             <span class="dt">random_number =</span> <span class="dv">680</span>,
                             <span class="dt">original_min_unit2=</span><span class="dv">2</span>,
-                            <span class="dt">original_sample_unit2=</span><span class="dv">100</span>,
+                            <span class="dt">original_sample_unit2=</span><span class="dv">150</span>,
                             <span class="dt">by_factor=</span><span class="fl">1.1</span>,
                             <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
 

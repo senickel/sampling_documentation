@@ -13,11 +13,11 @@ The figures \@ref(fig:indust1) to \@ref(fig:indust4) seem to not be populated bu
 
 
 # id <- "Nairobi@1@1"
-make_pic <- function(id) {
+make_pic <- function(id,sp_obj) {
   p2<-suppressWarnings(leaflet() %>% 
     addProviderTiles("Esri.WorldImagery") %>% 
-    addPolygons(data = nairobi_sample_non_pair[
-      nairobi_sample_non_pair$Name==id,],fillOpacity = 0))
+    addPolygons(data = sp_obj[
+      sp_obj$Name==id,],fillOpacity = 0))
   
   p3 <- suppressWarnings(saveWidget(p2,"temp.html",selfcontained = FALSE))
   p4 <- suppressWarnings(webshot("temp.html",
@@ -28,39 +28,39 @@ make_pic <- function(id) {
   image_composite(sat,lic)
 }
 
-make_pic("Nairobi@1@1")
+make_pic("Nairobi@1@1",nairobi_sample_100)
 
 ```
 
 
 ```{r indust1,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@3@16")
+make_pic("Nairobi@3@16",nairobi_sample_100)
 
 ```
 
 ```{r indust2,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@2@25")
+make_pic("Nairobi@2@25",nairobi_sample_100)
 
 ```
 
 
 ```{r indust3,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@3@8")
+make_pic("Nairobi@3@8",nairobi_sample_100)
 
 ```
 
 
 ```{r indust4,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@3@16")
+make_pic("Nairobi@3@16",nairobi_sample_100)
 ```
 
 
 ```{r empty1,echo=FALSE,fig.cap="A site in Nairobi where no one is living.",fig.margin=FALSE,message=FALSE}
-make_pic("Nairobi@2@17")
+make_pic("Nairobi@2@17",nairobi_sample_100)
 ```
 
 ```{r empty2,echo=FALSE,fig.cap="A site in Nairobi where no one is living.",fig.margin=FALSE,message=FALSE}
-make_pic("Nairobi@5@8")
+make_pic("Nairobi@5@8",nairobi_sample_100)
 ```
 
 

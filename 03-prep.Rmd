@@ -89,21 +89,6 @@ zambia_population_5k <- aggregate(zambia_population,fact=50,fun=sum,na.rm=TRUE) 
 
 
 ```{r extract,cache=TRUE}
-add_population <- function(poly,raster) {
-  poly$pop <- sapply(1:length(poly),function(x) {
-    db1 <- poly[x,]
-    db1 %>% 
-      st_as_sf %>% 
-      fasterize::fasterize(raster) %>% 
-      mask(raster,.) %>% 
-      getValues() %>% 
-      sum(na.rm=TRUE)
-  })
-  poly$prob <-  poly$pop/sum(poly$pop)
-  poly
-}
-
-
 
 dar_bins_6 <- add_population(dar_bins_6,dar_population)
 lusaka_bins <- add_population(lusaka_bins,luska_population)
@@ -116,14 +101,6 @@ southern_tanzania_sampling_bins <-
   add_population(southern_tanzania_sampling_bins,southern_tanzania_population)
 maw_sampling_bin <- add_population(maw_sampling_bin,malawi_population)
 zambia_sampling_bin <- add_population(zambia_sampling_bin,zambia_population)
-
-
-
-
-
-
-
-
 
 ```
 
