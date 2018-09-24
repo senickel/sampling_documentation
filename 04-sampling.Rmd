@@ -13,16 +13,6 @@ Here, we focus on Nairobi first
 
 ```{r sampling,cache=TRUE,include=TRUE,message=FALSE}
 
-nairobi_sample_100 <- oversample_wrapper_non_pair(name = "Nairobi",
-                            bins = nairobi_bins,
-                            raster_1 = nairobi_population,
-                            raster_2 = nairobi_population_1k,
-                            random_number = 680,
-                            original_min_unit2=2,
-                            original_sample_unit2=100,
-                            by_factor=1.1,
-                            verbose=2)
-
 nairobi_sample_150 <- oversample_wrapper_non_pair(name = "Nairobi",
                             bins = nairobi_bins,
                             raster_1 = nairobi_population,
@@ -36,16 +26,17 @@ nairobi_sample_150 <- oversample_wrapper_non_pair(name = "Nairobi",
 ```
 
 ```{r plotdarstrategies,cache=TRUE,include=FALSE}
-writeOGR(nairobi_sample_100[nairobi_sample_100$pick=="Sample",],
-         "output/nairobi_sample_100.kml",
-         driver="KML",layer="nairobi",
-         overwrite_layer = TRUE)
-
 
 writeOGR(nairobi_sample_150[nairobi_sample_150$pick=="Sample",],
-         "output/nairobi_sample_150.kml",
+         "output/nairobi_sample_150_sample.kml",
          driver="KML",layer="nairobi",
          overwrite_layer = TRUE)
+
+writeOGR(nairobi_sample_150[nairobi_sample_150$pick!="Sample",],
+         "output/nairobi_sample_150_replacement.kml",
+         driver="KML",layer="nairobi",
+         overwrite_layer = TRUE)
+
 
 
 

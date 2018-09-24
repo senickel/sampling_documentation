@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-09-20" />
+<meta name="date" content="2018-09-24" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -137,7 +137,12 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="sampling.html#sampling"><span class="toc-section-number">4</span> Sampling</a><ul>
 <li><a href="sampling.html#nairobi-and-lusaka"><span class="toc-section-number">4.1</span> Nairobi and Lusaka</a></li>
 </ul></li>
-<li><a href="evaluating-the-sample.html#evaluating-the-sample"><span class="toc-section-number">5</span> Evaluating the Sample</a></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#evaluating-the-sample"><span class="toc-section-number">5</span> Evaluating the Sample</a><ul>
+<li><a href="evaluating-the-sample.html#industry"><span class="toc-section-number">5.1</span> Industry</a></li>
+<li><a href="evaluating-the-sample.html#empty-units"><span class="toc-section-number">5.2</span> Empty units</a></li>
+<li><a href="evaluating-the-sample.html#almost-empty-units"><span class="toc-section-number">5.3</span> Almost empty units</a></li>
+<li><a href="evaluating-the-sample.html#others"><span class="toc-section-number">5.4</span> Others</a></li>
+</ul></li>
 </ul>
 </div>
 </div>
@@ -148,50 +153,116 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 5</span> Evaluating the Sample</h1>
 <p>For the cities we do not implement the pair-wise approach, because we assume travel costs will be relatively low anyways.<br />
 The function <code>oversample_wrapper_non_pair</code> returns a <code>SpatialPolygonsDataFrame</code> with the sampled units and replacements units. The sampled units are controlled by zooming into satelitte images to determine if there are actually people living in those units. For example, Figure <a href="evaluating-the-sample.html#fig:examppic">5.1</a> shows a clearly populated site.<br />
-The figures <a href="evaluating-the-sample.html#fig:indust1">5.2</a> to <a href="evaluating-the-sample.html#fig:indust4">5.5</a> seem to not be populated but business/industrial sites. In contrast, Figure <a href="evaluating-the-sample.html#fig:empty1">5.6</a> and <a href="evaluating-the-sample.html#fig:empty2">5.7</a> seem to uninhabited.</p>
+The figures <a href="evaluating-the-sample.html#fig:Industry1">5.2</a> to <a href="evaluating-the-sample.html#fig:Industry3">5.4</a> seem to not be populated but business/industrial sites. In contrast, Figure <a href="evaluating-the-sample.html#fig:Empty1">5.5</a> and <a href="evaluating-the-sample.html#fig:Empty5">5.9</a> seem to uninhabited.</p>
 <div class="figure"><span id="fig:examppic"></span>
 <p class="caption marginnote shownote">
 Figure 5.1: Populated site.
 </p>
 <img src="geosampling_files/figure-html/examppic-1.png" alt="Populated site." width="615"  />
 </div>
-<div class="figure"><span id="fig:indust1"></span>
+<div id="industry" class="section level2">
+<h2><span class="header-section-number">5.1</span> Industry</h2>
+<div class="figure"><span id="fig:Industry1"></span>
 <p class="caption marginnote shownote">
-Figure 5.2: Industrial site in Nairobi
+Figure 5.2: Industrial site in Nairobi.
 </p>
-<img src="geosampling_files/figure-html/indust1-1.png" alt="Industrial site in Nairobi" width="615"  />
+<img src="geosampling_files/figure-html/Industry1-1.png" alt="Industrial site in Nairobi." width="615"  />
 </div>
-<div class="figure"><span id="fig:indust2"></span>
+<div class="figure"><span id="fig:Industry2"></span>
 <p class="caption marginnote shownote">
-Figure 5.3: Industrial site in Nairobi
+Figure 5.3: Industrial site in Nairobi.
 </p>
-<img src="geosampling_files/figure-html/indust2-1.png" alt="Industrial site in Nairobi" width="615"  />
+<img src="geosampling_files/figure-html/Industry2-1.png" alt="Industrial site in Nairobi." width="615"  />
 </div>
-<div class="figure"><span id="fig:indust3"></span>
+<div class="figure"><span id="fig:Industry3"></span>
 <p class="caption marginnote shownote">
-Figure 5.4: Industrial site in Nairobi
+Figure 5.4: Industrial site in Nairobi.
 </p>
-<img src="geosampling_files/figure-html/indust3-1.png" alt="Industrial site in Nairobi" width="615"  />
+<img src="geosampling_files/figure-html/Industry3-1.png" alt="Industrial site in Nairobi." width="615"  />
 </div>
-<div class="figure"><span id="fig:indust4"></span>
-<p class="caption marginnote shownote">
-Figure 5.5: Industrial site in Nairobi
-</p>
-<img src="geosampling_files/figure-html/indust4-1.png" alt="Industrial site in Nairobi" width="615"  />
 </div>
-<div class="figure"><span id="fig:empty1"></span>
+<div id="empty-units" class="section level2">
+<h2><span class="header-section-number">5.2</span> Empty units</h2>
+<div class="figure"><span id="fig:Empty1"></span>
 <p class="caption marginnote shownote">
-Figure 5.6: A site in Nairobi where no one is living.
+Figure 5.5: Empty site in Nairobi.
 </p>
-<img src="geosampling_files/figure-html/empty1-1.png" alt="A site in Nairobi where no one is living." width="615"  />
+<img src="geosampling_files/figure-html/empty1-1.png" alt="Empty site in Nairobi." width="615"  />
 </div>
-<div class="figure"><span id="fig:empty2"></span>
+<div class="figure"><span id="fig:Empty2"></span>
 <p class="caption marginnote shownote">
-Figure 5.7: A site in Nairobi where no one is living.
+Figure 5.6: Empty site in Nairobi.
 </p>
-<img src="geosampling_files/figure-html/empty2-1.png" alt="A site in Nairobi where no one is living." width="615"  />
+<img src="geosampling_files/figure-html/empty2-1.png" alt="Empty site in Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:Empty3"></span>
+<p class="caption marginnote shownote">
+Figure 5.7: Empty site in Nairobi.
+</p>
+<img src="geosampling_files/figure-html/empty3-1.png" alt="Empty site in Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:Empty4"></span>
+<p class="caption marginnote shownote">
+Figure 5.8: Empty site in Nairobi.
+</p>
+<img src="geosampling_files/figure-html/empty4-1.png" alt="Empty site in Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:Empty5"></span>
+<p class="caption marginnote shownote">
+Figure 5.9: Empty site in Nairobi.
+</p>
+<img src="geosampling_files/figure-html/empty5-1.png" alt="Empty site in Nairobi." width="615"  />
+</div>
+</div>
+<div id="almost-empty-units" class="section level2">
+<h2><span class="header-section-number">5.3</span> Almost empty units</h2>
+<div class="figure"><span id="fig:AlmostEmpty1"></span>
+<p class="caption marginnote shownote">
+Figure 5.10: Almost empty site Nairobi.
+</p>
+<img src="geosampling_files/figure-html/AlmostEmpty1-1.png" alt="Almost empty site Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:AlmostEmpty2"></span>
+<p class="caption marginnote shownote">
+Figure 5.11: Almost empty site Nairobi.
+</p>
+<img src="geosampling_files/figure-html/AlmostEmpty2-1.png" alt="Almost empty site Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:AlmostEmpty3"></span>
+<p class="caption marginnote shownote">
+Figure 5.12: Almost empty site Nairobi.
+</p>
+<img src="geosampling_files/figure-html/AlmostEmpty3-1.png" alt="Almost empty site Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:AlmostEmpty4"></span>
+<p class="caption marginnote shownote">
+Figure 5.13: Almost empty site Nairobi.
+</p>
+<img src="geosampling_files/figure-html/AlmostEmpty4-1.png" alt="Almost empty site Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:AlmostEmpty5"></span>
+<p class="caption marginnote shownote">
+Figure 5.14: Almost empty site Nairobi.
+</p>
+<img src="geosampling_files/figure-html/AlmostEmpty5-1.png" alt="Almost empty site Nairobi." width="615"  />
+</div>
+<div class="figure"><span id="fig:AlmostEmpty6"></span>
+<p class="caption marginnote shownote">
+Figure 5.15: Almost empty site Nairobi.
+</p>
+<img src="geosampling_files/figure-html/AlmostEmpty6-1.png" alt="Almost empty site Nairobi." width="615"  />
+</div>
+</div>
+<div id="others" class="section level2">
+<h2><span class="header-section-number">5.4</span> Others</h2>
+<div class="figure"><span id="fig:Others1"></span>
+<p class="caption marginnote shownote">
+Figure 5.16: Not empty but maybe resort.
+</p>
+<img src="geosampling_files/figure-html/Others1-1.png" alt="Not empty but maybe resort." width="615"  />
 </div>
 
+</div>
 </div>
 <p style="text-align: center;">
 <a href="sampling.html"><button class="btn btn-default">Previous</button></a>

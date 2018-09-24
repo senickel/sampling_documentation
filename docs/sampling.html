@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-09-20" />
+<meta name="date" content="2018-09-24" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -137,7 +137,12 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="sampling.html#sampling"><span class="toc-section-number">4</span> Sampling</a><ul>
 <li><a href="sampling.html#nairobi-and-lusaka"><span class="toc-section-number">4.1</span> Nairobi and Lusaka</a></li>
 </ul></li>
-<li><a href="evaluating-the-sample.html#evaluating-the-sample"><span class="toc-section-number">5</span> Evaluating the Sample</a></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#evaluating-the-sample"><span class="toc-section-number">5</span> Evaluating the Sample</a><ul>
+<li><a href="evaluating-the-sample.html#industry"><span class="toc-section-number">5.1</span> Industry</a></li>
+<li><a href="evaluating-the-sample.html#empty-units"><span class="toc-section-number">5.2</span> Empty units</a></li>
+<li><a href="evaluating-the-sample.html#almost-empty-units"><span class="toc-section-number">5.3</span> Almost empty units</a></li>
+<li><a href="evaluating-the-sample.html#others"><span class="toc-section-number">5.4</span> Others</a></li>
+</ul></li>
 </ul>
 </div>
 </div>
@@ -151,17 +156,7 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <p>Here, we focus on Nairobi first</p>
 <div id="nairobi-and-lusaka" class="section level2">
 <h2><span class="header-section-number">4.1</span> Nairobi and Lusaka</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_sample_<span class="dv">100</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Nairobi&quot;</span>,
-                            <span class="dt">bins =</span> nairobi_bins,
-                            <span class="dt">raster_1 =</span> nairobi_population,
-                            <span class="dt">raster_2 =</span> nairobi_population_1k,
-                            <span class="dt">random_number =</span> <span class="dv">680</span>,
-                            <span class="dt">original_min_unit2=</span><span class="dv">2</span>,
-                            <span class="dt">original_sample_unit2=</span><span class="dv">100</span>,
-                            <span class="dt">by_factor=</span><span class="fl">1.1</span>,
-                            <span class="dt">verbose=</span><span class="dv">2</span>)
-
-nairobi_sample_<span class="dv">150</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Nairobi&quot;</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_sample_<span class="dv">150</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Nairobi&quot;</span>,
                             <span class="dt">bins =</span> nairobi_bins,
                             <span class="dt">raster_1 =</span> nairobi_population,
                             <span class="dt">raster_2 =</span> nairobi_population_1k,

@@ -1,18 +1,12 @@
 # Evaluating the Sample
 For the cities we do not implement the pair-wise approach, because we assume travel costs will be relatively low anyways.  
 The function `oversample_wrapper_non_pair` returns a `SpatialPolygonsDataFrame` with the sampled units and replacements units. The sampled units are controlled by zooming into satelitte images to determine if there are actually people living in those units. For example, Figure \@ref(fig:examppic) shows a clearly populated site.  
-The figures \@ref(fig:indust1) to \@ref(fig:indust4) seem to not be populated but business/industrial sites. In contrast, Figure \@ref(fig:empty1) and \@ref(fig:empty2) seem to uninhabited.  
+The figures \@ref(fig:Industry1) to \@ref(fig:Industry3) seem to not be populated but business/industrial sites. In contrast, Figure \@ref(fig:Empty1) and \@ref(fig:Empty5) seem to uninhabited.  
 
 
-```{r examppic,echo=FALSE,fig.cap="Populated site.",fig.margin=FALSE}
-
-# # create the license thing
-# webshot("temp.html",
-#         file = "license.png",
-#         cliprect=c(730,240,750,20),zoom = 1.5)
+```{r examppic,eval=TRUE,cache=FALSE,echo=FALSE,fig.cap="Populated site.",fig.margin=FALSE,cache=TRUE}
 
 
-# id <- "Nairobi@1@1"
 make_pic <- function(id,sp_obj) {
   p2<-suppressWarnings(leaflet() %>% 
     addProviderTiles("Esri.WorldImagery") %>% 
@@ -28,43 +22,60 @@ make_pic <- function(id,sp_obj) {
   image_composite(sat,lic)
 }
 
-make_pic("Nairobi@1@1",nairobi_sample_100)
+output_cutted_satellite_images <- function(type,title) {
+  rmd <- replaced_id %>%
+    filter(Type==type) %>%
+    nrow() %>%
+    seq %>%
+    sapply(function(x1) {
+      x <- replaced_id %>%
+        filter(Type==type) %>%
+        dplyr::select(ID) %>%
+        slice(x1) %>% 
+        unlist()
+
+      knit_expand("children/child_satellite_images.Rmd",
+                  x=x,
+                  title=paste(title),
+                  chunkname=paste0(type %>%
+                                     gsub(" ","",.),x1)) 
+    })
+
+
+  rmd <- paste(rmd,collapse = "\n")
+  rendered <- knit(text = rmd,quiet=TRUE)
+  cat(rendered,sep="\n")
+}
+
+replaced_id <- rbind(
+  data.frame(ID=c("Nairobi@3@16","Nairobi@2@25","Nairobi@3@8"),
+             Type="Industry"),
+  data.frame(ID=c("Nairobi@2@17","Nairobi@2@41","Nairobi@5@8",
+                  "Nairobi@6@16","Nairobi@7@3"),
+             Type="Empty"),
+  data.frame(ID=c("Nairobi@4@17","Nairobi@6@14","Nairobi@6@17",
+                  "Nairobi@7@3","Nairobi@7@8","Nairobi@8@2"),
+             Type="Almost Empty"),
+  data.frame(ID="Nairobi@2@11",
+             Type="Others"))
+
+
+make_pic("Nairobi@1@1",nairobi_sample_150)
 
 ```
 
 
-```{r indust1,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@3@16",nairobi_sample_100)
+```{r industry,results="asis",echo=FALSE,message=FALSE,cache=TRUE}
+cat("## Industry\n")
+output_cutted_satellite_images(type = "Industry","Industrial site in Nairobi.")
+cat("## Empty units\n")
+output_cutted_satellite_images("Empty",title = "Empty site in Nairobi.")
+cat("## Almost empty units\n")
+output_cutted_satellite_images("Almost Empty","Almost empty site Nairobi.")
+cat("## Others\n")
+output_cutted_satellite_images(type = "Others",title = "Not empty but maybe resort.")
 
 ```
-
-```{r indust2,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@2@25",nairobi_sample_100)
-
-```
-
-
-```{r indust3,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@3@8",nairobi_sample_100)
-
-```
-
-
-```{r indust4,echo=FALSE,fig.cap="Industrial site in Nairobi",message=FALSE,fig.margin=FALSE}
-make_pic("Nairobi@3@16",nairobi_sample_100)
-```
-
-
-```{r empty1,echo=FALSE,fig.cap="A site in Nairobi where no one is living.",fig.margin=FALSE,message=FALSE}
-make_pic("Nairobi@2@17",nairobi_sample_100)
-```
-
-```{r empty2,echo=FALSE,fig.cap="A site in Nairobi where no one is living.",fig.margin=FALSE,message=FALSE}
-make_pic("Nairobi@5@8",nairobi_sample_100)
-```
-
-
-
 
 
 
