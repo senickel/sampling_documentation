@@ -65,7 +65,7 @@ make_pic("Nairobi@1@1",nairobi_sample_150)
 ```
 
 
-```{r industry,results="asis",echo=FALSE,message=FALSE,cache=TRUE}
+```{r industry,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
 cat("## Industry\n")
 output_cutted_satellite_images(type = "Industry","Industrial site in Nairobi.")
 cat("## Empty units\n")
