@@ -84,7 +84,7 @@ include_graphics("figure/example.png")
   
 * The figures \@ref(fig:Industry1) to \@ref(fig:Industry3) seem to not be populated but business/industrial sites and will be replaced.  
 * Figure \@ref(fig:Empty1) to \@ref(fig:Empty5) seem to uninhabited and will be replaced.  
-* Figure \@ref(fig:Almostempty1) to \@ref(fig:Almostempty6) seem to be very sparsely populated and for each a replacement unit is drawn. (But we keep them in?)  
+* Figure \@ref(fig:AlmostEmpty1) to \@ref(fig:AlmostEmpty6) seem to be very sparsely populated and for each a replacement unit is drawn. (But we keep them in?)  
 * Figure \@ref(fig:Others1) seems to be resort and will be replaced as well.
 
 
