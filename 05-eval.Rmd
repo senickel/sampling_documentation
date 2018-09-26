@@ -1,13 +1,12 @@
 # Evaluating the Sample
 For the cities we do not implement the pair-wise approach, because we assume travel costs will be relatively low anyways.  
 The function `oversample_wrapper_non_pair` returns a `SpatialPolygonsDataFrame` with the sampled units and replacements units. The sampled units are controlled by zooming into satelitte images to determine if there are actually people living in those units. For example, Figure \@ref(fig:examppic) shows a clearly populated site.  
-The figures \@ref(fig:Industry1) to \@ref(fig:Industry3) seem to not be populated but business/industrial sites. In contrast, Figure \@ref(fig:Empty1) and \@ref(fig:Empty5) seem to uninhabited.  
 
 
-```{r examppic,eval=TRUE,cache=FALSE,echo=FALSE,fig.cap="Populated site.",fig.margin=FALSE,cache=TRUE}
 
+```{r satelittefunc,echo=FALSE,cache=TRUE}
 
-make_pic <- function(id,sp_obj) {
+make_pic <- function(id,sp_obj,image_name="") {
   p2<-suppressWarnings(leaflet() %>% 
     addProviderTiles("Esri.WorldImagery") %>% 
     addPolygons(data = sp_obj[
@@ -19,36 +18,36 @@ make_pic <- function(id,sp_obj) {
                            cliprect=c(165,290,410,410),zoom = 3))
   sat<-image_read("p3.png")
   lic <- image_read("license.png")
-  image_composite(sat,lic)
+  image_composite(sat,lic) %>% 
+    image_write(paste0("figure/",image_name,".png"))
+  
 }
 
-output_cutted_satellite_images <- function(type,title) {
-  rmd <- replaced_id %>%
+make_pic_loop <- function(type,data,sp_obj) {
+   sequence <- data %>%
     filter(Type==type) %>%
     nrow() %>%
-    seq %>%
-    sapply(function(x1) {
-      x <- replaced_id %>%
-        filter(Type==type) %>%
-        dplyr::select(ID) %>%
-        slice(x1) %>% 
-        unlist()
-
-      knit_expand("children/child_satellite_images.Rmd",
-                  x=x,
-                  title=paste(title),
-                  chunkname=paste0(type %>%
-                                     gsub(" ","",.),x1)) 
-    })
-
-
-  rmd <- paste(rmd,collapse = "\n")
-  rendered <- knit(text = rmd,quiet=TRUE)
-  cat(rendered,sep="\n")
+    seq 
+   
+   sequence %>%
+     sapply(function(x1) {
+       x <- data %>%
+         filter(Type==type) %>%
+         dplyr::select(ID) %>%
+         slice(x1) %>% 
+         unlist()
+      
+      make_pic(x,sp_obj,paste0(type %>% 
+                                 gsub(" ","",.),"-",x1))
+     })
+      
 }
 
+
+
+
 replaced_id <- rbind(
-  data.frame(ID=c("Nairobi@3@16","Nairobi@2@25","Nairobi@3@8"),
+  data.frame(ID=c("Nairobi@2@25","Nairobi@3@8","Nairobi@3@16"),
              Type="Industry"),
   data.frame(ID=c("Nairobi@2@17","Nairobi@2@41","Nairobi@5@8",
                   "Nairobi@6@16","Nairobi@7@3"),
@@ -60,21 +59,216 @@ replaced_id <- rbind(
              Type="Others"))
 
 
-make_pic("Nairobi@1@1",nairobi_sample_150)
+
+```
+
+```{r createpictures,message=FALSE,eval=FALSE}
+make_pic("Nairobi@1@1",nairobi_sample_150,image_name = "example")
+
+sapply(replaced_id$Type %>% 
+         unique,make_pic_loop,
+              data = replaced_id,
+              sp_obj = nairobi_sample_150)
+
 
 ```
 
 
-```{r industry,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
-cat("## Industry\n")
-output_cutted_satellite_images(type = "Industry","Industrial site in Nairobi.")
-cat("## Empty units\n")
-output_cutted_satellite_images("Empty",title = "Empty site in Nairobi.")
-cat("## Almost empty units\n")
-output_cutted_satellite_images("Almost Empty","Almost empty site Nairobi.")
-cat("## Others\n")
-output_cutted_satellite_images(type = "Others",title = "Not empty but maybe resort.")
+```{r examppic,eval=TRUE,cache=FALSE,echo=FALSE,fig.cap="Example of a populated site.",fig.margin=FALSE,cache=TRUE}
+include_graphics("figure/example.png")
 
+```
+
+## Identifying empty and underpopulated units
+
+  
+* The figures \@ref(fig:Industry1) to \@ref(fig:Industry3) seem to not be populated but business/industrial sites and will be replaced.  
+* Figure \@ref(fig:Empty1) to \@ref(fig:Empty5) seem to uninhabited and will be replaced.  
+* Figure \@ref(fig:Almostempty1) to \@ref(fig:Almostempty6) seem to be very sparsely populated and for each a replacement unit is drawn. (But we keep them in?)  
+* Figure \@ref(fig:Others1) seems to be resort and will be replaced as well.
+
+
+```{r industry,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
+
+include_graphics_thru_child <- function(type,data,title,addition=NA) {
+  
+  sequence <- data %>%
+    filter(Type==type) %>%
+    nrow() %>%
+    seq 
+  
+  if (length(sequence)!=length(addition)) addition <- 
+      rep(NA,length(sequence))
+  
+  rmd <- sequence %>%
+    sapply(function(x1) {
+      
+      x <- data %>%
+        filter(Type==type) %>%
+        dplyr::select(ID) %>%
+        slice(x1) %>% 
+        unlist()
+      
+      title_merge <- title
+      
+      if (!is.na(addition[x1])) title_merge <- 
+        paste(title_merge,addition[x1]) 
+      
+      knit_expand("children/child_wrap_images.Rmd",
+                  x=paste0(type,"-",x1),
+                  title=paste(title_merge,"(ID =",x,")"),
+                  chunkname=paste0(type %>%
+                                     gsub(" ","",.),x1)) 
+    })
+  rmd <- paste(rmd,collapse = "\n")
+  rendered <- knit(text = rmd,quiet=TRUE)
+  cat(rendered,sep="\n")
+}
+
+       
+cat("### Industry\n")
+include_graphics_thru_child(type = "Industry",
+                            data = replaced_id,
+                            title = "Industrial site in Nairobi.")
+
+cat("### Empty units\n")
+include_graphics_thru_child("Empty",
+                            data = replaced_id,
+                            title = "Empty site in Nairobi.")
+
+cat("### Almost empty units\n")
+include_graphics_thru_child("Almost Empty",
+                            data = replaced_id,
+                            "Almost empty site Nairobi.")
+
+cat("### Others\n")
+include_graphics_thru_child(type = "Others",
+                            data = replaced_id,
+                            title = "Not empty but maybe resort.")
+
+```
+
+## Replacement units
+
+
+```{r binreplacement,echo=FALSE}
+replaced_id$ID %>% 
+  sort %>%
+  strsplit("@") %>% 
+  lapply(`[[`,2) %>%
+  unlist %>% 
+  table %>% 
+  data.frame() %>% 
+  rename(Bin=".",
+         Frequency=Freq) %>% 
+  kable(caption = "Number of units that need to be resampled from each bin.")
+
+```
+
+If the resampled unit is empty, it is left out. 
+
+
+```{r addreplacementunits,include=FALSE,cache=TRUE}
+
+replacement_units<- c("2@47","",
+"2@48","",
+"2@49","",
+"2@50","",
+"3@23","",
+"3@24","",
+"4@24","",
+"4@25","(empty)",
+"4@26","",
+"5@11","(almost empty)",
+"5@12","",
+"6@23","",
+"6@24","",
+"6@25","(almost empty)",
+"6@26","",
+"7@9","(almost empty)",
+"7@10","",
+"7@11","(empty)",
+"7@12","",
+"7@13","(almost empty)",
+"7@14","(almost empty)",
+"7@15","(almost empty)",
+"7@16","(empty)",
+"7@17","(almost empty)",
+"7@18","",
+"8@3","(almost empty)",
+"8@4","(almost empty)",
+"8@5","(almost empty)",
+"8@6","") %>% 
+  matrix(byrow=TRUE,ncol=2) %>% 
+  as.data.frame() %>% 
+  rename(ID=V1,addition=V2) %>% 
+  mutate(ID=paste0("Nairobi@",ID),
+         Type=ifelse(addition=="(empty)","empty","replaced"))
+
+
+
+nairobi_1k_sample_complete <- 
+  bind(nairobi_sample_150[
+    nairobi_sample_150$pick=="Sample"&
+           !nairobi_sample_150$Name%in%(replaced_id %>%
+                                          filter(Type!="Almost Empty") %>% 
+                                          dplyr::select(ID) %>% 
+                                          unlist()),],
+       nairobi_sample_150[
+         which(nairobi_sample_150$Name%in%(replacement_units %>% 
+                                       filter(addition!="(empty)") %>% 
+                                       dplyr::select(ID) %>% 
+                                       unlist())),])
+
+nairobi_1k_sample_complete$Description[nairobi_1k_sample_complete$Name=="Nairobi@8@2"]
+
+nairobi_1k_sample_complete$almost_empty <- 
+  ifelse(nairobi_1k_sample_complete$Name%in%
+                               c(replaced_id %>% 
+                                   filter(Type=="Almost Empty") %>% 
+                                   dplyr::select(ID) %>% 
+                                          unlist(),
+                                  replacement_units %>% 
+                                       filter(addition=="(almost empty)") %>% 
+                                       dplyr::select(ID) %>% 
+                                       unlist()),"Almost Empty","Full")
+
+nairobi_1k_sample_complete$Description <- 
+  paste0(nairobi_1k_sample_complete$Description,"; Replacement Status: ",
+         nairobi_1k_sample_complete$almost_empty)
+
+nairobi_1k_sample_complete <- 
+  nairobi_1k_sample_complete[order(nairobi_1k_sample_complete$Name),]
+
+writeOGR(nairobi_1k_sample_complete,
+         "output/nairobi_1k_sample_complete.kml",
+         driver = "KML",
+         layer = "nairobi",overwrite_layer = TRUE)
+
+
+
+
+```
+
+```{r createreplacedpics,eval=FALSE}
+make_pic_loop(type = "replaced",
+              data = replacement_units,
+              sp_obj = nairobi_1k_sample_complete)
+
+```
+
+
+```{r replacements,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
+cat("### Replacement units\n")
+include_graphics_thru_child(type = "replaced",
+                            data = replacement_units,
+                               title = "Replacement units",
+                               addition = 
+                                 ifelse(replacement_units %>% 
+                                          filter(Type=="replaced") %>% 
+                                          dplyr::select(addition)=="",
+                                        NA,
+                                        "(Unit is almost empty, and a replacement unit is drawn.)"))
 ```
 
 
