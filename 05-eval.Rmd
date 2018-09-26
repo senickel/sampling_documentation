@@ -115,7 +115,8 @@ include_graphics_thru_child <- function(type,data,title,addition=NA) {
         paste(title_merge,addition[x1]) 
       
       knit_expand("children/child_wrap_images.Rmd",
-                  x=paste0(type,"-",x1),
+                  x=paste0(type %>% 
+                             gsub(" ","",.),"-",x1),
                   title=paste(title_merge,"(ID =",x,")"),
                   chunkname=paste0(type %>%
                                      gsub(" ","",.),x1)) 
@@ -137,9 +138,9 @@ include_graphics_thru_child("Empty",
                             title = "Empty site in Nairobi.")
 
 cat("### Almost empty units\n")
-include_graphics_thru_child("Almost Empty",
+include_graphics_thru_child(type = "Almost Empty",
                             data = replaced_id,
-                            "Almost empty site Nairobi.")
+                            title = "Almost empty site Nairobi.")
 
 cat("### Others\n")
 include_graphics_thru_child(type = "Others",
