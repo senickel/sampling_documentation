@@ -19,7 +19,7 @@ make_pic <- function(id,sp_obj,image_name="") {
   sat<-image_read("p3.png")
   lic <- image_read("license.png")
   image_composite(sat,lic) %>% 
-    image_write(paste0("figure/",image_name,".png"))
+    image_write(paste0("figs/",image_name,".png"))
   
 }
 
@@ -75,7 +75,7 @@ sapply(replaced_id$Type %>%
 
 
 ```{r examppic,eval=TRUE,cache=FALSE,echo=FALSE,fig.cap="Example of a populated site.",fig.margin=FALSE,cache=TRUE}
-include_graphics("figure/example.png")
+include_graphics("figs/example.png")
 
 ```
 
