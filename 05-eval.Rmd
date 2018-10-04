@@ -378,13 +378,41 @@ lusaka_replaced_id$ID %>%
   kable(caption = "Lusaka: Number of units that need to be resampled from each bin.")
 ```
 
-```{r lusakaimages,eval=FALSE}
+```{r lusakaimagesgeneration,eval=FALSE}
 sapply(lusaka_replaced_id$Type %>% 
          unique,make_pic_loop,
               data = lusaka_replaced_id,
               sp_obj = lusaka_sample_150,
        addition = "Lusaka")
 ```
+
+
+```{r lusakaimages,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
+       
+cat("#### Industry\n")
+include_graphics_thru_child(type = "Industry",
+                            data = lusaka_replaced_id,
+                            title = "Industrial site in Lusaka",
+                            nameadd = "Lusaka")
+
+cat("#### Empty units\n")
+include_graphics_thru_child("Empty",
+                            data = lusaka_replaced_id,
+                            title = "Empty site in Lusaka",
+                            nameadd = "Lusaka")
+
+cat("#### Almost empty units\n")
+include_graphics_thru_child(type = "Almost Empty",
+                            data = lusaka_replaced_id,
+                            title = "Almost empty site Lusaka",
+                            nameadd = "Lusaka")
+
+
+
+
+```
+
+
 ```{r lusakaaddreplacementunits,include=FALSE,cache=TRUE}
 lusaka_replacement_units <- readLines(
   "output/lusaka_replacement.txt",warn=FALSE) %>% 
