@@ -23,6 +23,19 @@ nairobi_sample_150 <- oversample_wrapper_non_pair(name = "Nairobi",
                             by_factor=1.1,
                             verbose=2)
 
+
+lusaka_sample_150 <- oversample_wrapper_non_pair(name = "Lusaka",
+                            bins = lusaka_bins,
+                            raster_1 = lusaka_population,
+                            raster_2 = lusaka_population_1k,
+                            random_number = 680,
+                            original_min_unit2=2,
+                            original_sample_unit2=150,
+                            by_factor=1.1,
+                            verbose=2)
+
+
+
 ```
 
 ```{r plotdarstrategies,cache=TRUE,include=FALSE}
@@ -37,6 +50,15 @@ writeOGR(nairobi_sample_150[nairobi_sample_150$pick!="Sample",],
          driver="KML",layer="nairobi",
          overwrite_layer = TRUE)
 
+writeOGR(lusaka_sample_150[lusaka_sample_150$pick=="Sample",],
+         "output/lusaka_sample_150_sample.kml",
+         driver="KML",layer="lusaka",
+         overwrite_layer = TRUE)
+
+writeOGR(lusaka_sample_150[lusaka_sample_150$pick!="Sample",],
+         "output/lusaka_sample_150_replacement.kml",
+         driver="KML",layer="lusaka",
+         overwrite_layer = TRUE)
 
 
 

@@ -32,7 +32,7 @@ zambia_unified <- gUnaryUnion(zambia_sampling_bin)
 # dar_population <- 
 #   prepare_raster_of_sampling_area(tanzania_population,dar_unified)
 
-luska_population <- 
+lusaka_population <- 
   prepare_raster_of_sampling_area(zambia_population,lusaka_unified)
 
 nairobi_population <- 
@@ -59,8 +59,8 @@ zambia_population <-
 # dar_population_1k <- aggregate(dar_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
 # dar_population_5k <- aggregate(dar_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
 
-luska_population_1k <- aggregate(luska_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
-luska_population_5k <- aggregate(luska_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+lusaka_population_1k <- aggregate(luska_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
+lusaka_population_5k <- aggregate(luska_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
 
 nairobi_population_1k <- aggregate(nairobi_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
 nairobi_population_5k <- aggregate(nairobi_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
