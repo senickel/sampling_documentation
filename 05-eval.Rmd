@@ -267,7 +267,6 @@ make_pic_loop(type = "replaced",
 
 
 ```{r replacements,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
-cat("### Replacement units\n")
 include_graphics_thru_child(type = "replaced",
                             data = nairobi_replacement_units,
                                title = "Replacement units",
