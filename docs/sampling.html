@@ -146,6 +146,9 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="evaluating-the-sample.html#lusaka"><span class="toc-section-number">5.2</span> Lusaka</a><ul>
 <li><a href="evaluating-the-sample.html#replacement-units-2"><span class="toc-section-number">5.2.1</span> Replacement units</a></li>
 </ul></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#lilongwe"><span class="toc-section-number">5.3</span> Lilongwe</a><ul>
+<li><a href="evaluating-the-sample.html#replacement-units-3"><span class="toc-section-number">5.3.1</span> Replacement units</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
@@ -175,6 +178,16 @@ lusaka_sample_<span class="dv">150</span> &lt;-<span class="st"> </span><span cl
                             <span class="dt">bins =</span> lusaka_bins,
                             <span class="dt">raster_1 =</span> lusaka_population,
                             <span class="dt">raster_2 =</span> lusaka_population_1k,
+                            <span class="dt">random_number =</span> <span class="dv">680</span>,
+                            <span class="dt">original_min_unit2=</span><span class="dv">2</span>,
+                            <span class="dt">original_sample_unit2=</span><span class="dv">150</span>,
+                            <span class="dt">by_factor=</span><span class="fl">1.1</span>,
+                            <span class="dt">verbose=</span><span class="dv">2</span>)
+
+lilongwe_sample_<span class="dv">150</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_non_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Lilongwe&quot;</span>,
+                            <span class="dt">bins =</span> lilongwe_bins,
+                            <span class="dt">raster_1 =</span> lilongwe_population,
+                            <span class="dt">raster_2 =</span> lilongwe_population_1k,
                             <span class="dt">random_number =</span> <span class="dv">680</span>,
                             <span class="dt">original_min_unit2=</span><span class="dv">2</span>,
                             <span class="dt">original_sample_unit2=</span><span class="dv">150</span>,

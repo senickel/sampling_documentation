@@ -34,7 +34,15 @@ lusaka_sample_150 <- oversample_wrapper_non_pair(name = "Lusaka",
                             by_factor=1.1,
                             verbose=2)
 
-
+lilongwe_sample_150 <- oversample_wrapper_non_pair(name = "Lilongwe",
+                            bins = lilongwe_bins,
+                            raster_1 = lilongwe_population,
+                            raster_2 = lilongwe_population_1k,
+                            random_number = 680,
+                            original_min_unit2=2,
+                            original_sample_unit2=150,
+                            by_factor=1.1,
+                            verbose=2)
 
 ```
 
@@ -60,7 +68,15 @@ writeOGR(lusaka_sample_150[lusaka_sample_150$pick!="Sample",],
          driver="KML",layer="lusaka",
          overwrite_layer = TRUE)
 
+writeOGR(lilongwe_sample_150[lilongwe_sample_150$pick=="Sample",],
+         "output/lilongwe_sample_150_sample.kml",
+         driver="KML",layer="lilongwe",
+         overwrite_layer = TRUE)
 
+writeOGR(lilongwe_sample_150[lilongwe_sample_150$pick!="Sample",],
+         "output/lilongwe_sample_150_replacement.kml",
+         driver="KML",layer="lilongwe",
+         overwrite_layer = TRUE)
 
 # t1<-leaflet() %>%
 #   addProviderTiles("Esri.WorldImagery") %>% 

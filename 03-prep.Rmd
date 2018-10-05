@@ -3,7 +3,7 @@
 ```{r load_raster,cache=TRUE,include=FALSE}
 kenya_population <- raster("../../WorldPop/Kenya~/KEN_popmap15adj_v2b.tif")
 malawi_population <- raster("../../WorldPop/Malawi~/MWI_ppp_2015_adj_v2.tif")
-# tanzania_population <- raster("../../WorldPop/United~/TZA_popmap15adj_v2b.tif")
+tanzania_population <- raster("../../WorldPop/United~/TZA_popmap15adj_v2b.tif")
 zambia_population <- raster("../../WorldPop/Zambia~/ZMB_ppp_v2c_2015_UNadj.tif")
 ```
 
@@ -12,7 +12,7 @@ To extract the population data, the sampling areas need to unified first. In the
 
 ```{r popextractaggr,cache=TRUE}
 # unify
-# dar_unified <- gUnaryUnion(dar_bins_6)
+lilongwe_unified <- gUnaryUnion(lilongwe_bins)
 
 lusaka_unified <- gUnaryUnion(lusaka_bins)
 
@@ -22,15 +22,15 @@ nairobi_unified <- gUnaryUnion(nairobi_bins)
 
 # northern_tanzania_unified <- gUnaryUnion(northern_tanzania_sampling_bins)
 
-# southern_tanzania_unified <- gUnaryUnion(southern_tanzania_sampling_bins)
+southern_tanzania_unified <- gUnaryUnion(southern_tanzania_sampling_bins)
 
 malawi_unified <- gUnaryUnion(maw_sampling_bin)
 
 zambia_unified <- gUnaryUnion(zambia_sampling_bin)
 
 # extract
-# dar_population <- 
-#   prepare_raster_of_sampling_area(tanzania_population,dar_unified)
+lilongwe_population <-
+  prepare_raster_of_sampling_area(malawi_population,lilongwe_unified)
 
 lusaka_population <- 
   prepare_raster_of_sampling_area(zambia_population,lusaka_unified)
@@ -45,9 +45,9 @@ nairobi_population <-
 #   prepare_raster_of_sampling_area(tanzania_population,
 #                                   northern_tanzania_unified)
 # 
-# southern_tanzania_population <- 
-#   prepare_raster_of_sampling_area(tanzania_population,
-#                                   southern_tanzania_unified)
+southern_tanzania_population <-
+  prepare_raster_of_sampling_area(tanzania_population,
+                                  southern_tanzania_unified)
 
 malawi_population <- 
   prepare_raster_of_sampling_area(malawi_population,malawi_unified)
@@ -56,8 +56,10 @@ zambia_population <-
   prepare_raster_of_sampling_area(zambia_population,zambia_unified)
 
 # aggregate
-# dar_population_1k <- aggregate(dar_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
-# dar_population_5k <- aggregate(dar_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
+lilongwe_population_1k <- aggregate(lilongwe_population,
+                                    fact=10,fun=sum,na.rm=TRUE) # 1 km
+lilongwe_population_5k <- aggregate(lilongwe_population,
+                                    fact=50,fun=sum,na.rm=TRUE) # 5 km
 
 lusaka_population_1k <- aggregate(luska_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
 lusaka_population_5k <- aggregate(luska_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
@@ -73,10 +75,10 @@ nairobi_population_5k <- aggregate(nairobi_population,fact=50,fun=sum,na.rm=TRUE
 # northern_tanzania_population_5k <- 
 #   aggregate(northern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
 # 
-# southern_tanzania_population_1k <- 
-#   aggregate(southern_tanzania_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
-# southern_tanzania_population_5k <- 
-#   aggregate(southern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km 
+southern_tanzania_population_1k <-
+  aggregate(southern_tanzania_population,fact=10,fun=sum,na.rm=TRUE) # 1 km
+southern_tanzania_population_5k <-
+  aggregate(southern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
 
 malawi_population_1k <- aggregate(malawi_population,fact=10,fun=sum,na.rm=TRUE) # 1 km 
 malawi_population_5k <- aggregate(malawi_population,fact=50,fun=sum,na.rm=TRUE) # 5 km
@@ -90,15 +92,15 @@ zambia_population_5k <- aggregate(zambia_population,fact=50,fun=sum,na.rm=TRUE) 
 
 ```{r extract,cache=TRUE}
 
-# dar_bins_6 <- add_population(dar_bins_6,dar_population)
+lilongwe_bins <- add_population(lilongwe_bins,lilongwe_population)
 lusaka_bins <- add_population(lusaka_bins,luska_population)
 nairobi_bins <- add_population(nairobi_bins,nairobi_population)
 
 # kenya_bins <- add_population(kenya_sampling_bins,kenya_population)
 # northern_tanzania_sampling_bins <- 
 #   add_population(northern_tanzania_sampling_bins,northern_tanzania_population)
-# southern_tanzania_sampling_bins <- 
-#   add_population(southern_tanzania_sampling_bins,southern_tanzania_population)
+southern_tanzania_sampling_bins <-
+  add_population(southern_tanzania_sampling_bins,southern_tanzania_population)
 maw_sampling_bin <- add_population(maw_sampling_bin,malawi_population)
 zambia_sampling_bin <- add_population(zambia_sampling_bin,zambia_population)
 
@@ -206,4 +208,17 @@ grid.arrange(
 ```
 
 
+
+```{r citiesraster3,out.width="100%",echo=FALSE,fig.cap="Population in a 5 kilometer grid.",cache=FALSE}
+grid.arrange(
+  ggplot_raster(lilongwe_population_5k,"Lilongwe",values_vector,
+                poly = lilongwe_bins),
+  ggplot_raster(southern_tanzania_population_5k,"Southern Tanzania",values_vector,
+                poly=southern_tanzania_sampling_bins),
+  cowplot::get_legend(ggplot_raster(nairobi_population_5k,"",values_vector,TRUE) +
+                      guides(fill=guide_legend(direction = "horizontal",
+                                               title.position = "top"))),
+  
+  layout_matrix=matrix(c(rep(c(1,2),4),3,3),ncol=2,byrow=TRUE))
+```
 

@@ -47,7 +47,7 @@ moz_adm0 <- readOGR("../../gadm/suppl_files/MOZ/gadm36_MOZ_0.shp")
 # tan_pop=raster('../../United~/TZA_popmap15adj_v2b.tif')
 # maw_pop=raster('../../Malawi~/MWI_ppp_2015_adj_v2.tif')
 
-city_table <- list(c(city="Dar es Salaam",long=39.283333,lat=-6.8),
+city_table <- list(c(city="Lilongwe",long=33.783333,lat=-13.983333),
   c(city="Lusaka",long=28.283333,lat=-15.416667),
   c(city="Nairobi",long=36.81667,lat=-1.28333)) %>% 
   do.call(rbind,.) %>% 
@@ -61,8 +61,8 @@ lusaka_bins <- prepare_sampling_bins_city(
   radius_inner_circle=25,
   radius_outer_circle=50)
 
-dar_bins <- prepare_sampling_bins_city(
-  adm0 = tanzania_adm0,
+lilongwe_bins <- prepare_sampling_bins_city(
+  adm0 = malawi_adm0,
   coords=city_table[1,2:3],
   lakes = lakes,
   radius_inner_circle=25,
@@ -93,52 +93,52 @@ theme_map <- function(...) {
       ...)
 }
 
-dar_bins$id <- 1:length(dar_bins)
-
-dar_bins_df <- dar_bins %>% 
-      fortify(region="id")
-
-d0 <- ggplot() +
-  geom_polygon(data=dar_bins_df %>% 
-      mutate(fill=ifelse(id==2,"fill",ifelse(id==1,"fill2","dont"))),
-    aes(x=long,y=lat,group=group,fill=fill),
-    color="black") +
-  coord_map()  +
-theme_map() +
-  guides(fill=FALSE)
-
-d1 <- d0 +
-  ggtitle("A") +
-  geom_rect(aes(xmin=39.2,xmax=39.35,ymin=-6.85,ymax=-6.7),fill=NA,color="red",size=2) +
-  scale_fill_manual(breaks=c("fill","fill1","dont"),values=rep("grey60",3))
-
-d2 <- d0 +
-  coord_map(xlim=c(39.211,39.35),ylim=c(-6.85,-6.7)) +
-  ggtitle("B")  +
-  scale_fill_manual(breaks=c("fill","dont","fill1"),values=c("grey60","blue","green"))
-
-dar_bins_6 <- bind(dar_bins[3:length(dar_bins),],
-                        gUnaryUnion(dar_bins[1:2,]))
-
-dar_bins_6$id <- 1:length(dar_bins_6)
-
-d03 <- ggplot() +
-  geom_polygon(
-    data=dar_bins_6 %>% 
-      fortify(region="id") %>% 
-      mutate(fill=ifelse(id==6,"fill","dont")),
-    aes(x=long,y=lat,group=group,fill=fill),
-    # fill=NA,
-    color="black") +
-  coord_map()  +
-  theme_minimal() + # https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/
-  theme_map() +
-    scale_fill_manual(breaks=c("fill","dont"),values=c("grey60","green")) +
- guides(fill=FALSE)
-
-d4 <- d03 +
-    coord_map(xlim=c(39.211,39.35),ylim=c(-6.85,-6.7)) +
-  ggtitle("C") 
+# dar_bins$id <- 1:length(dar_bins)
+# 
+# dar_bins_df <- dar_bins %>% 
+#       fortify(region="id")
+# 
+# d0 <- ggplot() +
+#   geom_polygon(data=dar_bins_df %>% 
+#       mutate(fill=ifelse(id==2,"fill",ifelse(id==1,"fill2","dont"))),
+#     aes(x=long,y=lat,group=group,fill=fill),
+#     color="black") +
+#   coord_map()  +
+# theme_map() +
+#   guides(fill=FALSE)
+# 
+# d1 <- d0 +
+#   ggtitle("A") +
+#   geom_rect(aes(xmin=39.2,xmax=39.35,ymin=-6.85,ymax=-6.7),fill=NA,color="red",size=2) +
+#   scale_fill_manual(breaks=c("fill","fill1","dont"),values=rep("grey60",3))
+# 
+# d2 <- d0 +
+#   coord_map(xlim=c(39.211,39.35),ylim=c(-6.85,-6.7)) +
+#   ggtitle("B")  +
+#   scale_fill_manual(breaks=c("fill","dont","fill1"),values=c("grey60","blue","green"))
+# 
+# dar_bins_6 <- bind(dar_bins[3:length(dar_bins),],
+#                         gUnaryUnion(dar_bins[1:2,]))
+# 
+# dar_bins_6$id <- 1:length(dar_bins_6)
+# 
+# d03 <- ggplot() +
+#   geom_polygon(
+#     data=dar_bins_6 %>% 
+#       fortify(region="id") %>% 
+#       mutate(fill=ifelse(id==6,"fill","dont")),
+#     aes(x=long,y=lat,group=group,fill=fill),
+#     # fill=NA,
+#     color="black") +
+#   coord_map()  +
+#   theme_minimal() + # https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/
+#   theme_map() +
+#     scale_fill_manual(breaks=c("fill","dont"),values=c("grey60","green")) +
+#  guides(fill=FALSE)
+# 
+# d4 <- d03 +
+#     coord_map(xlim=c(39.211,39.35),ylim=c(-6.85,-6.7)) +
+#   ggtitle("C") 
   
 
 
@@ -156,7 +156,7 @@ First, I will discuss the urban sampling areas before turning to the more compli
 The sampling area is defined by taking a 50 km radius around the center of the respective city. The coordinates from Table \@ref(tab:leaf1) are taken from Wikipedia.^[https://Wikipedia.org]  
  
 ```{r leaf1,cache=TRUE,echo=FALSE}
-kable(city_table,caption = "Longitude and latitude of Dar es Salaam, Lusaka, and Nairobi.\\label{tab:citytab}")
+kable(city_table,caption = "Longitude and latitude of Lilongwe Lusaka, and Nairobi.\\label{tab:citytab}")
 ```
 
 The `geosampling::prepare_sampling_bins_city` function draws two circles around a point and splits both circles along the horizontal and the vertical axis in 8 pieces.  
@@ -1214,11 +1214,11 @@ zambia_sampling_bin <- prepare_sampling_bins(a = zam_border_area_0_to_50,
 leaflet() %>% 
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>% 
   addPolygons(data=southern_tanzania_sampling_bins) %>% 
-  addPolygons(data=northern_tanzania_sampling_bins) %>% 
-  addPolygons(data=kenya_sampling_bins) %>% 
+  # addPolygons(data=northern_tanzania_sampling_bins) %>% 
+  # addPolygons(data=kenya_sampling_bins) %>% 
   addPolygons(data=maw_sampling_bin) %>% 
   addPolygons(data=zambia_sampling_bin) %>% 
-  addPolygons(data=dar_bins_6) %>% 
+  addPolygons(data=lilongwe_bins) %>% 
   addPolygons(data=nairobi_bins) %>% 
   addPolygons(data=lusaka_bins)
 

@@ -4,7 +4,7 @@ The function `oversample_wrapper_non_pair` returns a `SpatialPolygonsDataFrame` 
 
 
 ## Nairobi
-```{r satelittefunc,echo=FALSE,cache=TRUE}
+```{r satelittefunc,echo=FALSE,cache=FALSE}
 
 make_pic <- function(id,sp_obj,image_name="") {
   p2<-suppressWarnings(leaflet() %>% 
@@ -591,6 +591,188 @@ writeOGR(lusaka_1k_sample_complete_100m[lusaka_1k_sample_complete_100m$type == "
 writeOGR(lusaka_1k_sample_complete_100m,
          "output/lusaka_1k_sample_complete_with_100m.kml",
          layer = "lusaka",
+         overwrite_layer = TRUE,
+         driver = "KML")
+
+
+
+```
+
+
+## Lilongwe
+
+```{r llilongwereplaceid,echo=FALSE}
+lilongwe_replaced_id <- readLines("output/lilongwe_check.txt",warn=FALSE) %>% 
+  sub(" ","<split>",.) %>% 
+  gsub("\"","",.) %>% 
+  strsplit("<split>") %>% 
+  do.call(rbind,.) %>% 
+  data.frame %>% 
+  rename(ID = X1,
+         Type = X2)
+
+lilongwe_replaced_id$ID %>% 
+  sort %>%
+  strsplit("@") %>% 
+  lapply(`[[`,2) %>%
+  unlist %>% 
+  table %>% 
+  data.frame() %>% 
+  rename(Bin=".",
+         Frequency=Freq) %>% 
+  kable(caption = "Lilongwe: Number of units that need to be resampled from each bin.")
+```
+
+```{r lilongweimagesgeneration,eval=FALSE}
+sapply(lilongwe_replaced_id$Type %>% 
+         unique,make_pic_loop,
+              data = lilongwe_replaced_id,
+              sp_obj = lilongwe_sample_150,
+       addition = "Lilongwe")
+```
+
+
+```{r lilongweimages,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
+       
+cat("#### Industry\n")
+include_graphics_thru_child(type = "Industry",
+                            data = lilongwe_replaced_id,
+                            title = "Industrial site in Lilongwe",
+                            nameadd = "Lilongwe")
+
+cat("#### Empty units\n")
+include_graphics_thru_child("Empty",
+                            data = lilongwe_replaced_id,
+                            title = "Empty site in Lilongwe",
+                            nameadd = "Lilongwe")
+
+cat("#### Almost empty units\n")
+include_graphics_thru_child(type = "Almost Empty",
+                            data = lilongwe_replaced_id,
+                            title = "Almost empty site Lilongwe",
+                            nameadd = "Lilongwe")
+
+
+
+
+```
+
+
+```{r lilongweaddreplacementunits,include=FALSE,cache=TRUE}
+lilongwe_replacement_units <- readLines(
+  "output/lilongwe_replacement.txt",warn=FALSE) %>% 
+  strsplit("\n") %>% 
+  unlist() %>% 
+  sub(" ","<split>",.) %>% 
+  strsplit("<split>") %>% 
+  do.call(rbind,.) %>% 
+  as.data.frame() %>% 
+  rename(ID = V1,
+         addition = V2) %>% 
+  mutate(addition = tolower(addition) %>% 
+           gsub("\"","",.),
+         Type = ifelse(addition %in% c("empty","industry"),
+                       "empty","replaced"),
+         addition = ifelse(addition!="",paste0("(",addition %>% 
+                                                 change.first.letters(),")"),""))
+
+  
+
+lilongwe_1k_sample_complete <- 
+  bind(lilongwe_sample_150[
+    lilongwe_sample_150$pick=="Sample"&
+           !lilongwe_sample_150$Name%in%(lilongwe_replaced_id %>%
+                                          filter(Type!="Almost Empty") %>% 
+                                          dplyr::select(ID) %>% 
+                                          unlist()),],
+       lilongwe_sample_150[
+         which(lilongwe_sample_150$Name%in%(lilongwe_replacement_units %>% 
+                                       filter(Type!="empty") %>% 
+                                       dplyr::select(ID) %>% 
+                                       unlist())),])
+
+
+lilongwe_1k_sample_complete$almost_empty <- 
+  ifelse(lilongwe_1k_sample_complete$Name%in%
+                               c(lilongwe_replaced_id %>% 
+                                   filter(Type=="Almost Empty") %>% 
+                                   dplyr::select(ID) %>% 
+                                          unlist(),
+                                  lilongwe_replacement_units %>% 
+                                       filter(addition=="(Almost Empty)") %>% 
+                                       dplyr::select(ID) %>% 
+                                       unlist()),"Almost Empty","Full")
+
+lilongwe_1k_sample_complete$Description <- 
+  paste0(lilongwe_1k_sample_complete$Description,"; Replacement Status: ",
+         lilongwe_1k_sample_complete$almost_empty)
+
+lilongwe_1k_sample_complete <- 
+  lilongwe_1k_sample_complete[order(lilongwe_1k_sample_complete$Name),]
+
+writeOGR(lilongwe_1k_sample_complete,
+         "output/lilongwe_1k_sample_complete.kml",
+         driver = "KML",
+         layer = "lilongwe",overwrite_layer = TRUE)
+
+
+
+
+```
+
+```{r lilongwecreatereplacedpics,eval=FALSE}
+make_pic_loop(type = "replaced",
+              data = lilongwe_replacement_units,
+              sp_obj = lilongwe_1k_sample_complete,
+              addition = "Lilongwe")
+
+```
+
+
+```{r lilongwereplacements,results="asis",echo=FALSE,message=FALSE,cache=FALSE}
+cat("### Replacement units\n")
+include_graphics_thru_child(type = "replaced",
+                            data = lilongwe_replacement_units,
+                               title = "Replacement units",
+                               addition = 
+                                 ifelse(lilongwe_replacement_units %>% 
+                                          filter(Type=="replaced") %>% 
+                                          dplyr::select(addition)=="",
+                                        NA,
+                                        "(Unit is almost empty, and a replacement unit is drawn.)"),
+                            nameadd = "Lilongwe")
+```
+
+
+
+```{r lilongweadd100m,cache=TRUE}
+
+lilongwe_1k_sample_complete_100m <- add_100m_units(lilongwe_1k_sample_complete)
+# 
+# malawi_fdgs <- readKML("data/fdgs/Zambia Northern Eastern FGD Locations.kml") %>%
+#   as("SpatialPoints")
+# 
+# 
+# if (over(lilongwe_1k_sample_complete_100m,zambia_fdgs) %>% 
+#   is.na %>% 
+#   `!` %>% 
+#   which() %>% 
+#   length() == 0) cat("No overlap between sample and FDGs.")
+
+
+```
+
+```{r lilongweadd100msave,echo=FALSE}
+writeOGR(lilongwe_1k_sample_complete_100m[lilongwe_1k_sample_complete_100m$type == "Unit_1",],
+         "output/lilongwe_1k_sample_complete_only_100m.kml",
+         layer = "lilongwe",
+         overwrite_layer = TRUE,
+         driver = "KML")
+
+
+writeOGR(lilongwe_1k_sample_complete_100m,
+         "output/lilongwe_1k_sample_complete_with_100m.kml",
+         layer = "lilongwe",
          overwrite_layer = TRUE,
          driver = "KML")
 

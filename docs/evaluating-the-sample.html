@@ -146,6 +146,9 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="evaluating-the-sample.html#lusaka"><span class="toc-section-number">5.2</span> Lusaka</a><ul>
 <li><a href="evaluating-the-sample.html#replacement-units-2"><span class="toc-section-number">5.2.1</span> Replacement units</a></li>
 </ul></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#lilongwe"><span class="toc-section-number">5.3</span> Lilongwe</a><ul>
+<li><a href="evaluating-the-sample.html#replacement-units-3"><span class="toc-section-number">5.3.1</span> Replacement units</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
@@ -1594,6 +1597,588 @@ zambia_fdgs &lt;-<span class="st"> </span><span class="kw">readKML</span>(<span 
 <span class="st">  </span><span class="kw">which</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">length</span>() <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">cat</span>(<span class="st">&quot;No overlap between sample and FDGs.&quot;</span>)</code></pre></div>
 <pre><code>## No overlap between sample and FDGs.</code></pre>
+<pre><code>## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length</code></pre>
+</div>
+</div>
+<div id="lilongwe" class="section level2">
+<h2><span class="header-section-number">5.3</span> Lilongwe</h2>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:llilongwereplaceid">Table 5.3: </span>Lilongwe: Number of units that need to be resampled from each bin.</span><!--</caption>--></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Bin</th>
+<th align="right">Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="right">7</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(lilongwe_replaced_id<span class="op">$</span>Type <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">         </span>unique,make_pic_loop,
+              <span class="dt">data =</span> lilongwe_replaced_id,
+              <span class="dt">sp_obj =</span> lilongwe_sample_<span class="dv">150</span>,
+       <span class="dt">addition =</span> <span class="st">&quot;Lilongwe&quot;</span>)</code></pre></div>
+<div id="industry-2" class="section level4">
+<h4><span class="header-section-number">5.3.0.1</span> Industry</h4>
+<div class="figure" style="text-align: center"><span id="fig:LilongweIndustry1"></span>
+<p class="caption marginnote shownote">
+Figure 5.203: Industrial site in Lilongwe (ID = <a href="mailto:Lilongwe@1@11">Lilongwe@1@11</a> )
+</p>
+<img src="figs/LilongweIndustry-1.jpg" alt="Industrial site in Lilongwe (ID = Lilongwe@1@11 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweIndustry2"></span>
+<p class="caption marginnote shownote">
+Figure 5.204: Industrial site in Lilongwe (ID = <a href="mailto:Lilongwe@3@25">Lilongwe@3@25</a> )
+</p>
+<img src="figs/LilongweIndustry-2.jpg" alt="Industrial site in Lilongwe (ID = Lilongwe@3@25 )" width="400"  />
+</div>
+</div>
+<div id="empty-units-2" class="section level4">
+<h4><span class="header-section-number">5.3.0.2</span> Empty units</h4>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty1"></span>
+<p class="caption marginnote shownote">
+Figure 5.205: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@1@17">Lilongwe@1@17</a> )
+</p>
+<img src="figs/LilongweEmpty-1.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@1@17 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty2"></span>
+<p class="caption marginnote shownote">
+Figure 5.206: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@2@3">Lilongwe@2@3</a> )
+</p>
+<img src="figs/LilongweEmpty-2.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@2@3 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty3"></span>
+<p class="caption marginnote shownote">
+Figure 5.207: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@2@8">Lilongwe@2@8</a> )
+</p>
+<img src="figs/LilongweEmpty-3.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@2@8 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty4"></span>
+<p class="caption marginnote shownote">
+Figure 5.208: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@2@11">Lilongwe@2@11</a> )
+</p>
+<img src="figs/LilongweEmpty-4.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@2@11 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty5"></span>
+<p class="caption marginnote shownote">
+Figure 5.209: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@2@16">Lilongwe@2@16</a> )
+</p>
+<img src="figs/LilongweEmpty-5.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@2@16 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty6"></span>
+<p class="caption marginnote shownote">
+Figure 5.210: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@4@11">Lilongwe@4@11</a> )
+</p>
+<img src="figs/LilongweEmpty-6.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@4@11 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty7"></span>
+<p class="caption marginnote shownote">
+Figure 5.211: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@5@3">Lilongwe@5@3</a> )
+</p>
+<img src="figs/LilongweEmpty-7.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@5@3 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty8"></span>
+<p class="caption marginnote shownote">
+Figure 5.212: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@5@14">Lilongwe@5@14</a> )
+</p>
+<img src="figs/LilongweEmpty-8.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@5@14 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty9"></span>
+<p class="caption marginnote shownote">
+Figure 5.213: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@5@16">Lilongwe@5@16</a> )
+</p>
+<img src="figs/LilongweEmpty-9.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@5@16 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty10"></span>
+<p class="caption marginnote shownote">
+Figure 5.214: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@5@17">Lilongwe@5@17</a> )
+</p>
+<img src="figs/LilongweEmpty-10.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@5@17 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty11"></span>
+<p class="caption marginnote shownote">
+Figure 5.215: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@6@8">Lilongwe@6@8</a> )
+</p>
+<img src="figs/LilongweEmpty-11.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@6@8 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty12"></span>
+<p class="caption marginnote shownote">
+Figure 5.216: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@6@11">Lilongwe@6@11</a> )
+</p>
+<img src="figs/LilongweEmpty-12.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@6@11 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty13"></span>
+<p class="caption marginnote shownote">
+Figure 5.217: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@6@14">Lilongwe@6@14</a> )
+</p>
+<img src="figs/LilongweEmpty-13.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@6@14 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty14"></span>
+<p class="caption marginnote shownote">
+Figure 5.218: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@6@18">Lilongwe@6@18</a> )
+</p>
+<img src="figs/LilongweEmpty-14.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@6@18 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty15"></span>
+<p class="caption marginnote shownote">
+Figure 5.219: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@7@8">Lilongwe@7@8</a> )
+</p>
+<img src="figs/LilongweEmpty-15.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@7@8 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty16"></span>
+<p class="caption marginnote shownote">
+Figure 5.220: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@7@16">Lilongwe@7@16</a> )
+</p>
+<img src="figs/LilongweEmpty-16.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@7@16 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty17"></span>
+<p class="caption marginnote shownote">
+Figure 5.221: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@7@17">Lilongwe@7@17</a> )
+</p>
+<img src="figs/LilongweEmpty-17.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@7@17 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty18"></span>
+<p class="caption marginnote shownote">
+Figure 5.222: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@8@11">Lilongwe@8@11</a> )
+</p>
+<img src="figs/LilongweEmpty-18.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@8@11 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweEmpty19"></span>
+<p class="caption marginnote shownote">
+Figure 5.223: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@8@17">Lilongwe@8@17</a> )
+</p>
+<img src="figs/LilongweEmpty-19.jpg" alt="Empty site in Lilongwe (ID = Lilongwe@8@17 )" width="400"  />
+</div>
+</div>
+<div id="almost-empty-units-2" class="section level4">
+<h4><span class="header-section-number">5.3.0.3</span> Almost empty units</h4>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty1"></span>
+<p class="caption marginnote shownote">
+Figure 5.224: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@2@2">Lilongwe@2@2</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-1.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@2@2 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty2"></span>
+<p class="caption marginnote shownote">
+Figure 5.225: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@2@9">Lilongwe@2@9</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-2.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@2@9 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty3"></span>
+<p class="caption marginnote shownote">
+Figure 5.226: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@4@3">Lilongwe@4@3</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-3.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@4@3 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty4"></span>
+<p class="caption marginnote shownote">
+Figure 5.227: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@5@8">Lilongwe@5@8</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-4.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@5@8 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty5"></span>
+<p class="caption marginnote shownote">
+Figure 5.228: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@5@15">Lilongwe@5@15</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-5.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@5@15 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty6"></span>
+<p class="caption marginnote shownote">
+Figure 5.229: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@6@4">Lilongwe@6@4</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-6.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@6@4 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty7"></span>
+<p class="caption marginnote shownote">
+Figure 5.230: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@6@16">Lilongwe@6@16</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-7.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@6@16 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty8"></span>
+<p class="caption marginnote shownote">
+Figure 5.231: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@6@17">Lilongwe@6@17</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-8.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@6@17 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty9"></span>
+<p class="caption marginnote shownote">
+Figure 5.232: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@6@22">Lilongwe@6@22</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-9.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@6@22 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty10"></span>
+<p class="caption marginnote shownote">
+Figure 5.233: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@7@2">Lilongwe@7@2</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-10.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@7@2 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty11"></span>
+<p class="caption marginnote shownote">
+Figure 5.234: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@7@3">Lilongwe@7@3</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-11.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@7@3 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty12"></span>
+<p class="caption marginnote shownote">
+Figure 5.235: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@7@7">Lilongwe@7@7</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-12.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@7@7 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty13"></span>
+<p class="caption marginnote shownote">
+Figure 5.236: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@7@11">Lilongwe@7@11</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-13.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@7@11 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty14"></span>
+<p class="caption marginnote shownote">
+Figure 5.237: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@8@2">Lilongwe@8@2</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-14.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@8@2 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty15"></span>
+<p class="caption marginnote shownote">
+Figure 5.238: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@8@3">Lilongwe@8@3</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-15.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@8@3 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty16"></span>
+<p class="caption marginnote shownote">
+Figure 5.239: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@8@13">Lilongwe@8@13</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-16.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@8@13 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty17"></span>
+<p class="caption marginnote shownote">
+Figure 5.240: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@8@15">Lilongwe@8@15</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-17.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@8@15 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty18"></span>
+<p class="caption marginnote shownote">
+Figure 5.241: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@8@16">Lilongwe@8@16</a> )
+</p>
+<img src="figs/LilongweAlmostEmpty-18.jpg" alt="Almost empty site Lilongwe (ID = Lilongwe@8@16 )" width="400"  />
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">make_pic_loop</span>(<span class="dt">type =</span> <span class="st">&quot;replaced&quot;</span>,
+              <span class="dt">data =</span> lilongwe_replacement_units,
+              <span class="dt">sp_obj =</span> lilongwe_1k_sample_complete,
+              <span class="dt">addition =</span> <span class="st">&quot;Lilongwe&quot;</span>)</code></pre></div>
+</div>
+<div id="replacement-units-3" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Replacement units</h3>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced1"></span>
+<p class="caption marginnote shownote">
+Figure 5.242: Replacement units (ID = <a href="mailto:Lilongwe@1@19">Lilongwe@1@19</a> )
+</p>
+<img src="figs/Lilongwereplaced-1.jpg" alt="Replacement units (ID = Lilongwe@1@19 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced2"></span>
+<p class="caption marginnote shownote">
+Figure 5.243: Replacement units (ID = <a href="mailto:Lilongwe@1@20">Lilongwe@1@20</a> )
+</p>
+<img src="figs/Lilongwereplaced-2.jpg" alt="Replacement units (ID = Lilongwe@1@20 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced3"></span>
+<p class="caption marginnote shownote">
+Figure 5.244: Replacement units (ID = <a href="mailto:Lilongwe@2@18">Lilongwe@2@18</a> )
+</p>
+<img src="figs/Lilongwereplaced-3.jpg" alt="Replacement units (ID = Lilongwe@2@18 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced4"></span>
+<p class="caption marginnote shownote">
+Figure 5.245: Replacement units (ID = <a href="mailto:Lilongwe@2@19">Lilongwe@2@19</a> )
+</p>
+<img src="figs/Lilongwereplaced-4.jpg" alt="Replacement units (ID = Lilongwe@2@19 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced5"></span>
+<p class="caption marginnote shownote">
+Figure 5.246: Replacement units (ID = <a href="mailto:Lilongwe@2@20">Lilongwe@2@20</a> )
+</p>
+<img src="figs/Lilongwereplaced-5.jpg" alt="Replacement units (ID = Lilongwe@2@20 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced6"></span>
+<p class="caption marginnote shownote">
+Figure 5.247: Replacement units (ID = <a href="mailto:Lilongwe@2@21">Lilongwe@2@21</a> )
+</p>
+<img src="figs/Lilongwereplaced-6.jpg" alt="Replacement units (ID = Lilongwe@2@21 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced7"></span>
+<p class="caption marginnote shownote">
+Figure 5.248: Replacement units (ID = <a href="mailto:Lilongwe@2@22">Lilongwe@2@22</a> )
+</p>
+<img src="figs/Lilongwereplaced-7.jpg" alt="Replacement units (ID = Lilongwe@2@22 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced8"></span>
+<p class="caption marginnote shownote">
+Figure 5.249: Replacement units (ID = <a href="mailto:Lilongwe@2@23">Lilongwe@2@23</a> )
+</p>
+<img src="figs/Lilongwereplaced-8.jpg" alt="Replacement units (ID = Lilongwe@2@23 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced9"></span>
+<p class="caption marginnote shownote">
+Figure 5.250: Replacement units (ID = <a href="mailto:Lilongwe@3@27">Lilongwe@3@27</a> )
+</p>
+<img src="figs/Lilongwereplaced-9.jpg" alt="Replacement units (ID = Lilongwe@3@27 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced10"></span>
+<p class="caption marginnote shownote">
+Figure 5.251: Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = <a href="mailto:Lilongwe@4@14">Lilongwe@4@14</a> )
+</p>
+<img src="figs/Lilongwereplaced-10.jpg" alt="Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = Lilongwe@4@14 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced11"></span>
+<p class="caption marginnote shownote">
+Figure 5.252: Replacement units (ID = <a href="mailto:Lilongwe@4@15">Lilongwe@4@15</a> )
+</p>
+<img src="figs/Lilongwereplaced-11.jpg" alt="Replacement units (ID = Lilongwe@4@15 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced12"></span>
+<p class="caption marginnote shownote">
+Figure 5.253: Replacement units (ID = <a href="mailto:Lilongwe@4@16">Lilongwe@4@16</a> )
+</p>
+<img src="figs/Lilongwereplaced-12.jpg" alt="Replacement units (ID = Lilongwe@4@16 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced13"></span>
+<p class="caption marginnote shownote">
+Figure 5.254: Replacement units (ID = <a href="mailto:Lilongwe@5@21">Lilongwe@5@21</a> )
+</p>
+<img src="figs/Lilongwereplaced-13.jpg" alt="Replacement units (ID = Lilongwe@5@21 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced14"></span>
+<p class="caption marginnote shownote">
+Figure 5.255: Replacement units (ID = <a href="mailto:Lilongwe@5@23">Lilongwe@5@23</a> )
+</p>
+<img src="figs/Lilongwereplaced-14.jpg" alt="Replacement units (ID = Lilongwe@5@23 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced15"></span>
+<p class="caption marginnote shownote">
+Figure 5.256: Replacement units (ID = <a href="mailto:Lilongwe@5@26">Lilongwe@5@26</a> )
+</p>
+<img src="figs/Lilongwereplaced-15.jpg" alt="Replacement units (ID = Lilongwe@5@26 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced16"></span>
+<p class="caption marginnote shownote">
+Figure 5.257: Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = <a href="mailto:Lilongwe@5@27">Lilongwe@5@27</a> )
+</p>
+<img src="figs/Lilongwereplaced-16.jpg" alt="Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = Lilongwe@5@27 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced17"></span>
+<p class="caption marginnote shownote">
+Figure 5.258: Replacement units (ID = <a href="mailto:Lilongwe@5@28">Lilongwe@5@28</a> )
+</p>
+<img src="figs/Lilongwereplaced-17.jpg" alt="Replacement units (ID = Lilongwe@5@28 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced18"></span>
+<p class="caption marginnote shownote">
+Figure 5.259: Replacement units (ID = <a href="mailto:Lilongwe@5@29">Lilongwe@5@29</a> )
+</p>
+<img src="figs/Lilongwereplaced-18.jpg" alt="Replacement units (ID = Lilongwe@5@29 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced19"></span>
+<p class="caption marginnote shownote">
+Figure 5.260: Replacement units (ID = <a href="mailto:Lilongwe@5@30">Lilongwe@5@30</a> )
+</p>
+<img src="figs/Lilongwereplaced-19.jpg" alt="Replacement units (ID = Lilongwe@5@30 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced20"></span>
+<p class="caption marginnote shownote">
+Figure 5.261: Replacement units (ID = <a href="mailto:Lilongwe@6@23">Lilongwe@6@23</a> )
+</p>
+<img src="figs/Lilongwereplaced-20.jpg" alt="Replacement units (ID = Lilongwe@6@23 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced21"></span>
+<p class="caption marginnote shownote">
+Figure 5.262: Replacement units (ID = <a href="mailto:Lilongwe@6@26">Lilongwe@6@26</a> )
+</p>
+<img src="figs/Lilongwereplaced-21.jpg" alt="Replacement units (ID = Lilongwe@6@26 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced22"></span>
+<p class="caption marginnote shownote">
+Figure 5.263: Replacement units (ID = <a href="mailto:Lilongwe@6@28">Lilongwe@6@28</a> )
+</p>
+<img src="figs/Lilongwereplaced-22.jpg" alt="Replacement units (ID = Lilongwe@6@28 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced23"></span>
+<p class="caption marginnote shownote">
+Figure 5.264: Replacement units (ID = <a href="mailto:Lilongwe@6@29">Lilongwe@6@29</a> )
+</p>
+<img src="figs/Lilongwereplaced-23.jpg" alt="Replacement units (ID = Lilongwe@6@29 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced24"></span>
+<p class="caption marginnote shownote">
+Figure 5.265: Replacement units (ID = <a href="mailto:Lilongwe@6@30">Lilongwe@6@30</a> )
+</p>
+<img src="figs/Lilongwereplaced-24.jpg" alt="Replacement units (ID = Lilongwe@6@30 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced25"></span>
+<p class="caption marginnote shownote">
+Figure 5.266: Replacement units (ID = <a href="mailto:Lilongwe@6@32">Lilongwe@6@32</a> )
+</p>
+<img src="figs/Lilongwereplaced-25.jpg" alt="Replacement units (ID = Lilongwe@6@32 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced26"></span>
+<p class="caption marginnote shownote">
+Figure 5.267: Replacement units (ID = <a href="mailto:Lilongwe@6@33">Lilongwe@6@33</a> )
+</p>
+<img src="figs/Lilongwereplaced-26.jpg" alt="Replacement units (ID = Lilongwe@6@33 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced27"></span>
+<p class="caption marginnote shownote">
+Figure 5.268: Replacement units (ID = <a href="mailto:Lilongwe@6@34">Lilongwe@6@34</a> )
+</p>
+<img src="figs/Lilongwereplaced-27.jpg" alt="Replacement units (ID = Lilongwe@6@34 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced28"></span>
+<p class="caption marginnote shownote">
+Figure 5.269: Replacement units (ID = <a href="mailto:Lilongwe@7@19">Lilongwe@7@19</a> )
+</p>
+<img src="figs/Lilongwereplaced-28.jpg" alt="Replacement units (ID = Lilongwe@7@19 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced29"></span>
+<p class="caption marginnote shownote">
+Figure 5.270: Replacement units (ID = <a href="mailto:Lilongwe@7@20">Lilongwe@7@20</a> )
+</p>
+<img src="figs/Lilongwereplaced-29.jpg" alt="Replacement units (ID = Lilongwe@7@20 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced30"></span>
+<p class="caption marginnote shownote">
+Figure 5.271: Replacement units (ID = <a href="mailto:Lilongwe@7@21">Lilongwe@7@21</a> )
+</p>
+<img src="figs/Lilongwereplaced-30.jpg" alt="Replacement units (ID = Lilongwe@7@21 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced31"></span>
+<p class="caption marginnote shownote">
+Figure 5.272: Replacement units (ID = <a href="mailto:Lilongwe@7@22">Lilongwe@7@22</a> )
+</p>
+<img src="figs/Lilongwereplaced-31.jpg" alt="Replacement units (ID = Lilongwe@7@22 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced32"></span>
+<p class="caption marginnote shownote">
+Figure 5.273: Replacement units (ID = <a href="mailto:Lilongwe@7@23">Lilongwe@7@23</a> )
+</p>
+<img src="figs/Lilongwereplaced-32.jpg" alt="Replacement units (ID = Lilongwe@7@23 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced33"></span>
+<p class="caption marginnote shownote">
+Figure 5.274: Replacement units (ID = <a href="mailto:Lilongwe@7@24">Lilongwe@7@24</a> )
+</p>
+<img src="figs/Lilongwereplaced-33.jpg" alt="Replacement units (ID = Lilongwe@7@24 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced34"></span>
+<p class="caption marginnote shownote">
+Figure 5.275: Replacement units (ID = <a href="mailto:Lilongwe@7@26">Lilongwe@7@26</a> )
+</p>
+<img src="figs/Lilongwereplaced-34.jpg" alt="Replacement units (ID = Lilongwe@7@26 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced35"></span>
+<p class="caption marginnote shownote">
+Figure 5.276: Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = <a href="mailto:Lilongwe@8@18">Lilongwe@8@18</a> )
+</p>
+<img src="figs/Lilongwereplaced-35.jpg" alt="Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = Lilongwe@8@18 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced36"></span>
+<p class="caption marginnote shownote">
+Figure 5.277: Replacement units (ID = <a href="mailto:Lilongwe@8@19">Lilongwe@8@19</a> )
+</p>
+<img src="figs/Lilongwereplaced-36.jpg" alt="Replacement units (ID = Lilongwe@8@19 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced37"></span>
+<p class="caption marginnote shownote">
+Figure 5.278: Replacement units (ID = <a href="mailto:Lilongwe@8@20">Lilongwe@8@20</a> )
+</p>
+<img src="figs/Lilongwereplaced-37.jpg" alt="Replacement units (ID = Lilongwe@8@20 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced38"></span>
+<p class="caption marginnote shownote">
+Figure 5.279: Replacement units (ID = <a href="mailto:Lilongwe@8@21">Lilongwe@8@21</a> )
+</p>
+<img src="figs/Lilongwereplaced-38.jpg" alt="Replacement units (ID = Lilongwe@8@21 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced39"></span>
+<p class="caption marginnote shownote">
+Figure 5.280: Replacement units (ID = <a href="mailto:Lilongwe@8@22">Lilongwe@8@22</a> )
+</p>
+<img src="figs/Lilongwereplaced-39.jpg" alt="Replacement units (ID = Lilongwe@8@22 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced40"></span>
+<p class="caption marginnote shownote">
+Figure 5.281: Replacement units (ID = <a href="mailto:Lilongwe@8@23">Lilongwe@8@23</a> )
+</p>
+<img src="figs/Lilongwereplaced-40.jpg" alt="Replacement units (ID = Lilongwe@8@23 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced41"></span>
+<p class="caption marginnote shownote">
+Figure 5.282: Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = <a href="mailto:Lilongwe@8@24">Lilongwe@8@24</a> )
+</p>
+<img src="figs/Lilongwereplaced-41.jpg" alt="Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = Lilongwe@8@24 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced42"></span>
+<p class="caption marginnote shownote">
+Figure 5.283: Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = <a href="mailto:Lilongwe@8@25">Lilongwe@8@25</a> )
+</p>
+<img src="figs/Lilongwereplaced-42.jpg" alt="Replacement units (Unit is almost empty, and a replacement unit is drawn.) (ID = Lilongwe@8@25 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced43"></span>
+<p class="caption marginnote shownote">
+Figure 5.284: Replacement units (ID = <a href="mailto:Lilongwe@8@25">Lilongwe@8@25</a> )
+</p>
+<img src="figs/Lilongwereplaced-43.jpg" alt="Replacement units (ID = Lilongwe@8@25 )" width="400"  />
+</div>
+<div class="figure" style="text-align: center"><span id="fig:Lilongwereplaced44"></span>
+<p class="caption marginnote shownote">
+Figure 5.285: Replacement units (ID = <a href="mailto:Lilongwe@8@27">Lilongwe@8@27</a> )
+</p>
+<img src="figs/Lilongwereplaced-44.jpg" alt="Replacement units (ID = Lilongwe@8@27 )" width="400"  />
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lilongwe_1k_sample_complete_100m &lt;-<span class="st"> </span><span class="kw">add_100m_units</span>(lilongwe_1k_sample_complete)
+<span class="co"># </span>
+<span class="co"># malawi_fdgs &lt;- readKML(&quot;data/fdgs/Zambia Northern Eastern FGD Locations.kml&quot;) %&gt;%</span>
+<span class="co">#   as(&quot;SpatialPoints&quot;)</span>
+<span class="co"># </span>
+<span class="co"># </span>
+<span class="co"># if (over(lilongwe_1k_sample_complete_100m,zambia_fdgs) %&gt;% </span>
+<span class="co">#   is.na %&gt;% </span>
+<span class="co">#   `!` %&gt;% </span>
+<span class="co">#   which() %&gt;% </span>
+<span class="co">#   length() == 0) cat(&quot;No overlap between sample and FDGs.&quot;)</span></code></pre></div>
 <pre><code>## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
 ## a multiple of shorter object length
 

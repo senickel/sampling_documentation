@@ -146,6 +146,9 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="evaluating-the-sample.html#lusaka"><span class="toc-section-number">5.2</span> Lusaka</a><ul>
 <li><a href="evaluating-the-sample.html#replacement-units-2"><span class="toc-section-number">5.2.1</span> Replacement units</a></li>
 </ul></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#lilongwe"><span class="toc-section-number">5.3</span> Lilongwe</a><ul>
+<li><a href="evaluating-the-sample.html#replacement-units-3"><span class="toc-section-number">5.3.1</span> Replacement units</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
@@ -157,7 +160,7 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 3</span> Extract Population Data</h1>
 <p>To extract the population data, the sampling areas need to unified first. In the next step, the data gets extracted via the <code>prepare_raster_of_sampling_area</code>. Here, we make use of the <code>fasterize</code> package which is much faster in turning <code>SpatialPolygons</code> into raster files than the original <code>rasterize</code> function of the <code>raster</code> package. Finally, we aggregate the extracted data to a 1 and a 5 kilometer grid. The 5 km grid is shown in the following graphs.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># unify</span>
-<span class="co"># dar_unified &lt;- gUnaryUnion(dar_bins_6)</span>
+lilongwe_unified &lt;-<span class="st"> </span><span class="kw">gUnaryUnion</span>(lilongwe_bins)
 
 lusaka_unified &lt;-<span class="st"> </span><span class="kw">gUnaryUnion</span>(lusaka_bins)
 
@@ -167,15 +170,15 @@ nairobi_unified &lt;-<span class="st"> </span><span class="kw">gUnaryUnion</span
 
 <span class="co"># northern_tanzania_unified &lt;- gUnaryUnion(northern_tanzania_sampling_bins)</span>
 
-<span class="co"># southern_tanzania_unified &lt;- gUnaryUnion(southern_tanzania_sampling_bins)</span>
+southern_tanzania_unified &lt;-<span class="st"> </span><span class="kw">gUnaryUnion</span>(southern_tanzania_sampling_bins)
 
 malawi_unified &lt;-<span class="st"> </span><span class="kw">gUnaryUnion</span>(maw_sampling_bin)
 
 zambia_unified &lt;-<span class="st"> </span><span class="kw">gUnaryUnion</span>(zambia_sampling_bin)
 
 <span class="co"># extract</span>
-<span class="co"># dar_population &lt;- </span>
-<span class="co">#   prepare_raster_of_sampling_area(tanzania_population,dar_unified)</span>
+lilongwe_population &lt;-
+<span class="st">  </span><span class="kw">prepare_raster_of_sampling_area</span>(malawi_population,lilongwe_unified)
 
 lusaka_population &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">prepare_raster_of_sampling_area</span>(zambia_population,lusaka_unified)
@@ -190,9 +193,9 @@ nairobi_population &lt;-<span class="st"> </span>
 <span class="co">#   prepare_raster_of_sampling_area(tanzania_population,</span>
 <span class="co">#                                   northern_tanzania_unified)</span>
 <span class="co"># </span>
-<span class="co"># southern_tanzania_population &lt;- </span>
-<span class="co">#   prepare_raster_of_sampling_area(tanzania_population,</span>
-<span class="co">#                                   southern_tanzania_unified)</span>
+southern_tanzania_population &lt;-
+<span class="st">  </span><span class="kw">prepare_raster_of_sampling_area</span>(tanzania_population,
+                                  southern_tanzania_unified)
 
 malawi_population &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">prepare_raster_of_sampling_area</span>(malawi_population,malawi_unified)
@@ -201,8 +204,10 @@ zambia_population &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">prepare_raster_of_sampling_area</span>(zambia_population,zambia_unified)
 
 <span class="co"># aggregate</span>
-<span class="co"># dar_population_1k &lt;- aggregate(dar_population,fact=10,fun=sum,na.rm=TRUE) # 1 km </span>
-<span class="co"># dar_population_5k &lt;- aggregate(dar_population,fact=50,fun=sum,na.rm=TRUE) # 5 km</span>
+lilongwe_population_1k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(lilongwe_population,
+                                    <span class="dt">fact=</span><span class="dv">10</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 1 km</span>
+lilongwe_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(lilongwe_population,
+                                    <span class="dt">fact=</span><span class="dv">50</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 5 km</span>
 
 lusaka_population_1k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(luska_population,<span class="dt">fact=</span><span class="dv">10</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 1 km </span>
 lusaka_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(luska_population,<span class="dt">fact=</span><span class="dv">50</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 5 km</span>
@@ -218,25 +223,25 @@ nairobi_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</
 <span class="co"># northern_tanzania_population_5k &lt;- </span>
 <span class="co">#   aggregate(northern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km</span>
 <span class="co"># </span>
-<span class="co"># southern_tanzania_population_1k &lt;- </span>
-<span class="co">#   aggregate(southern_tanzania_population,fact=10,fun=sum,na.rm=TRUE) # 1 km </span>
-<span class="co"># southern_tanzania_population_5k &lt;- </span>
-<span class="co">#   aggregate(southern_tanzania_population,fact=50,fun=sum,na.rm=TRUE) # 5 km </span>
+southern_tanzania_population_1k &lt;-
+<span class="st">  </span><span class="kw">aggregate</span>(southern_tanzania_population,<span class="dt">fact=</span><span class="dv">10</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 1 km</span>
+southern_tanzania_population_5k &lt;-
+<span class="st">  </span><span class="kw">aggregate</span>(southern_tanzania_population,<span class="dt">fact=</span><span class="dv">50</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 5 km</span>
 
 malawi_population_1k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(malawi_population,<span class="dt">fact=</span><span class="dv">10</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 1 km </span>
 malawi_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(malawi_population,<span class="dt">fact=</span><span class="dv">50</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 5 km</span>
 
 zambia_population_1k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(zambia_population,<span class="dt">fact=</span><span class="dv">10</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 1 km </span>
 zambia_population_5k &lt;-<span class="st"> </span><span class="kw">aggregate</span>(zambia_population,<span class="dt">fact=</span><span class="dv">50</span>,<span class="dt">fun=</span>sum,<span class="dt">na.rm=</span><span class="ot">TRUE</span>) <span class="co"># 5 km</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dar_bins_6 &lt;- add_population(dar_bins_6,dar_population)</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lilongwe_bins &lt;-<span class="st"> </span><span class="kw">add_population</span>(lilongwe_bins,lilongwe_population)
 lusaka_bins &lt;-<span class="st"> </span><span class="kw">add_population</span>(lusaka_bins,luska_population)
 nairobi_bins &lt;-<span class="st"> </span><span class="kw">add_population</span>(nairobi_bins,nairobi_population)
 
 <span class="co"># kenya_bins &lt;- add_population(kenya_sampling_bins,kenya_population)</span>
 <span class="co"># northern_tanzania_sampling_bins &lt;- </span>
 <span class="co">#   add_population(northern_tanzania_sampling_bins,northern_tanzania_population)</span>
-<span class="co"># southern_tanzania_sampling_bins &lt;- </span>
-<span class="co">#   add_population(southern_tanzania_sampling_bins,southern_tanzania_population)</span>
+southern_tanzania_sampling_bins &lt;-
+<span class="st">  </span><span class="kw">add_population</span>(southern_tanzania_sampling_bins,southern_tanzania_population)
 maw_sampling_bin &lt;-<span class="st"> </span><span class="kw">add_population</span>(maw_sampling_bin,malawi_population)
 zambia_sampling_bin &lt;-<span class="st"> </span><span class="kw">add_population</span>(zambia_sampling_bin,zambia_population)</code></pre></div>
 <div class="figure"><span id="fig:cityraster1"></span>
@@ -250,6 +255,12 @@ Figure 3.1: Population in a 5 kilometer grid.
 Figure 3.2: Population in a 5 kilometer grid.
 </p>
 <img src="geosampling_files/figure-html/citiesraster2-1.png" alt="Population in a 5 kilometer grid." width="100%"  />
+</div>
+<div class="figure"><span id="fig:citiesraster3"></span>
+<p class="caption marginnote shownote">
+Figure 3.3: Population in a 5 kilometer grid.
+</p>
+<img src="geosampling_files/figure-html/citiesraster3-1.png" alt="Population in a 5 kilometer grid." width="100%"  />
 </div>
 
 </div>
