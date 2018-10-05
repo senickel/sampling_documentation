@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="Northern___Eastern_FGD_Locations" id="Northern___Eastern_FGD_Locations">
+	<SimpleField name="Descriptio" type="string"></SimpleField>
+</Schema>
+<Folder><name>Northern___Eastern_FGD_Locations</name>
+  <Placemark>
+	<name>Northern Location 2a</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>31.633751964194449,-9.804320326328234 31.63389543278296,-9.804671586261028 31.634168012442849,-9.804655056197529 31.634072459772892,-9.804380103549086 31.634009746387999,-9.804272807620061 31.633751964194449,-9.804320326328234</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>East location 2b</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>32.123469243845413,-13.908884653285741 32.124489998717479,-13.91744149708355 32.140510032453527,-13.916847393307989 32.138462453412693,-13.908116811691549 32.123469243845413,-13.908884653285741</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>Northern location 1 b</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>31.126160750566239,-8.768083661594439 31.126403178090829,-8.760715095167102 31.120274408534691,-8.760429650809467 31.12010572083916,-8.767806124197364 31.126160750566239,-8.768083661594439</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>Northern Location 1a</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>31.127468377749629,-8.803098240966511 31.129815775902561,-8.803018963062371 31.129924631151241,-8.800454548536468 31.12725208909011,-8.800316418019131 31.127468377749629,-8.803098240966511</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>East location 1 a (Kamuvi vil)</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>32.843004260227772,-13.466532613614239 32.841447398227928,-13.4666508028119 32.841487635374818,-13.468667207133469 32.843127342409069,-13.46874158281682 32.843004260227772,-13.466532613614239</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>East location 2a (katete)</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>32.190429409817483,-14.2081368132572 32.194263919573302,-14.208046856157649 32.193989044566322,-14.205179928315729 32.190318614913203,-14.205400180738661 32.190429409817483,-14.2081368132572</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>East location 1b (Mwami)</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>32.759840729972041,-13.808340868932429 32.758608070977147,-13.81188677755007 32.762272106206353,-13.81110277533009 32.762939131756703,-13.80741871786344 32.759840729972041,-13.808340868932429</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>Northen Location 1  Mbala</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>31.390747049213399,-8.790470851000443 31.396029808926428,-8.789882317038424 31.39581901878713,-8.785240087438478 31.389153730639439,-8.784959224654054 31.390747049213399,-8.790470851000443</coordinates></LineString>
+  </Placemark>
+  <Placemark>
+	<name>Northen Location 2b</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <LineString><altitudeMode>relativeToGround</altitudeMode><coordinates>31.27425252104938,-9.336584739397052 31.270415523963742,-9.336561389666672 31.270585909458411,-9.33971450757328 31.274074023831808,-9.339733375411655 31.27425252104938,-9.336584739397052</coordinates></LineString>
+  </Placemark>
+</Folder>
+</Document></kml>

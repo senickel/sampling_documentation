@@ -288,6 +288,70 @@ nairobi_1k_sample_complete_100m <- add_100m_units(nairobi_1k_sample_complete)
 
 ```
 
+```{r nairobidfgs}
+
+coord_string <- c("S03°23.602’;E037°40.783’
+S03°23.604’;E037°40.756’
+S03°16.746’;E038°18.349’
+S03°16.724’;E038°18.337’
+S-1.842537;E36.785076
+S-1.839773;E36.782486
+S-1.389256;E36.866333
+S-1.389330;E36.683559
+S-1.994650;E36.867916
+S-1.994853;E36.866333
+S01°06.434’;E036°38.363’
+S01°06.461’;E036°38.355’
+S01°00.679’;E036°54.028’
+S01°00.673’;E036°54.022’
+S01°14.124’;E036°56.020’
+S01°14.152’;E036°56.081’")
+
+coord_matrix <- coord_string %>% 
+  strsplit("\n") %>% 
+  unlist() %>% 
+  strsplit(";") %>% 
+  do.call(rbind,.)
+
+coord_degree <- coord_matrix[grep("°",coord_matrix[,1]),] %>% 
+  apply(2,function(y) {
+    y %>% 
+      gsub("S","-",.,fixed=TRUE) %>% 
+  gsub("[A-Z]","",.) %>%
+  strsplit("[°\\.]") %>% 
+  lapply(function(x) {
+    x <- x %>% 
+      gsub("[^0-9\\-]","",.) %>% 
+      as.numeric()
+    x[1] + x[2]/60 + x[3]/3600
+  }) %>% 
+      unlist()
+})
+  
+coord_decimal <- coord_matrix[!grepl("°",coord_matrix[,1]),] %>% 
+  gsub("[A-Z]","",.) %>% 
+  apply(2,as.numeric)
+
+nairobi_fdgs <- rbind(coord_degree,coord_decimal) %>% 
+  as.data.frame() %>% 
+  SpatialPoints(CRS("+init=epsg:4326")) %>% 
+  spTransform(CRS(proj4string(nairobi_1k_sample_complete_100m)))
+  
+
+if (over(nairobi_1k_sample_complete_100m,nairobi_fdgs,returnList = FALSE) %>% 
+  is.na() %>% 
+  `!` %>% 
+  which() %>% 
+  length() == 0) cat("No overlap between sample and FDGs.")
+
+  
+ 
+
+
+```
+
+
+
 ```{r add100msave,echo=FALSE}
 writeOGR(nairobi_1k_sample_complete_100m[nairobi_1k_sample_complete_100m$type=="Unit_1",],
          "output/nairobi_1k_sample_complete_only_100m.kml",
@@ -502,6 +566,16 @@ include_graphics_thru_child(type = "replaced",
 ```{r lusakaadd100m,cache=TRUE}
 
 lusaka_1k_sample_complete_100m <- add_100m_units(lusaka_1k_sample_complete)
+
+zambia_fdgs <- readKML("data/fdgs/Zambia Northern Eastern FGD Locations.kml") %>%
+  as("SpatialPoints")
+
+
+if (over(lusaka_1k_sample_complete_100m,zambia_fdgs) %>% 
+  is.na %>% 
+  `!` %>% 
+  which() %>% 
+  length() == 0) cat("No overlap between sample and FDGs.")
 
 
 ```
