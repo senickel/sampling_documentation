@@ -157,44 +157,75 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="header">
-<h1 class="title">Geographic sampling</h1>
-<h4 class="author"><em>Sebastian Nickel</em></h4>
-<h4 class="date"><em>October 22, 2018</em></h4>
-</div>
-<div id="prerequisites" class="section level1 unnumbered">
-<h1>Prerequisites</h1>
-<p>This document/website contains the methods used for sampling in <a href="http://gld.gu.se">The Program on Governance and Local Development’s</a> urbanization project.</p>
-<div id="study-area" class="section level2">
-<h2><span class="header-section-number">0.1</span> Study Area</h2>
-<p>The study includes the following areas:</p>
-<ul>
-<li>The border area between Kenya and Tanzania.<br />
-</li>
-<li>The border area between Malawi, Tanzania, and Zambia.<br />
-</li>
-<li>The three capitals Dar es Salaam, Lusaka, and Nairobi.</li>
-</ul>
-</div>
-<div id="data" class="section level2">
-<h2><span class="header-section-number">0.2</span> Data</h2>
-<p>To replicate the method described here, the following geospatial vector and raster files are necessary:</p>
-<ul>
-<li><a href="https://www.worldpop.org.uk/">WorldPop</a> raster data for Kenya, Malawi, Tanzania, and Zambia<br />
-</li>
-<li>Administrative spatial polygons for all four countries from <a href="https://gadm.org/">GADM</a></li>
-<li>Lakes spatial polygons from <a href="https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/">Natural Earth</a></li>
-</ul>
-</div>
-<div id="geosampling-package" class="section level2">
-<h2><span class="header-section-number">0.3</span> geosampling package</h2>
-<p>The geosampling package was created to simplify the process and has the necessary functions needed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;senickel/geosampling&quot;</span>)</code></pre></div>
+<div id="extract-amenities-from-openstreetmap" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Extract amenities from OpenStreetMap</h1>
+<p>For the surveying</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">extract_from_osm &lt;-<span class="st"> </span><span class="cf">function</span>(sp_obj) {
+  amenities_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">name=</span> <span class="kw">c</span>(<span class="st">&quot;hospital&quot;</span>,
+                                     <span class="st">&quot;doctors&quot;</span>,
+                                     <span class="st">&quot;clinic&quot;</span>,
+                                     <span class="st">&quot;pharmacy&quot;</span>,
+                                     <span class="st">&quot;witchdoctors&quot;</span>,
+                                     <span class="st">&quot;drinking_water&quot;</span>,
+                                     <span class="st">&quot;water_point&quot;</span>,
+                                     <span class="st">&quot;police&quot;</span>,
+                                     <span class="st">&quot;marketplace&quot;</span>,
+                                     <span class="st">&quot;school&quot;</span>,
+                                     <span class="st">&quot;college&quot;</span>,
+                                     <span class="st">&quot;university&quot;</span>,
+                                     <span class="st">&quot;kindergarten&quot;</span>,
+                                     <span class="st">&quot;community_centre&quot;</span>,
+                                     <span class="st">&quot;social_facility&quot;</span>,
+                                     <span class="st">&quot;place_of_worship&quot;</span>),
+                             <span class="dt">category=</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;health&quot;</span>,<span class="dv">5</span>),
+                                         <span class="kw">rep</span>(<span class="st">&quot;water&quot;</span>,<span class="dv">2</span>),<span class="st">&quot;police&quot;</span>,
+                                         <span class="st">&quot;marketplace&quot;</span>,
+                                         <span class="kw">rep</span>(<span class="st">&quot;education&quot;</span>,<span class="dv">4</span>),
+                                         <span class="st">&quot;community_centre&quot;</span>,
+                                         <span class="st">&quot;social_facility&quot;</span>,
+                                         <span class="st">&quot;place_of_worship&quot;</span>))
+  
+  
+  coords &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">st_bbox</span>(sp_obj)[<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">3</span>)],<span class="dt">collapse=</span><span class="st">&quot;,&quot;</span>)
+  
+  overpass_query &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;[out:xml][timeout:100];</span><span class="ch">\n</span><span class="st">(</span><span class="ch">\n</span><span class="st">node[&quot;amenity&quot;](&#39;</span>,coords,<span class="st">&#39;);</span>
+<span class="st">);</span><span class="ch">\n</span><span class="st">out body;</span><span class="ch">\n</span><span class="st">&gt;;</span><span class="ch">\n</span><span class="st">out skel qt;&#39;</span>)
+  
+  query_spatial &lt;-<span class="st"> </span><span class="kw">overpass_query</span>(overpass_query)
+  <span class="kw">proj4string</span>(query_spatial) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="st">&quot;+init=epsg:4326&quot;</span>)
+  
+  
+  sp_obj &lt;-<span class="st"> </span>sp_obj[sp_obj<span class="op">$</span>type<span class="op">!=</span><span class="st">&quot;Bin&quot;</span>,]
+  sp_obj_buf &lt;-<span class="st"> </span><span class="kw">buffer_shape</span>(sp_obj,<span class="dv">5</span>)
+  sp_obj_buf &lt;-<span class="st"> </span>sp_obj_buf[[<span class="dv">2</span>]]
+  
+  
+  amenities_cropped &lt;-<span class="st"> </span>
+<span class="st">    </span><span class="kw">crop</span>(query_spatial,<span class="kw">spTransform</span>(sp_obj_buf,<span class="kw">CRS</span>(<span class="kw">proj4string</span>(query_spatial)))) 
+  
+  amenities_cropped_restr &lt;-<span class="st"> </span>
+<span class="st">    </span>amenities_cropped[amenities_cropped<span class="op">$</span>amenity<span class="op">%in%</span>amenities_df<span class="op">$</span>name,]
+  
+  amenities_cropped<span class="op">$</span>amenity[<span class="op">!</span><span class="kw">is.na</span>(amenities_cropped<span class="op">$</span>religion)] <span class="op">%&gt;%</span><span class="st"> </span>table
+  
+  
+  <span class="kw">plot</span>(sp_obj_buf,<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+  <span class="kw">pa</span>(sp_obj,<span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)
+  amenities_cropped_restr
+  
+  amenities_cropped_restr_sf &lt;-<span class="st"> </span>amenities_cropped_restr <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">st_as_sf</span>()
+  amenities_cropped_restr_sf<span class="op">$</span>amenity
+  
+  amenities_cropped_restr_sf &lt;-<span class="st"> </span>amenities_cropped_restr_sf <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cat =</span> <span class="kw">sapply</span>(amenity,<span class="cf">function</span>(x) amenities_df<span class="op">$</span>category[amenities_df<span class="op">$</span>name<span class="op">==</span>x]))
+  
+  amenities_cropped_restr_sf
+}</code></pre></div>
 
 </div>
-</div>
 <p style="text-align: center;">
-<a href="introduction.html"><button class="btn btn-default">Next</button></a>
+<a href="evaluating-the-sample.html"><button class="btn btn-default">Previous</button></a>
 </p>
 </div>
 </div>

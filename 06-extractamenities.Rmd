@@ -1,0 +1,76 @@
+# Extract amenities from OpenStreetMap
+
+For the surveying 
+
+```{r extractfromosm}
+extract_from_osm <- function(sp_obj) {
+  amenities_df <- data.frame(name= c("hospital",
+                                     "doctors",
+                                     "clinic",
+                                     "pharmacy",
+                                     "witchdoctors",
+                                     "drinking_water",
+                                     "water_point",
+                                     "police",
+                                     "marketplace",
+                                     "school",
+                                     "college",
+                                     "university",
+                                     "kindergarten",
+                                     "community_centre",
+                                     "social_facility",
+                                     "place_of_worship"),
+                             category= c(rep("health",5),
+                                         rep("water",2),"police",
+                                         "marketplace",
+                                         rep("education",4),
+                                         "community_centre",
+                                         "social_facility",
+                                         "place_of_worship"))
+  
+  
+  coords <- paste0(st_bbox(sp_obj)[c(2,1,4,3)],collapse=",")
+  
+  overpass_query <- paste0('[out:xml][timeout:100];\n(\nnode["amenity"](',coords,');
+);\nout body;\n>;\nout skel qt;')
+  
+  query_spatial <- overpass_query(overpass_query)
+  proj4string(query_spatial) <- CRS("+init=epsg:4326")
+  
+  
+  sp_obj <- sp_obj[sp_obj$type!="Bin",]
+  sp_obj_buf <- buffer_shape(sp_obj,5)
+  sp_obj_buf <- sp_obj_buf[[2]]
+  
+  
+  amenities_cropped <- 
+    crop(query_spatial,spTransform(sp_obj_buf,CRS(proj4string(query_spatial)))) 
+  
+  amenities_cropped_restr <- 
+    amenities_cropped[amenities_cropped$amenity%in%amenities_df$name,]
+  
+  amenities_cropped$amenity[!is.na(amenities_cropped$religion)] %>% table
+  
+  
+  plot(sp_obj_buf,col="red")
+  pa(sp_obj,col="blue")
+  amenities_cropped_restr
+  
+  amenities_cropped_restr_sf <- amenities_cropped_restr %>% 
+    st_as_sf()
+  amenities_cropped_restr_sf$amenity
+  
+  amenities_cropped_restr_sf <- amenities_cropped_restr_sf %>% 
+    mutate(cat = sapply(amenity,function(x) amenities_df$category[amenities_df$name==x]))
+  
+  amenities_cropped_restr_sf
+}
+```
+
+```{r runosm,echo=FALSE,eval=FALSE}
+
+
+
+```
+
+

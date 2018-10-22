@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-10-05" />
+<meta name="date" content="2018-10-22" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -148,7 +148,9 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="evaluating-the-sample.html#lilongwe"><span class="toc-section-number">5.3</span> Lilongwe</a><ul>
 <li><a href="evaluating-the-sample.html#replacement-units-2"><span class="toc-section-number">5.3.1</span> Replacement units</a></li>
 </ul></li>
+<li><a href="evaluating-the-sample.html#zambia-1"><span class="toc-section-number">5.4</span> Zambia</a></li>
 </ul></li>
+<li><a href="extract-amenities-from-openstreetmap.html#extract-amenities-from-openstreetmap"><span class="toc-section-number">6</span> Extract amenities from OpenStreetMap</a></li>
 </ul>
 </div>
 </div>
@@ -280,6 +282,7 @@ Figure 5.15: Almost empty site Nairobi. (ID = <a href="mailto:Nairobi@8@2">Nairo
 </div>
 <div id="others" class="section level4">
 <h4><span class="header-section-number">5.1.1.4</span> Others</h4>
+<img src="geosampling_files/figure-html/industry-1.png" width="672"  />
 <div class="figure" style="text-align: center"><span id="fig:NairobiOthers1"></span>
 <p class="caption marginnote shownote">
 Figure 5.16: Not empty but maybe resort. (ID = <a href="mailto:Nairobi@2@11">Nairobi@2@11</a> )
@@ -756,6 +759,7 @@ Figure 5.66: Empty site in Lusaka (ID = <a href="mailto:Lusaka@8@3">Lusaka@8@3</
 </div>
 <div id="almost-empty-units-1" class="section level4">
 <h4><span class="header-section-number">5.2.0.3</span> Almost empty units</h4>
+<img src="geosampling_files/figure-html/lusakaimages-1.png" width="672"  />
 <div class="figure" style="text-align: center"><span id="fig:LusakaAlmostEmpty1"></span>
 <p class="caption marginnote shownote">
 Figure 5.67: Almost empty site Lusaka (ID = <a href="mailto:Lusaka@2@3">Lusaka@2@3</a> )
@@ -1785,6 +1789,7 @@ Figure 5.223: Empty site in Lilongwe (ID = <a href="mailto:Lilongwe@8@17">Lilong
 </div>
 <div id="almost-empty-units-2" class="section level4">
 <h4><span class="header-section-number">5.3.0.3</span> Almost empty units</h4>
+<img src="geosampling_files/figure-html/lilongweimages-1.png" width="672"  />
 <div class="figure" style="text-align: center"><span id="fig:LilongweAlmostEmpty1"></span>
 <p class="caption marginnote shownote">
 Figure 5.224: Almost empty site Lilongwe (ID = <a href="mailto:Lilongwe@2@2">Lilongwe@2@2</a> )
@@ -2180,12 +2185,105 @@ Figure 5.285: Replacement units (ID = <a href="mailto:Lilongwe@8@27">Lilongwe@8@
 
 ## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
 ## a multiple of shorter object length</code></pre>
-
 </div>
+</div>
+<div id="zambia-1" class="section level2">
+<h2><span class="header-section-number">5.4</span> Zambia</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">zam_check &lt;-<span class="st"> </span><span class="kw">readLines</span>(<span class="st">&quot;output/zambia_check.txt&quot;</span>,<span class="dt">warn=</span><span class="ot">FALSE</span>)
+zam_check &lt;-<span class="st"> </span>zam_check[zam_check<span class="op">!=</span><span class="st">&quot;&quot;</span>]
+zambia_checking &lt;-<span class="st"> </span>zam_check <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">strsplit</span>(<span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) {
+    <span class="cf">if</span> (<span class="kw">length</span>(x)<span class="op">==</span><span class="dv">1</span>) <span class="kw">return</span>(<span class="kw">data.frame</span>(<span class="dt">ID=</span>x[<span class="dv">1</span>],<span class="dt">Full=</span><span class="st">&quot;Full&quot;</span>))
+    <span class="cf">if</span> (x[<span class="dv">2</span>]<span class="op">==</span><span class="st">&quot;a&quot;</span>) <span class="kw">return</span>(<span class="kw">data.frame</span>(<span class="dt">ID=</span>x[<span class="dv">1</span>],<span class="dt">Full=</span><span class="st">&quot;Almost Full&quot;</span>))
+    <span class="kw">return</span>(<span class="ot">NULL</span>)
+  }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.)
+
+zambia_checking<span class="op">$</span>unit3 &lt;-<span class="st"> </span>zambia_checking[,<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">strsplit</span>(<span class="st">&quot;@&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) <span class="kw">paste</span>(x[<span class="dv">1</span>],x[<span class="dv">2</span>],x[<span class="dv">3</span>],<span class="dt">sep=</span><span class="st">&quot;@&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unlist</span>()
+
+to_be_replaced &lt;-<span class="st"> </span>zambia_checking <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(Full<span class="op">==</span><span class="st">&quot;Full&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(unit3) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Full=</span><span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(Full<span class="op">&lt;</span><span class="dv">2</span>) 
+
+empty_units &lt;-<span class="st"> </span>zam_check[<span class="kw">grepl</span>(<span class="st">&quot;repl&quot;</span>,zam_check)] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot; repl&quot;</span>,<span class="st">&quot;&quot;</span>,.)
+
+to_be_replaced &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">unit3=</span>empty_units[<span class="op">!</span>empty_units<span class="op">%in%</span>to_be_replaced[,<span class="dv">1</span>]],
+           <span class="dt">Full=</span><span class="dv">0</span>)
+
+
+to_be_replaced <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">bin=</span><span class="kw">strsplit</span>(unit3,<span class="st">&quot;@&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">           </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) <span class="kw">paste</span>(x[<span class="dv">1</span>],x[<span class="dv">2</span>],<span class="dt">sep=</span><span class="st">&quot;@&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                    </span><span class="kw">unlist</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(bin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="kw">n</span>())</code></pre></div>
+<pre><code>## # A tibble: 10 x 2
+##    bin       `n()`
+##    &lt;chr&gt;     &lt;int&gt;
+##  1 Zambia@1      4
+##  2 Zambia@10     3
+##  3 Zambia@2      8
+##  4 Zambia@3      6
+##  5 Zambia@4      4
+##  6 Zambia@5      6
+##  7 Zambia@6      2
+##  8 Zambia@7      5
+##  9 Zambia@8      4
+## 10 Zambia@9      4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">replacements_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">readLines</span>(<span class="st">&quot;output/zambia_replacement.txt&quot;</span>,<span class="dt">warn=</span><span class="ot">FALSE</span>)
+replacements_<span class="dv">1</span> &lt;-<span class="st"> </span>replacements_<span class="dv">1</span>[replacements_<span class="dv">1</span><span class="op">!=</span><span class="st">&quot;&quot;</span>]
+replacements_<span class="dv">2</span> &lt;-<span class="st"> </span>replacements_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">strsplit</span>(<span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) {
+    <span class="cf">if</span> (<span class="kw">length</span>(x)<span class="op">==</span><span class="dv">1</span>) <span class="kw">return</span>(<span class="kw">data.frame</span>(<span class="dt">ID=</span>x[<span class="dv">1</span>],<span class="dt">Full=</span><span class="st">&quot;Full&quot;</span>))
+    <span class="cf">if</span> (x[<span class="dv">2</span>]<span class="op">==</span><span class="st">&quot;a&quot;</span>) <span class="kw">return</span>(<span class="kw">data.frame</span>(<span class="dt">ID=</span>x[<span class="dv">1</span>],<span class="dt">Full=</span><span class="st">&quot;Almost Full&quot;</span>))
+    <span class="kw">return</span>(<span class="ot">NULL</span>)
+  }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(Full<span class="op">==</span><span class="st">&quot;Full&quot;</span>)
+
+replacements_<span class="dv">2</span><span class="op">$</span>unit3 &lt;-<span class="st"> </span>replacements_<span class="dv">2</span>[,<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">strsplit</span>(<span class="st">&quot;@&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) <span class="kw">paste</span>(x[<span class="dv">1</span>],x[<span class="dv">2</span>],x[<span class="dv">3</span>],<span class="dt">sep=</span><span class="st">&quot;@&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.)
+
+
+replacements_<span class="dv">3</span> &lt;-<span class="st"> </span>replacements_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(unit3) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Full=</span><span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(Full<span class="op">&gt;</span><span class="dv">1</span>)
+
+
+replacements_<span class="dv">3</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">bin=</span><span class="kw">strsplit</span>(unit3,<span class="st">&quot;@&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">           </span><span class="kw">lapply</span>(<span class="cf">function</span>(x) <span class="kw">paste</span>(x[<span class="dv">1</span>],x[<span class="dv">2</span>],<span class="dt">sep=</span><span class="st">&quot;@&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                    </span><span class="kw">unlist</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(bin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="kw">n</span>())</code></pre></div>
+<pre><code>## # A tibble: 9 x 2
+##   bin      `n()`
+##   &lt;chr&gt;    &lt;int&gt;
+## 1 Zambia@1     4
+## 2 Zambia@2     8
+## 3 Zambia@3     6
+## 4 Zambia@4     4
+## 5 Zambia@5     6
+## 6 Zambia@6     2
+## 7 Zambia@7     5
+## 8 Zambia@8     4
+## 9 Zambia@9     4</code></pre>
+
 </div>
 </div>
 <p style="text-align: center;">
 <a href="sampling.html"><button class="btn btn-default">Previous</button></a>
+<a href="extract-amenities-from-openstreetmap.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>

@@ -45,8 +45,42 @@ lilongwe_sample_150 <- oversample_wrapper_non_pair(name = "Lilongwe",
                             verbose=2)
 
 ```
+```{r zambiasmaplingxx,cache=TRUE,include=TRUE,message=FALSE}
 
-```{r plotdarstrategies,cache=TRUE,include=FALSE}
+# zambia_sample_200 <- oversample_wrapper_non_pair(name = "Zambia",
+#                             bins = zambia_sampling_bin,
+#                             raster_1 = zambia_population,
+#                             raster_2 = zambia_population_1k,
+#                             random_number = 680,
+#                             original_min_unit2=2,
+#                             original_sample_unit2=200,
+#                             by_factor=1.1,
+#                             verbose=2)
+
+
+
+```
+
+```{r zambiasmapling,cache=FALSE,include=TRUE,message=FALSE}
+
+zambia_sample_200 <- oversample_wrapper_pair(name = "Zambia",
+                            bins = zambia_sampling_bin,
+                            raster_1 = zambia_population,
+                            raster_2 = zambia_population_1k,
+                            raster_3 = zambia_population_5k,
+                            random_number = 680,
+                            original_min_unit3 = 1,
+                            original_sample_unit3 = 100,
+                            by_factor=1.1,
+                            verbose=2)
+
+
+```
+
+
+
+
+```{r plotdarstrategies,cache=FALSE,include=FALSE}
 
 writeOGR(nairobi_sample_150[nairobi_sample_150$pick=="Sample",],
          "output/nairobi_sample_150_sample.kml",
@@ -78,18 +112,16 @@ writeOGR(lilongwe_sample_150[lilongwe_sample_150$pick!="Sample",],
          driver="KML",layer="lilongwe",
          overwrite_layer = TRUE)
 
-# t1<-leaflet() %>%
-#   addProviderTiles("Esri.WorldImagery") %>% 
-#   addPolygons(data=nairobi_sample_non_pair,opacity = 1,fillOpacity = 0) %>%
-#   addPolygons(data = 
-#                 nairobi_sample_non_pair[
-#                   nairobi_sample_non_pair$type=="Unit_2"&
-#                     nairobi_sample_non_pair$pick=="Sample",],
-#               fillColor = "red",color = "red",opacity = 0.5) %>% 
-#   addPolygons(data=lusaka_sample_non_pair,opacity = 1,fillOpacity = 0) %>%
-#   addPolygons(data= lusaka_sample_non_pair[lusaka_sample_non_pair$type=="Unit_2"&
-#                                              lusaka_sample_non_pair$pick=="Sample",],
-#               fillColor = "red",color = "red",opacity = 0.5) 
+
+writeOGR(zambia_sample_200[zambia_sample_200$pick=="Sample",],
+         "output/zambia_sample_200_sample.kml",
+         driver="KML",layer="zambia",
+         overwrite_layer = TRUE)
+
+writeOGR(zambia_sample_200[zambia_sample_200$pick!="Sample",],
+         "output/zambia_sample_200_replacement.kml",
+         driver="KML",layer="zambia",
+         overwrite_layer = TRUE)
 
 
 ```

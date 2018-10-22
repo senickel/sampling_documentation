@@ -778,3 +778,79 @@ writeOGR(lilongwe_1k_sample_complete_100m,
 
 
 ```
+
+
+## Zambia
+
+```{r lineread}
+zam_check <- readLines("output/zambia_check.txt",warn=FALSE)
+zam_check <- zam_check[zam_check!=""]
+zambia_checking <- zam_check %>% 
+  strsplit(" ") %>% 
+  lapply(function(x) {
+    if (length(x)==1) return(data.frame(ID=x[1],Full="Full"))
+    if (x[2]=="a") return(data.frame(ID=x[1],Full="Almost Full"))
+    return(NULL)
+  }) %>% 
+  do.call(rbind,.)
+
+zambia_checking$unit3 <- zambia_checking[,1] %>% 
+  strsplit("@") %>% 
+  lapply(function(x) paste(x[1],x[2],x[3],sep="@")) %>% 
+  unlist()
+
+to_be_replaced <- zambia_checking %>% 
+  filter(Full=="Full") %>% 
+  group_by(unit3) %>% 
+  summarise(Full=n()) %>%
+  filter(Full<2) 
+
+empty_units <- zam_check[grepl("repl",zam_check)] %>% gsub(" repl","",.)
+
+to_be_replaced <- data.frame(unit3=empty_units[!empty_units%in%to_be_replaced[,1]],
+           Full=0)
+
+
+to_be_replaced %>% 
+  mutate(bin=strsplit(unit3,"@") %>% 
+           lapply(function(x) paste(x[1],x[2],sep="@")) %>% 
+                    unlist()) %>% 
+  group_by(bin) %>% 
+  summarise(n())
+
+```
+
+```{r}
+replacements_1 <- readLines("output/zambia_replacement.txt",warn=FALSE)
+replacements_1 <- replacements_1[replacements_1!=""]
+replacements_2 <- replacements_1 %>% 
+ strsplit(" ") %>% 
+  lapply(function(x) {
+    if (length(x)==1) return(data.frame(ID=x[1],Full="Full"))
+    if (x[2]=="a") return(data.frame(ID=x[1],Full="Almost Full"))
+    return(NULL)
+  }) %>% 
+  do.call(rbind,.) %>% 
+  filter(Full=="Full")
+
+replacements_2$unit3 <- replacements_2[,1] %>% 
+  strsplit("@") %>% 
+  lapply(function(x) paste(x[1],x[2],x[3],sep="@")) %>% 
+  do.call(rbind,.)
+
+
+replacements_3 <- replacements_2 %>% 
+  group_by(unit3) %>% 
+  summarise(Full=n()) %>% 
+  filter(Full>1)
+
+
+replacements_3 %>% 
+  mutate(bin=strsplit(unit3,"@") %>% 
+           lapply(function(x) paste(x[1],x[2],sep="@")) %>% 
+                    unlist()) %>% 
+  group_by(bin) %>% 
+  summarise(n())
+
+```
+

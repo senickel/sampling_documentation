@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-10-05" />
+<meta name="date" content="2018-10-22" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -148,7 +148,9 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li class="has-sub"><a href="evaluating-the-sample.html#lilongwe"><span class="toc-section-number">5.3</span> Lilongwe</a><ul>
 <li><a href="evaluating-the-sample.html#replacement-units-2"><span class="toc-section-number">5.3.1</span> Replacement units</a></li>
 </ul></li>
+<li><a href="evaluating-the-sample.html#zambia-1"><span class="toc-section-number">5.4</span> Zambia</a></li>
 </ul></li>
+<li><a href="extract-amenities-from-openstreetmap.html#extract-amenities-from-openstreetmap"><span class="toc-section-number">6</span> Extract amenities from OpenStreetMap</a></li>
 </ul>
 </div>
 </div>
@@ -190,6 +192,25 @@ lilongwe_sample_<span class="dv">150</span> &lt;-<span class="st"> </span><span 
                             <span class="dt">random_number =</span> <span class="dv">680</span>,
                             <span class="dt">original_min_unit2=</span><span class="dv">2</span>,
                             <span class="dt">original_sample_unit2=</span><span class="dv">150</span>,
+                            <span class="dt">by_factor=</span><span class="fl">1.1</span>,
+                            <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># zambia_sample_200 &lt;- oversample_wrapper_non_pair(name = &quot;Zambia&quot;,</span>
+<span class="co">#                             bins = zambia_sampling_bin,</span>
+<span class="co">#                             raster_1 = zambia_population,</span>
+<span class="co">#                             raster_2 = zambia_population_1k,</span>
+<span class="co">#                             random_number = 680,</span>
+<span class="co">#                             original_min_unit2=2,</span>
+<span class="co">#                             original_sample_unit2=200,</span>
+<span class="co">#                             by_factor=1.1,</span>
+<span class="co">#                             verbose=2)</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">zambia_sample_<span class="dv">200</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Zambia&quot;</span>,
+                            <span class="dt">bins =</span> zambia_sampling_bin,
+                            <span class="dt">raster_1 =</span> zambia_population,
+                            <span class="dt">raster_2 =</span> zambia_population_1k,
+                            <span class="dt">raster_3 =</span> zambia_population_5k,
+                            <span class="dt">random_number =</span> <span class="dv">680</span>,
+                            <span class="dt">original_min_unit3 =</span> <span class="dv">1</span>,
+                            <span class="dt">original_sample_unit3 =</span> <span class="dv">100</span>,
                             <span class="dt">by_factor=</span><span class="fl">1.1</span>,
                             <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
 
