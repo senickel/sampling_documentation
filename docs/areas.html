@@ -546,51 +546,7 @@ malawi_districs &lt;-<span class="st"> </span>malawi_adm1[<span class="kw">over<
 <span class="st">              </span><span class="kw">is.na</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">              `</span><span class="dt">!</span><span class="st">`</span> <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">              </span>which,] <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">st_as_sf</span>()
-
-
-
-kenya_districs</code></pre></div>
-<pre><code>## Simple feature collection with 41 features and 13 fields
-## geometry type:  MULTIPOLYGON
-## dimension:      XY
-## bbox:           xmin: 35.9962 ymin: -2.402655 xmax: 37.72435 ymax: -0.6044609
-## epsg (SRID):    4326
-## proj4string:    +proj=longlat +datum=WGS84 +no_defs
-## First 10 features:
-##    GID_0 NAME_0    GID_1  NAME_1 NL_NAME_1      GID_2        NAME_2
-## 56   KEN  Kenya KEN.10_1 Kajiado      &lt;NA&gt; KEN.10.2_1  Kajiado East
-## 57   KEN  Kenya KEN.10_1 Kajiado      &lt;NA&gt; KEN.10.3_1 Kajiado North
-## 59   KEN  Kenya KEN.10_1 Kajiado      &lt;NA&gt; KEN.10.5_1  Kajiado West
-## 77   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.1_1 Gatundu North
-## 78   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.2_1 Gatundu South
-## 79   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.3_1    Githunguri
-## 80   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.4_1          Juja
-## 81   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.5_1        Kabete
-## 82   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.6_1       Kiambaa
-## 83   KEN  Kenya KEN.13_1  Kiambu      &lt;NA&gt; KEN.13.7_1        Kiambu
-##    VARNAME_2 NL_NAME_2       TYPE_2    ENGTYPE_2 CC_2 HASC_2
-## 56      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  185   &lt;NA&gt;
-## 57      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  183   &lt;NA&gt;
-## 59      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  186   &lt;NA&gt;
-## 77      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  112   &lt;NA&gt;
-## 78      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  111   &lt;NA&gt;
-## 79      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  116   &lt;NA&gt;
-## 80      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  113   &lt;NA&gt;
-## 81      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  119   &lt;NA&gt;
-## 82      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  118   &lt;NA&gt;
-## 83      &lt;NA&gt;      &lt;NA&gt; Constituency Constituency  117   &lt;NA&gt;
-##                          geometry
-## 56 MULTIPOLYGON (((37.67785 -2...
-## 57 MULTIPOLYGON (((36.78143 -1...
-## 59 MULTIPOLYGON (((36.67472 -1...
-## 77 MULTIPOLYGON (((36.97518 -0...
-## 78 MULTIPOLYGON (((36.91276 -1...
-## 79 MULTIPOLYGON (((36.80273 -1...
-## 80 MULTIPOLYGON (((37.15557 -1...
-## 81 MULTIPOLYGON (((36.72554 -1...
-## 82 MULTIPOLYGON (((36.7835 -1....
-## 83 MULTIPOLYGON (((36.88772 -1...</code></pre>
+<span class="st">  </span><span class="kw">st_as_sf</span>()</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:kenyadistric"></span>
 <p class="caption marginnote shownote">
 Figure 2.7: Districts in Kenya

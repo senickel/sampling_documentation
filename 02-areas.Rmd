@@ -982,10 +982,6 @@ malawi_districs <- malawi_adm1[over(malawi_adm1,
   st_as_sf()
 
 
-
-kenya_districs
-
-
 ```
 
 ```{r kenyadistric,echo=FALSE,fig.cap="Districts in Kenya",fig.align="center"}
