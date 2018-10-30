@@ -45,6 +45,7 @@ lilongwe_sample_150 <- oversample_wrapper_non_pair(name = "Lilongwe",
                             verbose=2)
 
 ```
+
 ```{r zambiasmaplingxx,cache=TRUE,include=TRUE,message=FALSE}
 
 # zambia_sample_200 <- oversample_wrapper_non_pair(name = "Zambia",
@@ -61,7 +62,7 @@ lilongwe_sample_150 <- oversample_wrapper_non_pair(name = "Lilongwe",
 
 ```
 
-```{r zambiasmapling,cache=FALSE,include=TRUE,message=FALSE}
+```{r malawizambiasmapling,cache=TRUE,include=TRUE,message=FALSE}
 
 zambia_sample_200 <- oversample_wrapper_pair(name = "Zambia",
                             bins = zambia_sampling_bin,
@@ -74,9 +75,82 @@ zambia_sample_200 <- oversample_wrapper_pair(name = "Zambia",
                             by_factor=1.1,
                             verbose=2)
 
+malawi_sample_200 <- oversample_wrapper_pair(name = "Malawi",
+                            bins = maw_sampling_bin,
+                            raster_1 = malawi_population,
+                            raster_2 = malawi_population_1k,
+                            raster_3 = malawi_population_5k,
+                            random_number = 680,
+                            original_min_unit3 = 1,
+                            original_sample_unit3 = 100,
+                            by_factor=1.1,
+                            verbose=2)
+```
+
+```{r sample_table,echo=TRUE}
+respondents_per_bin <- function(sp_obj,name,onlydf=FALSE) {
+  if (any("Unit_3"==sp_obj$type)) {
+
+    tab1 <- sp_obj %>% 
+    st_as_sf() %>% 
+    filter(pick=="Sample"&type=="Unit_3") %>% 
+    mutate(Bin = sapply(Name,function(x) {
+      strsplit(x,"@") %>% 
+        lapply(function(y) y[2]) %>% 
+        unlist()
+    })) %>% 
+    as.data.frame() %>% 
+    group_by(Bin) %>% 
+    summarise(`Sampling Units`=n()) %>% 
+    mutate(`Number of Households` = `Sampling Units` * 50) %>% 
+    mutate(Bin = as.numeric(Bin)) %>% 
+    arrange(Bin)
+} else {
+  tab1 <- sp_obj %>% 
+    st_as_sf() %>% 
+    filter(pick=="Sample"&type!="Bin") %>% 
+    mutate(Bin = sapply(Name,function(x) {
+      strsplit(x,"@") %>% 
+        lapply(function(y) y[2]) %>% 
+        unlist()
+    })) %>% 
+    as.data.frame() %>% 
+    group_by(Bin) %>% 
+    summarise(`Sampling Units`=n()) %>% 
+    mutate(`Number of Households` = `Sampling Units` * 25) %>% 
+    mutate(Bin = as.numeric(Bin)) %>% 
+    arrange(Bin)
+}
+  if(onlydf) return(tab1)
+  
+  kable(tab1,caption = paste0("Number of Respondents and sampling units in ",
+                              name,". (n = ",
+                              tab1 %$% 
+                                sum(`Number of Households`),")")) %>% 
+  kable_styling(full_width = FALSE,position = "left")
+  
+}
+
 
 ```
 
+```{r sampletables}
+nairobi_sample_150 %>% 
+  respondents_per_bin("Nairobi") 
+lusaka_sample_150 %>% 
+  respondents_per_bin("Lusaka") 
+lilongwe_sample_150 %>% 
+  respondents_per_bin("Lilongwe") 
+zambia_sample_200 %>% 
+  respondents_per_bin("Zambia")
+malawi_sample_200 %>% 
+  respondents_per_bin("Malawi")
+
+```
+
+```{r}
+
+```
 
 
 
@@ -123,5 +197,14 @@ writeOGR(zambia_sample_200[zambia_sample_200$pick!="Sample",],
          driver="KML",layer="zambia",
          overwrite_layer = TRUE)
 
+writeOGR(malawi_sample_200[malawi_sample_200$pick=="Sample",],
+         "output/malawi_sample_200_sample.kml",
+         driver="KML",layer="malawi",
+         overwrite_layer = TRUE)
+
+writeOGR(malawi_sample_200[malawi_sample_200$pick!="Sample",],
+         "output/malawi_sample_200_replacement.kml",
+         driver="KML",layer="malawi",
+         overwrite_layer = TRUE)
 
 ```

@@ -2,7 +2,7 @@
 
 For the surveying 
 
-```{r extractfromosm}
+```{r extractfromosm,eval=FALSE}
 extract_from_osm <- function(sp_obj) {
   amenities_df <- data.frame(name= c("hospital",
                                      "doctors",
@@ -35,10 +35,22 @@ extract_from_osm <- function(sp_obj) {
 );\nout body;\n>;\nout skel qt;')
   
   query_spatial <- overpass_query(overpass_query)
+  if (is.null(query_spatial)) return(NULL)
+
   proj4string(query_spatial) <- CRS("+init=epsg:4326")
   
+  select_type <- sp_obj$type %>% 
+    unique %>% 
+    data.frame(u=.) %>% 
+    filter(grepl("Unit",u)) %>% 
+    mutate(v=strsplit(u,"_",fixed=TRUE) %>% 
+             lapply(`[[`,2)) %>% 
+    filter(v==max(as.numeric(v))) %>% 
+    dplyr::select(u) %>% 
+    unlist
   
-  sp_obj <- sp_obj[sp_obj$type!="Bin",]
+  
+  sp_obj <- sp_obj[sp_obj$type==select_type,]
   sp_obj_buf <- buffer_shape(sp_obj,5)
   sp_obj_buf <- sp_obj_buf[[2]]
   
@@ -46,31 +58,257 @@ extract_from_osm <- function(sp_obj) {
   amenities_cropped <- 
     crop(query_spatial,spTransform(sp_obj_buf,CRS(proj4string(query_spatial)))) 
   
+  if (is.null(amenities_cropped)) return(NULL)
+  
   amenities_cropped_restr <- 
     amenities_cropped[amenities_cropped$amenity%in%amenities_df$name,]
   
-  amenities_cropped$amenity[!is.na(amenities_cropped$religion)] %>% table
+  # amenities_cropped$amenity[!is.na(amenities_cropped$religion)] %>% table
   
   
-  plot(sp_obj_buf,col="red")
-  pa(sp_obj,col="blue")
-  amenities_cropped_restr
+  # plot(sp_obj_buf,col="red")
+  # pa(sp_obj,col="blue")
+  # amenities_cropped_restr
   
   amenities_cropped_restr_sf <- amenities_cropped_restr %>% 
     st_as_sf()
-  amenities_cropped_restr_sf$amenity
+  # amenities_cropped_restr_sf$amenity
   
   amenities_cropped_restr_sf <- amenities_cropped_restr_sf %>% 
-    mutate(cat = sapply(amenity,function(x) amenities_df$category[amenities_df$name==x]))
+    mutate(cat = sapply(amenity,function(x) 
+      amenities_df$category[amenities_df$name==x]))
   
   amenities_cropped_restr_sf
 }
 ```
 
-```{r runosm,echo=FALSE,eval=FALSE}
-
+```{r runosmcities,eval=FALSE}
+nairobi_amenities <- extract_from_osm(nairobi_1k_sample_complete)
+lusaka_amenities <- extract_from_osm(lusaka_1k_sample_complete)
+lilongwe_amenities <- extract_from_osm(lilongwe_1k_sample_complete)
+zambia_amenities <- extract_from_osm(zambia_5k_1k_sample_200_complete)
 
 
 ```
 
+```{r zambiafisondata,eval=FALSE}
+lays <- ogrListLayers("data/zambia/Zam_Sample_schs.kml")
+zambia_wards <- readKML("data/zambia/Zam_Sample_schs.kml",
+                        layer=lays[1])
+
+zambia_schools <- readKML("data/zambia/Zam_Sample_schs.kml",
+                        layer=lays[2])
+
+
+```
+
+
+
+```{r osmschool1,eval=FALSE}
+
+osm_school <- lusaka_amenities %>% 
+  filter(amenity=="school"&!is.na(name)) %>% 
+  arrange(name) %>% 
+  as("Spatial") 
+
+
+# ring wise
+kms <- seq(0,2,0.05) 
+kms_df <- data.frame(f = kms[1:(length(kms)-1)],
+                     s = kms[2:length(kms)])
+kd <- kms_df[1,] %>% unlist
+x <- 1
+
+substract_circle <- function(point,buffer_vector) {
+  b2 <- point %>% 
+    buffer_shape(buffer_vector[2])
+  if (buffer_vector[1]==0) return(b2[[2]])
+  b1 <- point %>% 
+    buffer_shape(buffer_vector[1])
+  gDifference(b2[[2]],b1[[2]])
+}
+
+
+pairs <- lapply(1:nrow(kms_df)
+                ,function(kdx) {
+  message(kdx)
+  kd <- kms_df[kdx,]
+  osm_school_buf <- lapply(1:length(osm_school),function(x) {
+    substract_circle(osm_school[x,],kd)
+  }) %>% 
+    do.call(bind,.)
+
+  # fison_school_buf <- lapply(1:length(zambia_schools),function(x) {
+  #   substract_circle(zambia_schools[x,],kd)
+  # }) %>% 
+  #   do.call(bind,.)
+  
+  
+  over_df <- over(zambia_schools,osm_school_buf) %>% 
+    data.frame(osm = .,fison = names(.) %>% 
+                 strsplit(".",fixed=TRUE) %>% 
+                 sapply(`[[`,1)) %>% 
+    filter(!is.na(fison)&!is.na(osm))
+  
+   
+  
+   # over_df <- over(osm_school_buf,fison_school_buf,returnList = FALSE) %>% 
+   #  data.frame(fison=.,osm=names(.) %>% 
+   #               strsplit(".",fixed=TRUE) %>% 
+   #               sapply(`[[`,1)) %>% 
+   #  filter(!is.na(fison)&!is.na(osm))
+  
+   if (nrow(over_df)==0) return(NULL)
+  
+   data.frame(over_df %>% 
+    apply(2,as.numeric),
+    max_radius=kd[2],
+    rn= apply(over_df,1,paste0,collapse=""),
+    row.names = 4)
+}) %>% 
+  do.call(rbind,.)
+ 
+pairs2 <- pairs %>% 
+  group_by(osm,fison) %>% 
+  summarise(distance=min(s))
+
+school_names_with_dist <- 
+  lapply(kms_df$s,
+         function(x1) {
+           apply(pairs2 %>% 
+                   filter(distance==x1),1,
+                 function(x) { 
+                   if (is.na(zambia_schools$Name[x[2]])|
+                       is.na(osm_school$name[x[1]])) return(NULL)
+                   data.frame(fison=zambia_schools$Name[x[2]],
+                              osm=osm_school$name[x[1]])
+                 }) %>% 
+             do.call(rbind,.) %>% 
+             cbind(radius=x1)
+           }) %>% 
+  do.call(rbind,.)
+
+write.csv(school_names_with_dist,"output/zambia_school_merge.csv",
+          row.names = FALSE)
+school_names_with_dist[1:10,]
+
+
+apply(pairs2,1,function(x) {
+  if (is.na(zambia_schools$Name[x[1]])|
+      is.na(osm_school$name[x[2]])) return(NULL)
+  message("t")
+  data.frame(fison=zambia_schools$Name[x[1]],
+  osm=osm_school$name[x[2]])
+}) %>% 
+  do.call(rbind,.)
+
+
+lusaka_close_schools <- lapply(c(5,1,0.05),function(y) {
+  osm_school_buf <- lapply(1:length(osm_school),function(x) {
+    b1 <- osm_school[x,] %>% 
+      buffer_shape(y)
+    b1[[2]]
+  }) %>% 
+    do.call(bind,.)
+  
+  fison_school_buf <- lapply(1:length(zambia_schools),function(x) {
+    b2 <- zambia_schools[x,] %>% 
+      buffer_shape(y)
+    b2[[2]]
+  }) %>% 
+    do.call(bind,.)
+  
+  
+  
+  
+  
+  over_df <- over(osm_school_buf,fison_school_buf,returnList = FALSE) %>% 
+    data.frame(fison=.,osm=names(.) %>% 
+                 strsplit(".",fixed=TRUE) %>% 
+                 sapply(`[[`,1)) %>% 
+    filter(!is.na(fison)&!is.na(osm))
+  over_df %>% 
+    apply(2,as.numeric)
+})
+
+lusaka_close_schools[[3]]
+
+osm_school@data %$% table(name) %>% length
+osm_school %>% length
+osm_school$name
+
+plot(fison_school_buf[over_df[,1] %>% unique,])
+pa(osm_school_buf[over_df[,2] %>% unique,],col="red")
+x<-over_df[2,] %>% unlist
+
+apply(lusaka_close_schools[[2]],1,function(x) {
+  
+  if (is.na(zambia_schools$Name[x[1]])|
+      is.na(osm_school$name[x[2]])) return(NULL)
+  message("t")
+  data.frame(fison=zambia_schools$Name[x[1]],
+  osm=osm_school$name[x[2]])
+}) %>% 
+  do.call(rbind,.)
+
+
+```
+
+
+
+
+```{r saverunosm,eval=FALSE,echo=FALSE}
+saveRDS(nairobi_amenities,"output/nairobi_amenities.RData")
+saveRDS(lusaka_amenities,"output/lusaka_amenities.RData")
+saveRDS(lilongwe_amenities,"output/lilongwe_amenities.RData")
+
+```
+
+```{r loadamenities,echo=FALSE,eval=FALSE}
+nairobi_amenities <- readRDS("output/nairobi_amenities.RData")
+lusaka_amenities <- readRDS("output/lusaka_amenities.RData")
+lilongwe_amenities <- readRDS("output/lilongwe_amenities.RData")
+
+```
+
+```{r amen,eval=FALSE}
+nairobi_amenities$cat %>%
+  unique
+x1 <- "health"
+split_amenity <- function(amenity,x1,where) {
+  
+  x1_sf <- amenity %>% 
+    filter(cat==x1) 
+  
+  x1_keep <- x1_sf %>% 
+    apply(2,function(y) !all(is.na(y))) %>% 
+    which
+  
+  x1_sf %>% 
+    dplyr::select(x1_keep) %>% 
+    as.data.frame() %>% 
+    dplyr::select(-geometry) %>% 
+    write.csv(paste0("output/amenities/",where,"/osm_amenity_",x1,".csv"),
+              row.names = FALSE)
+}
+
+sapply(nairobi_amenities$x<cat %>%
+         unique,
+       FUN = split_amenity,
+       amenity = nairobi_amenities,
+       where = "nairobi")
+
+sapply(lusaka_amenities$cat %>%
+         unique,
+       FUN = split_amenity,
+       amenity = lusaka_amenities,
+       where = "lusaka")
+
+sapply(lilongwe_amenities$cat %>%
+         unique,
+       FUN = split_amenity,
+       amenity = lilongwe_amenities,
+       where = "lilongwe")
+
+```
 

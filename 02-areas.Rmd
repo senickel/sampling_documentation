@@ -9,8 +9,11 @@ library(rgdal)
 library(sebstoolkit2)
 library(rgeos)
 library(rasterVis)
+library(overpass)
 library(raster)
 library(leaflet)
+library(magrittr)
+library(kableExtra)
 library(gridExtra)
 library(bookdown)
 library(webshot)
@@ -38,6 +41,10 @@ malawi_adm0 <- gUnaryUnion(malawi_adm2)
 malawi_adm1 <- readOGR("../../gadm/gadm36_MWI_shp/gadm36_MWI_1.shp")
 kenya_adm0a <- readOGR("../../gadm/gadm36_KEN_shp/gadm36_KEN_0.shp")
 kenya_adm0 <- gDifference(kenya_adm0a,lakes)
+kenya_adm2 <- readOGR("../../gadm/gadm36_KEN_shp/gadm36_KEN_2.shp")
+zambia_adm2 <- readOGR("../../gadm/gadm36_ZMB_shp/gadm36_ZMB_2.shp")
+malawi_adm1 <- readOGR("../../gadm/gadm36_MWI_shp/gadm36_MWI_1.shp")
+
 
 # suppl
 drc_adm0 <- readOGR("../../gadm/suppl_files/DRC/gadm36_COD_0.shp")
@@ -147,7 +154,7 @@ theme_map <- function(...) {
 # Spatial polygon areas {#areas}
 
 ```{r darraw,cache=TRUE,fig.margin=TRUE,fig.cap="Panel A shows sampling bins for Dar es Salaam. The red rectangle is the clipped area shown in Panel B and C. The green and blue area in B are merged to the blue area in C.",echo=FALSE}
-grid.arrange(d1,d2,d4,layout_matrix=matrix(c(1,2,3),ncol=3))
+# grid.arrange(d1,d2,d4,layout_matrix=matrix(c(1,2,3),ncol=3))
 ```
 
 First, I will discuss the urban sampling areas before turning to the more complicated border areas.
@@ -156,7 +163,7 @@ First, I will discuss the urban sampling areas before turning to the more compli
 The sampling area is defined by taking a 50 km radius around the center of the respective city. The coordinates from Table \@ref(tab:leaf1) are taken from Wikipedia.^[https://Wikipedia.org]  
  
 ```{r leaf1,cache=TRUE,echo=FALSE}
-kable(city_table,caption = "Longitude and latitude of Lilongwe Lusaka, and Nairobi.\\label{tab:citytab}")
+kable(city_table,caption = "Longitude and latitude of Lilongwe, Lusaka, and Nairobi.\\label{tab:citytab}")
 ```
 
 The `geosampling::prepare_sampling_bins_city` function draws two circles around a point and splits both circles along the horizontal and the vertical axis in 8 pieces.  
@@ -219,283 +226,6 @@ Figure \@ref(fig:darraw) shows the sampling areas for Dar Es Salaam. In Panel A 
 The sampling areas for all three cities are visualized in Figure \@ref(fig:leafletmap).  
 
 
-## Kenyan-Tanzania border
-```{r plotkenyaborder,echo=FALSE,fig.margin=TRUE,fig.cap="Sampling area with sampling bins in Kenya (A) and Nothern Tanzania (B). The red colored areas mark the 0-50 km sampling area and the 50-100 km area is colored in blue.",cache=TRUE}
-# 0 - 50 km area
-kenya_border_area_0_to_50 <- prepare_sampling_area(
-  kenya_adm0,
-  border_tanz_ken,
-  lakes,
-  width_in_km = 50)
-
-# 0 - 50 km area
-kenya_border_area_50_to_100_1 <- prepare_sampling_area(
-  kenya_adm0,
-  border_tanz_ken,
-  lakes,
-  width_in_km = 100,
-  split_width = 49)
- 
-kenya_border_area_50_to_100 <- gDifference(
-  kenya_border_area_50_to_100_1,
-  kenya_border_area_0_to_50)
-
-kenya_sampling_bins <- prepare_sampling_bins(
-  a = kenya_border_area_0_to_50,
-  b = kenya_border_area_50_to_100,
-  start_end = start_end,
-  number_of_bins = 5)
-
-kenya_areas_sf<-rbind(kenya_border_area_0_to_50 %>% 
-        st_as_sf() %>% 
-        mutate(Area="0-50 km") %>% 
-        dplyr::select(-X1),
-      kenya_border_area_50_to_100 %>% 
-        st_as_sf() %>% 
-        mutate(Area="50-100 km"))
-
-kenya_sampling_bins$id<-1:length(kenya_sampling_bins)
-
-kenya_sampling_bins_sf<-st_as_sf(kenya_sampling_bins) %>% 
-  mutate(Area=ifelse(id<6,"0-50 km","50-100 km"))
-
-
-g1<-ggplot() +
-  geom_sf(data=kenya_areas_sf,aes(fill=Area)) +
-    theme_map() +
-  ggtitle("A") +
-  theme(legend.position = c(0.2,0.2))
-
-g2<-ggplot() +
-  geom_sf(data=kenya_sampling_bins_sf,color="black",aes(fill=Area)) +
-  theme_map() +
-  ggtitle("B") +
-  theme(legend.position = c(0.2,0.2))
-
-northern_tanzania_border_area_0_to_50 <- prepare_sampling_area(
-  tanzania_adm0,
-  border_tanz_ken,
-  lakes,
-  width_in_km = 50)
-
-# 0 - 50 km area
-northern_tanzania_border_area_50_to_100 <- prepare_sampling_area(
-  tanzania_adm0,
-  border_tanz_ken,
-  lakes,
-  width_in_km = 100,
-  split_width = 49) %>% 
-  gDifference(northern_tanzania_border_area_0_to_50)
-
-northern_tanzania_sampling_bins <- prepare_sampling_bins(
-  a = northern_tanzania_border_area_0_to_50,
-  b = northern_tanzania_border_area_50_to_100,
-  start_end = start_end,
-  number_of_bins = 5)
-
-g3<-northern_tanzania_sampling_bins %>% 
-  st_as_sf() %>% 
-  mutate(id=1:nrow(.),
-         Area=ifelse(id<6,"0-50 km","50-100 km")) %>% 
-  ggplot() +
-  geom_sf(aes(fill=Area)) +
-  theme_map() +
-  theme(legend.position = c(0.2,0.2))
-
-
-grid.arrange(g2,g3,ncol=2)
-```
-
-There are two border areas of interest: the border area between Kenya and Tanzania on the one hand and the border area between Malawi, Tanzania, and Zambia on the other.  
-Since the border between those states is the defining element for the respective sampling area, they are discussed separately.  
-  
-The land border between Kenya and Tanzania is the defining element and we can extract it by simply loading the Tanzanian `SpatialPolygonsDataFrame`, which includes the third administrative division. Waterbodies are declared as such and they are easily removed. In the next step, the `SpatialPolygons` object is transformed to a `SpatialLines` object and is cropped by the national borders of Kenya.^[There is a 1 meter buffer around Kenya to make sure it overlaps with the `SpatialLines` object.] The most Western and Eastern points of the border are selected which we will need for the constructions of the bin.
-
-```{r borderKTnoteval,eval=FALSE}
-# load polygons
-shared_border1_with_kenya <- tanzania_adm3
-
-# remove water bodies and unify Polygons
-shared_border_with_kenya <- 
-  shared_border1_with_kenya[shared_border1_with_kenya$TYPE_3!='Water body',] %>% 
-  gUnaryUnion
-
-
-border_tanz_ken <- shared_border_with_kenya %>% 
-  as("SpatialLines") %>% # transform to SpatialLines
-  crop(buffer_shape(kenya_adm0,0.001)[[2]]) # crop by Kenya
-
-# select coordinates of border
-border_tanz_ken_geom <- geom(border_tanz_ken) %>% 
-    as.data.frame %>% 
-    dplyr::select(x,y)
-
-# select most Western and Eastern point. Here: start and end point of line
-start_end <- border_tanz_ken_geom[c(1,nrow(border_tanz_ken_geom)),]
-
-
-```
-
-
-```{r produceborder,include=FALSE,cache=TRUE}
-shared_border1_of_tanz <- tanzania_adm3
-
-shared_border_of_tanz2 <- shared_border1_of_tanz[shared_border1_of_tanz$TYPE_3!='Water body',]
-
-shared_border_of_tanz <- gUnaryUnion(shared_border_of_tanz2)
-
-border_for_tanz <- bind(zambia_adm0,malawi_adm0)
-
-maw_zam <- malawi_adm0 %>% 
-  as("SpatialLines") %>% 
-  crop(buffer_shape(zambia_adm0,0.001)[[2]])
-
-# identify lake Tanganyika
-tanganyika_full <- lakes[grep("Tanganyika",lakes$name_en),]
-
-# Zambian side
-tanganyika_zambia <- border_for_tanz %>% 
-  as("SpatialLines") %>% 
-  crop(buffer_shape(tanganyika_full,0.1)[[2]])
-
-# need to prolong border from Zambia
-zam_line_to_lake <- tanganyika_zambia@lines[[1]]@Lines[[1]]@coords[1:2,] %>% 
-  as.data.frame()
-
-split_line_tanzania_tangayika<-
-  rbind(new_line_thru_math(lm(y~x,data=zam_line_to_lake)$coef,
-                           x_vector = 40,
-                           p4s = proj4string(tanganyika_zambia)
-  )@lines[[1]]@Lines[[1]]@coords,
-  zam_line_to_lake) %>% 
-  coords_to_line(p4s = proj4string(tanganyika_zambia)) 
-
-# shore line tangayika tanzani
-tanganyika_tanzania<-crop(tanzania_adm0 %>% 
-                             as("SpatialLines"),
-                           buffer_shape(tanganyika_full,10)[[2]])
-
-# coordinates of the intersection between the prolonged border line and the Tanganyika shore
-tanganyika_tanzania_split_point <- 
-  gIntersection(tanganyika_tanzania,split_line_tanzania_tangayika)@coords
-
-# clip tanganyika_tanzania at tanganyika_tanzania_split_point
-line_list<-lapply(1:length(tanganyika_tanzania@lines[[1]]@Lines),function(x) {
-  l1<-tanganyika_tanzania@lines[[1]]@Lines[[x]]@coords %>% 
-  as.data.frame() %>%
-  filter(y<=tanganyika_tanzania_split_point[1,2]) 
-  if (nrow(l1)==0) return()
-  list(coords_to_line(l1,proj4string(tanganyika_zambia)))
-})
-
-# Sampling line for the Tanganyika line on the Tanzanian side
-tan_line_to_lake<-from_list_to_poly3(line_list) %>%  
-  crop(tanzania_adm0a) %>% 
-  gDifference(buffer_shape(zambia_adm0a,0.01)[[2]])
-
-
-# BUFFER LINE -------------------------------------------------------------
-# Zambia
-border_for_zamb1 <- shared_border_of_tanz %>% 
-  as("SpatialLines") %>% 
-  crop(buffer_shape(zambia_adm0,0.001)[[2]])
-
-border_for_zamb2 <- bind(border_for_zamb1,tanganyika_zambia,maw_zam) 
-
-# Tanzania
-border_for_tanz_line1 <- border_for_tanz %>% 
-  as("SpatialLines")
-
-border_for_tanz_line2 <- crop(border_for_tanz_line1,
-                              buffer_shape(tanzania_adm0,0.001)[[2]])
-
-border_for_tanz3 <- bind(tan_line_to_lake,border_for_tanz_line2)
-
-# Malawi
-border_for_maw1 <- shared_border_of_tanz %>% 
-  as("SpatialLines") %>% 
-  crop(buffer_shape(malawi_adm0,0.001)[[2]])
-
-border_for_maw2 <- list(border_for_maw1,maw_zam) %>% 
-  do.call(bind,.)
-
-southern_area_border<-bind(border_for_maw2,border_for_tanz3,border_for_zamb2)
-
-```
-
-```{r produceborderplot,cache=TRUE,echo=FALSE,fig.margin=TRUE,fig.cap="Malawi, Tanzania, and Zambia and their common border in red."}
-ggplot() +
-  geom_sf(fill="#89b6ff",color="#89b6ff",
-          data=bind(tanzania_adm0a,malawi_adm0a,zambia_adm0a) %>% 
-            st_as_sf()) +
-  geom_sf(fill="grey60",color="grey60",
-          data=bind(tanzania_adm0,malawi_adm0,zambia_adm0) %>% 
-            st_as_sf()) +
-  geom_sf(color="black",data=bind(border_for_zamb1,border_for_maw1,maw_zam) %>% st_as_sf()) +
-  geom_sf(color="red",data=southern_area_border %>% st_as_sf()) +
-  theme_map()
-
-```
-
-
-The border between Kenya and Tanzania is the start point for building the sampling areas. In our project we want to stratify by a 0-50 and a 50-100 km border area (Figure \@ref(fig:plotkenyaborder) Panel A). Both areas are successively built by implementing the function `prepare_sampling_area`. The 50-100 km area is constructed in a way that it overlaps with the 0-50 km area and then is cut in the following step. This way we make sure that we do not have any empty space between those two areas.  
-Finally, we pass both areas in the `prepare_sampling_bins` function, which further divides both areas in 5 more or less equally sized bins which will serve as the secondary sampling unit. Here, the variable `start_end` comes in handy because a simple line is drawn to connect both points and the split it into 5 equally sized areas.  
-  
-The procedure is the same for the Nothern Tanzanian side (Figure \@ref(fig:plotkenyaborder) Panel B).  
-
-```{r kenyabordernoteval,eval=FALSE}
-# KENYA
-# 0 - 50 km area
-kenya_border_area_0_to_50 <- 
-  prepare_sampling_area(
-    adm0 = kenya_adm0,
-    border_spatialline = border_tanz_ken,
-    lakes = lakes,
-    width_in_km = 50)
-
-# 0 - 50 km area
-kenya_border_area_50_to_100 <- 
-  prepare_sampling_area(
-    adm0 = kenya_adm0,
-    border_spatialline = border_tanz_ken,
-    lakes = lakes,
-    width_in_km = 100,
-    split_width = 49) %>% 
-  gDifference(kenya_border_area_0_to_50)
-
-kenya_sampling_bins <- 
-  prepare_sampling_bins(
-    a = kenya_border_area_0_to_50,
-    b = kenya_border_area_50_to_100,
-    start_end = start_end,
-    number_of_bins = 5)
-
-# TANZANIA
-# 0 - 50 km area
-northern_tanzania_border_area_0_to_50 <- prepare_sampling_area(
-  tanzania_adm0,
-  border_tanz_ken,
-  lakes,
-  width_in_km = 50)
-
-# 0 - 50 km area
-northern_tanzania_border_area_50_to_100 <- prepare_sampling_area(
-  tanzania_adm0,
-  border_tanz_ken,
-  lakes,
-  width_in_km = 100,
-  split_width = 49) %>% 
-  gDifference(northern_tanzania_border_area_0_to_50)
-
-northern_tanzania_sampling_bins <- prepare_sampling_bins(
-  a = northern_tanzania_border_area_0_to_50,
-  b = northern_tanzania_border_area_50_to_100,
-  start_end = start_end,
-  number_of_bins = 5)
-
-```
-
-For the area on the Tanzania side of the Kenya-Tanzania border, the above code is analogous and only the `adm0` argument of `prepare_sampling_area` needs to be changed. Figure \@ref(fig:plotkenyaborder) Panel B shows the resulting sampling area.
 
 ## Malawi-Tanzania-Zambia border
 
@@ -1213,9 +943,6 @@ zambia_sampling_bin <- prepare_sampling_bins(a = zam_border_area_0_to_50,
 ```{r leafletmap,cache=TRUE,fig.cap="Sampling border areas in the four countries."}
 leaflet() %>% 
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>% 
-  addPolygons(data=southern_tanzania_sampling_bins) %>% 
-  # addPolygons(data=northern_tanzania_sampling_bins) %>% 
-  # addPolygons(data=kenya_sampling_bins) %>% 
   addPolygons(data=maw_sampling_bin) %>% 
   addPolygons(data=zambia_sampling_bin) %>% 
   addPolygons(data=lilongwe_bins) %>% 
@@ -1224,5 +951,52 @@ leaflet() %>%
 
 
 
+```
+
+## Districts likely to be sampled
+
+```{r sampleddistricts}
+kenya_districs <- 
+  kenya_adm2[over(kenya_adm2,gUnaryUnion(nairobi_bins),
+                  returnList = FALSE) %>%  
+               is.na() %>% 
+               `!` %>% 
+               which,] %>% 
+  st_as_sf()
+
+zambia_districts <- 
+  zambia_adm2[over(zambia_adm2,
+                   gUnaryUnion(bind(lusaka_bins,
+                                    zambia_sampling_bin))) %>% 
+                is.na() %>% 
+                `!` %>%
+                which,] %>% 
+  st_as_sf()
+
+
+malawi_districs <- malawi_adm1[over(malawi_adm1,
+                 gUnaryUnion(bind(lilongwe_bins,maw_sampling_bin))) %>% 
+              is.na() %>% 
+              `!` %>% 
+              which,] %>% 
+  st_as_sf()
+
+
+
+kenya_districs
+
+
+```
+
+```{r kenyadistric,echo=FALSE,fig.cap="Districts in Kenya",fig.align="center"}
+kenya_districs %>% rename(District=NAME_2) %>% ggplot() + geom_sf(aes(fill=District)) 
+```
+
+```{r zambiadistric,echo=FALSE,fig.cap="Districts in Kenya",fig.align="center"}
+zambia_districts %>% rename(District=NAME_2) %>% ggplot() + geom_sf(aes(fill=District)) 
+```
+
+```{r malawidistric,echo=FALSE,fig.cap="Districts in Kenya",fig.align="center"}
+malawi_districs %>% rename(District=NAME_1) %>% ggplot() + geom_sf(aes(fill=District)) 
 ```
 

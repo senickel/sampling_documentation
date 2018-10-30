@@ -17,7 +17,7 @@
 
 <meta name="author" content="Sebastian Nickel" />
 
-<meta name="date" content="2018-10-22" />
+<meta name="date" content="2018-10-30" />
 
 
 <meta name="description" content="Geographic sampling">
@@ -39,6 +39,7 @@
 <script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
 <script src="libs/leaflet-providers-1.1.17/leaflet-providers.js"></script>
 <script src="libs/leaflet-providers-plugin-2.0.2/leaflet-providers-plugin.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <script type="text/javascript">
 
 // toggle visibility of R source blocks in R Markdown output
@@ -125,13 +126,13 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="introduction.html#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
 <li class="has-sub"><a href="areas.html#areas"><span class="toc-section-number">2</span> Spatial polygon areas</a><ul>
 <li><a href="areas.html#cities"><span class="toc-section-number">2.1</span> Cities</a></li>
-<li><a href="areas.html#kenyan-tanzania-border"><span class="toc-section-number">2.2</span> Kenyan-Tanzania border</a></li>
-<li class="has-sub"><a href="areas.html#malawi-tanzania-zambia-border"><span class="toc-section-number">2.3</span> Malawi-Tanzania-Zambia border</a><ul>
-<li><a href="areas.html#malawi"><span class="toc-section-number">2.3.1</span> Malawi</a></li>
-<li><a href="areas.html#tanzania-southern-border-area"><span class="toc-section-number">2.3.2</span> Tanzania Southern border area</a></li>
-<li><a href="areas.html#zambia"><span class="toc-section-number">2.3.3</span> Zambia</a></li>
+<li class="has-sub"><a href="areas.html#malawi-tanzania-zambia-border"><span class="toc-section-number">2.2</span> Malawi-Tanzania-Zambia border</a><ul>
+<li><a href="areas.html#malawi"><span class="toc-section-number">2.2.1</span> Malawi</a></li>
+<li><a href="areas.html#tanzania-southern-border-area"><span class="toc-section-number">2.2.2</span> Tanzania Southern border area</a></li>
+<li><a href="areas.html#zambia"><span class="toc-section-number">2.2.3</span> Zambia</a></li>
 </ul></li>
-<li><a href="areas.html#summarising-sampling-border-areas"><span class="toc-section-number">2.4</span> Summarising: Sampling border areas</a></li>
+<li><a href="areas.html#summarising-sampling-border-areas"><span class="toc-section-number">2.3</span> Summarising: Sampling border areas</a></li>
+<li><a href="areas.html#districts-likely-to-be-sampled"><span class="toc-section-number">2.4</span> Districts likely to be sampled</a></li>
 </ul></li>
 <li><a href="prep.html#prep"><span class="toc-section-number">3</span> Extract Population Data</a></li>
 <li class="has-sub"><a href="sampling.html#sampling"><span class="toc-section-number">4</span> Sampling</a><ul>
@@ -192,10 +193,22 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">);</span><span class="ch">\n</span><span class="st">out body;</span><span class="ch">\n</span><span class="st">&gt;;</span><span class="ch">\n</span><span class="st">out skel qt;&#39;</span>)
   
   query_spatial &lt;-<span class="st"> </span><span class="kw">overpass_query</span>(overpass_query)
+  <span class="cf">if</span> (<span class="kw">is.null</span>(query_spatial)) <span class="kw">return</span>(<span class="ot">NULL</span>)
+
   <span class="kw">proj4string</span>(query_spatial) &lt;-<span class="st"> </span><span class="kw">CRS</span>(<span class="st">&quot;+init=epsg:4326&quot;</span>)
   
+  select_type &lt;-<span class="st"> </span>sp_obj<span class="op">$</span>type <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span>unique <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">u=</span>.) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(<span class="kw">grepl</span>(<span class="st">&quot;Unit&quot;</span>,u)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">v=</span><span class="kw">strsplit</span>(u,<span class="st">&quot;_&quot;</span>,<span class="dt">fixed=</span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">lapply</span>(<span class="st">`</span><span class="dt">[[</span><span class="st">`</span>,<span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(v<span class="op">==</span><span class="kw">max</span>(<span class="kw">as.numeric</span>(v))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(u) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span>unlist
   
-  sp_obj &lt;-<span class="st"> </span>sp_obj[sp_obj<span class="op">$</span>type<span class="op">!=</span><span class="st">&quot;Bin&quot;</span>,]
+  
+  sp_obj &lt;-<span class="st"> </span>sp_obj[sp_obj<span class="op">$</span>type<span class="op">==</span>select_type,]
   sp_obj_buf &lt;-<span class="st"> </span><span class="kw">buffer_shape</span>(sp_obj,<span class="dv">5</span>)
   sp_obj_buf &lt;-<span class="st"> </span>sp_obj_buf[[<span class="dv">2</span>]]
   
@@ -203,25 +216,219 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
   amenities_cropped &lt;-<span class="st"> </span>
 <span class="st">    </span><span class="kw">crop</span>(query_spatial,<span class="kw">spTransform</span>(sp_obj_buf,<span class="kw">CRS</span>(<span class="kw">proj4string</span>(query_spatial)))) 
   
+  <span class="cf">if</span> (<span class="kw">is.null</span>(amenities_cropped)) <span class="kw">return</span>(<span class="ot">NULL</span>)
+  
   amenities_cropped_restr &lt;-<span class="st"> </span>
 <span class="st">    </span>amenities_cropped[amenities_cropped<span class="op">$</span>amenity<span class="op">%in%</span>amenities_df<span class="op">$</span>name,]
   
-  amenities_cropped<span class="op">$</span>amenity[<span class="op">!</span><span class="kw">is.na</span>(amenities_cropped<span class="op">$</span>religion)] <span class="op">%&gt;%</span><span class="st"> </span>table
+  <span class="co"># amenities_cropped$amenity[!is.na(amenities_cropped$religion)] %&gt;% table</span>
   
   
-  <span class="kw">plot</span>(sp_obj_buf,<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
-  <span class="kw">pa</span>(sp_obj,<span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)
-  amenities_cropped_restr
+  <span class="co"># plot(sp_obj_buf,col=&quot;red&quot;)</span>
+  <span class="co"># pa(sp_obj,col=&quot;blue&quot;)</span>
+  <span class="co"># amenities_cropped_restr</span>
   
   amenities_cropped_restr_sf &lt;-<span class="st"> </span>amenities_cropped_restr <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">st_as_sf</span>()
-  amenities_cropped_restr_sf<span class="op">$</span>amenity
+  <span class="co"># amenities_cropped_restr_sf$amenity</span>
   
   amenities_cropped_restr_sf &lt;-<span class="st"> </span>amenities_cropped_restr_sf <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cat =</span> <span class="kw">sapply</span>(amenity,<span class="cf">function</span>(x) amenities_df<span class="op">$</span>category[amenities_df<span class="op">$</span>name<span class="op">==</span>x]))
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cat =</span> <span class="kw">sapply</span>(amenity,<span class="cf">function</span>(x) 
+      amenities_df<span class="op">$</span>category[amenities_df<span class="op">$</span>name<span class="op">==</span>x]))
   
   amenities_cropped_restr_sf
 }</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_amenities &lt;-<span class="st"> </span><span class="kw">extract_from_osm</span>(nairobi_1k_sample_complete)
+lusaka_amenities &lt;-<span class="st"> </span><span class="kw">extract_from_osm</span>(lusaka_1k_sample_complete)
+lilongwe_amenities &lt;-<span class="st"> </span><span class="kw">extract_from_osm</span>(lilongwe_1k_sample_complete)
+zambia_amenities &lt;-<span class="st"> </span><span class="kw">extract_from_osm</span>(zambia_5k_1k_sample_200_complete)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lays &lt;-<span class="st"> </span><span class="kw">ogrListLayers</span>(<span class="st">&quot;data/zambia/Zam_Sample_schs.kml&quot;</span>)
+zambia_wards &lt;-<span class="st"> </span><span class="kw">readKML</span>(<span class="st">&quot;data/zambia/Zam_Sample_schs.kml&quot;</span>,
+                        <span class="dt">layer=</span>lays[<span class="dv">1</span>])
+
+zambia_schools &lt;-<span class="st"> </span><span class="kw">readKML</span>(<span class="st">&quot;data/zambia/Zam_Sample_schs.kml&quot;</span>,
+                        <span class="dt">layer=</span>lays[<span class="dv">2</span>])</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">osm_school &lt;-<span class="st"> </span>lusaka_amenities <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(amenity<span class="op">==</span><span class="st">&quot;school&quot;</span><span class="op">&amp;!</span><span class="kw">is.na</span>(name)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(name) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as</span>(<span class="st">&quot;Spatial&quot;</span>) 
+
+
+<span class="co"># ring wise</span>
+kms &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="fl">0.05</span>) 
+kms_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">f =</span> kms[<span class="dv">1</span><span class="op">:</span>(<span class="kw">length</span>(kms)<span class="op">-</span><span class="dv">1</span>)],
+                     <span class="dt">s =</span> kms[<span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(kms)])
+kd &lt;-<span class="st"> </span>kms_df[<span class="dv">1</span>,] <span class="op">%&gt;%</span><span class="st"> </span>unlist
+x &lt;-<span class="st"> </span><span class="dv">1</span>
+
+substract_circle &lt;-<span class="st"> </span><span class="cf">function</span>(point,buffer_vector) {
+  b2 &lt;-<span class="st"> </span>point <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">buffer_shape</span>(buffer_vector[<span class="dv">2</span>])
+  <span class="cf">if</span> (buffer_vector[<span class="dv">1</span>]<span class="op">==</span><span class="dv">0</span>) <span class="kw">return</span>(b2[[<span class="dv">2</span>]])
+  b1 &lt;-<span class="st"> </span>point <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">buffer_shape</span>(buffer_vector[<span class="dv">1</span>])
+  <span class="kw">gDifference</span>(b2[[<span class="dv">2</span>]],b1[[<span class="dv">2</span>]])
+}
+
+
+pairs &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(kms_df)
+                ,<span class="cf">function</span>(kdx) {
+  <span class="kw">message</span>(kdx)
+  kd &lt;-<span class="st"> </span>kms_df[kdx,]
+  osm_school_buf &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(osm_school),<span class="cf">function</span>(x) {
+    <span class="kw">substract_circle</span>(osm_school[x,],kd)
+  }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">do.call</span>(bind,.)
+
+  <span class="co"># fison_school_buf &lt;- lapply(1:length(zambia_schools),function(x) {</span>
+  <span class="co">#   substract_circle(zambia_schools[x,],kd)</span>
+  <span class="co"># }) %&gt;% </span>
+  <span class="co">#   do.call(bind,.)</span>
+  
+  
+  over_df &lt;-<span class="st"> </span><span class="kw">over</span>(zambia_schools,osm_school_buf) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">osm =</span> .,<span class="dt">fison =</span> <span class="kw">names</span>(.) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                 </span><span class="kw">strsplit</span>(<span class="st">&quot;.&quot;</span>,<span class="dt">fixed=</span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                 </span><span class="kw">sapply</span>(<span class="st">`</span><span class="dt">[[</span><span class="st">`</span>,<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(fison)<span class="op">&amp;!</span><span class="kw">is.na</span>(osm))
+  
+   
+  
+   <span class="co"># over_df &lt;- over(osm_school_buf,fison_school_buf,returnList = FALSE) %&gt;% </span>
+   <span class="co">#  data.frame(fison=.,osm=names(.) %&gt;% </span>
+   <span class="co">#               strsplit(&quot;.&quot;,fixed=TRUE) %&gt;% </span>
+   <span class="co">#               sapply(`[[`,1)) %&gt;% </span>
+   <span class="co">#  filter(!is.na(fison)&amp;!is.na(osm))</span>
+  
+   <span class="cf">if</span> (<span class="kw">nrow</span>(over_df)<span class="op">==</span><span class="dv">0</span>) <span class="kw">return</span>(<span class="ot">NULL</span>)
+  
+   <span class="kw">data.frame</span>(over_df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">apply</span>(<span class="dv">2</span>,as.numeric),
+    <span class="dt">max_radius=</span>kd[<span class="dv">2</span>],
+    <span class="dt">rn=</span> <span class="kw">apply</span>(over_df,<span class="dv">1</span>,paste0,<span class="dt">collapse=</span><span class="st">&quot;&quot;</span>),
+    <span class="dt">row.names =</span> <span class="dv">4</span>)
+}) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.)
+ 
+pairs2 &lt;-<span class="st"> </span>pairs <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(osm,fison) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">distance=</span><span class="kw">min</span>(s))
+
+school_names_with_dist &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">lapply</span>(kms_df<span class="op">$</span>s,
+         <span class="cf">function</span>(x1) {
+           <span class="kw">apply</span>(pairs2 <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                   </span><span class="kw">filter</span>(distance<span class="op">==</span>x1),<span class="dv">1</span>,
+                 <span class="cf">function</span>(x) { 
+                   <span class="cf">if</span> (<span class="kw">is.na</span>(zambia_schools<span class="op">$</span>Name[x[<span class="dv">2</span>]])<span class="op">|</span>
+<span class="st">                       </span><span class="kw">is.na</span>(osm_school<span class="op">$</span>name[x[<span class="dv">1</span>]])) <span class="kw">return</span>(<span class="ot">NULL</span>)
+                   <span class="kw">data.frame</span>(<span class="dt">fison=</span>zambia_schools<span class="op">$</span>Name[x[<span class="dv">2</span>]],
+                              <span class="dt">osm=</span>osm_school<span class="op">$</span>name[x[<span class="dv">1</span>]])
+                 }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">do.call</span>(rbind,.) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">             </span><span class="kw">cbind</span>(<span class="dt">radius=</span>x1)
+           }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.)
+
+<span class="kw">write.csv</span>(school_names_with_dist,<span class="st">&quot;output/zambia_school_merge.csv&quot;</span>,
+          <span class="dt">row.names =</span> <span class="ot">FALSE</span>)
+school_names_with_dist[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,]
+
+
+<span class="kw">apply</span>(pairs2,<span class="dv">1</span>,<span class="cf">function</span>(x) {
+  <span class="cf">if</span> (<span class="kw">is.na</span>(zambia_schools<span class="op">$</span>Name[x[<span class="dv">1</span>]])<span class="op">|</span>
+<span class="st">      </span><span class="kw">is.na</span>(osm_school<span class="op">$</span>name[x[<span class="dv">2</span>]])) <span class="kw">return</span>(<span class="ot">NULL</span>)
+  <span class="kw">message</span>(<span class="st">&quot;t&quot;</span>)
+  <span class="kw">data.frame</span>(<span class="dt">fison=</span>zambia_schools<span class="op">$</span>Name[x[<span class="dv">1</span>]],
+  <span class="dt">osm=</span>osm_school<span class="op">$</span>name[x[<span class="dv">2</span>]])
+}) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.)
+
+
+lusaka_close_schools &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),<span class="cf">function</span>(y) {
+  osm_school_buf &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(osm_school),<span class="cf">function</span>(x) {
+    b1 &lt;-<span class="st"> </span>osm_school[x,] <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">buffer_shape</span>(y)
+    b1[[<span class="dv">2</span>]]
+  }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">do.call</span>(bind,.)
+  
+  fison_school_buf &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(zambia_schools),<span class="cf">function</span>(x) {
+    b2 &lt;-<span class="st"> </span>zambia_schools[x,] <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">buffer_shape</span>(y)
+    b2[[<span class="dv">2</span>]]
+  }) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">do.call</span>(bind,.)
+  
+  
+  
+  
+  
+  over_df &lt;-<span class="st"> </span><span class="kw">over</span>(osm_school_buf,fison_school_buf,<span class="dt">returnList =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">fison=</span>.,<span class="dt">osm=</span><span class="kw">names</span>(.) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                 </span><span class="kw">strsplit</span>(<span class="st">&quot;.&quot;</span>,<span class="dt">fixed=</span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                 </span><span class="kw">sapply</span>(<span class="st">`</span><span class="dt">[[</span><span class="st">`</span>,<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(fison)<span class="op">&amp;!</span><span class="kw">is.na</span>(osm))
+  over_df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">apply</span>(<span class="dv">2</span>,as.numeric)
+})
+
+lusaka_close_schools[[<span class="dv">3</span>]]
+
+osm_school<span class="op">@</span>data <span class="op">%$%</span><span class="st"> </span><span class="kw">table</span>(name) <span class="op">%&gt;%</span><span class="st"> </span>length
+osm_school <span class="op">%&gt;%</span><span class="st"> </span>length
+osm_school<span class="op">$</span>name
+
+<span class="kw">plot</span>(fison_school_buf[over_df[,<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span>unique,])
+<span class="kw">pa</span>(osm_school_buf[over_df[,<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span>unique,],<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+x&lt;-over_df[<span class="dv">2</span>,] <span class="op">%&gt;%</span><span class="st"> </span>unlist
+
+<span class="kw">apply</span>(lusaka_close_schools[[<span class="dv">2</span>]],<span class="dv">1</span>,<span class="cf">function</span>(x) {
+  
+  <span class="cf">if</span> (<span class="kw">is.na</span>(zambia_schools<span class="op">$</span>Name[x[<span class="dv">1</span>]])<span class="op">|</span>
+<span class="st">      </span><span class="kw">is.na</span>(osm_school<span class="op">$</span>name[x[<span class="dv">2</span>]])) <span class="kw">return</span>(<span class="ot">NULL</span>)
+  <span class="kw">message</span>(<span class="st">&quot;t&quot;</span>)
+  <span class="kw">data.frame</span>(<span class="dt">fison=</span>zambia_schools<span class="op">$</span>Name[x[<span class="dv">1</span>]],
+  <span class="dt">osm=</span>osm_school<span class="op">$</span>name[x[<span class="dv">2</span>]])
+}) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">do.call</span>(rbind,.)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_amenities<span class="op">$</span>cat <span class="op">%&gt;%</span>
+<span class="st">  </span>unique
+x1 &lt;-<span class="st"> &quot;health&quot;</span>
+split_amenity &lt;-<span class="st"> </span><span class="cf">function</span>(amenity,x1,where) {
+  
+  x1_sf &lt;-<span class="st"> </span>amenity <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(cat<span class="op">==</span>x1) 
+  
+  x1_keep &lt;-<span class="st"> </span>x1_sf <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">apply</span>(<span class="dv">2</span>,<span class="cf">function</span>(y) <span class="op">!</span><span class="kw">all</span>(<span class="kw">is.na</span>(y))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span>which
+  
+  x1_sf <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(x1_keep) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>geometry) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">write.csv</span>(<span class="kw">paste0</span>(<span class="st">&quot;output/amenities/&quot;</span>,where,<span class="st">&quot;/osm_amenity_&quot;</span>,x1,<span class="st">&quot;.csv&quot;</span>),
+              <span class="dt">row.names =</span> <span class="ot">FALSE</span>)
+}
+
+<span class="kw">sapply</span>(nairobi_amenities<span class="op">$</span>x<span class="op">&lt;</span>cat <span class="op">%&gt;%</span>
+<span class="st">         </span>unique,
+       <span class="dt">FUN =</span> split_amenity,
+       <span class="dt">amenity =</span> nairobi_amenities,
+       <span class="dt">where =</span> <span class="st">&quot;nairobi&quot;</span>)
+
+<span class="kw">sapply</span>(lusaka_amenities<span class="op">$</span>cat <span class="op">%&gt;%</span>
+<span class="st">         </span>unique,
+       <span class="dt">FUN =</span> split_amenity,
+       <span class="dt">amenity =</span> lusaka_amenities,
+       <span class="dt">where =</span> <span class="st">&quot;lusaka&quot;</span>)
+
+<span class="kw">sapply</span>(lilongwe_amenities<span class="op">$</span>cat <span class="op">%&gt;%</span>
+<span class="st">         </span>unique,
+       <span class="dt">FUN =</span> split_amenity,
+       <span class="dt">amenity =</span> lilongwe_amenities,
+       <span class="dt">where =</span> <span class="st">&quot;lilongwe&quot;</span>)</code></pre></div>
 
 </div>
 <p style="text-align: center;">

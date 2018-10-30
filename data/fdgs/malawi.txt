@@ -1,0 +1,12 @@
+Latitude: S59'41'25
+Longitude: E33'14'40
+Latitude: S10'49'39'
+Longitude: E33'24'15'
+Latitude: S12'15'21'
+Longitude: E33'20'57'
+Latitude: -12.57686666666669
+Longitude:33.341503333333335
+Latitude:-12.57686666666669
+Longitude: 33.341503333333335 
+Latitude: -13.782009999999998
+Longitude: 32.79757
