@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta property="og:title" content="Chapter 1 Introduction | Geographic sampling" />
+<meta property="og:title" content="Chapter 7 100 meter units | Geographic sampling" />
 <meta property="og:type" content="book" />
 
 
@@ -20,9 +20,9 @@
 <meta name="date" content="2019-01-10" />
 
 
-<meta name="description" content="Chapter 1 Introduction | Geographic sampling">
+<meta name="description" content="Chapter 7 100 meter units | Geographic sampling">
 
-<title>Chapter 1 Introduction | Geographic sampling</title>
+<title>Chapter 7 100 meter units | Geographic sampling</title>
 
 <link href="libs/tufte-css-2015.12.29/tufte-fonts.css" rel="stylesheet" />
 <link href="libs/tufte-css-2015.12.29/tufte-background.css" rel="stylesheet" />
@@ -162,35 +162,50 @@ code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div class="row">
 <div class="col-sm-12">
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
-<p>The book is divided into four broad chapters that contain all necessary steps to replicate the sampling for GLD’s urbanization project.<br />
-The following chapter discusses and walks through how the necessary spatial polygon files are constructed. The third chapter focus on the preparation of the sampling areas, whereas the fourth chapter describes the sampling methods. Finally, the two different sampling methods are discussed by simulating different tables for selected key variables.</p>
+<div id="meter-units" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> 100 meter units</h1>
+<p>For now, 1 km squares are sampled in all survey areas. These 1 kilometer squares are abstractions for a village or neighborhood and the aim is to interview 25 people in each. However, there is a need to get a more diverse picture of each 1 km square and hence, they will be sliced up into smaller 100 meter squares that in turn get drawn by PPS. The 100 meter squares are eyeballed by using Google Earth Pro, to check if those are inhabited.<br />
+The sampling of the 100 meter square units is done by the function <code>add_100m_units</code>. Here, missing or <code>0</code> values in WorldPop are set to <code>0.0001</code> to make sure that all 100 meter squares are taking into account that are lying in the sampling areas.</p>
+<p>The function <code>preapre_100m_eyeballing</code> reduces the SpatialPolygonsDataFrame to a CSV file. The source files can be loaded from <a href="https://github.com/senickel/Select10by10">GitHub</a> and the executable exe from <a href="">here</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lusaka_1k_sample_complete_100m &lt;-<span class="st"> </span><span class="kw">add_100m_units</span>(lusaka_1k_sample_complete,lusaka_population)
+nairobi_1k_sample_complete_100m &lt;-<span class="st"> </span><span class="kw">add_100m_units</span>(nairobi_1k_sample_complete,nairobi_population)
+lilongwe_1k_sample_complete_100m &lt;-<span class="st"> </span><span class="kw">add_100m_units</span>(lilongwe_1k_sample_complete,lilongwe_population)
+malawi_1k_sample_complete_100m &lt;-<span class="st"> </span><span class="kw">add_100m_units</span>(malawi_sample_200_complete,malawi_population)
+zambia_1k_sample_complete_100m &lt;-<span class="st"> </span><span class="kw">add_100m_units</span>(zambia_sample_200_complete,zambia_population)</code></pre></div>
+<pre><code>## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(knitr)
-<span class="kw">library</span>(geosampling)
-<span class="kw">library</span>(sf)
-<span class="kw">library</span>(rgdal)
-<span class="kw">library</span>(sebstoolkit2)
-<span class="kw">library</span>(rgeos)
-<span class="kw">library</span>(rasterVis)
-<span class="kw">library</span>(overpass)
-<span class="kw">library</span>(raster)
-<span class="kw">library</span>(leaflet)
-<span class="kw">library</span>(magrittr)
-<span class="kw">library</span>(kableExtra)
-<span class="kw">library</span>(gridExtra)
-<span class="kw">library</span>(bookdown)
-<span class="kw">library</span>(webshot)
-<span class="kw">library</span>(htmlwidgets)
-<span class="kw">library</span>(magick)
-<span class="co"># knitr::opts_chunk$set(fig.align=&quot;center&quot;)</span>
-<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length
+
+## Warning in fld_names == attr(res, &quot;ofld_nms&quot;): longer object length is not
+## a multiple of shorter object length</code></pre>
+
 </div>
 <p style="text-align: center;">
-<a href="index.html"><button class="btn btn-default">Previous</button></a>
-<a href="areas.html"><button class="btn btn-default">Next</button></a>
+<a href="evaluating-the-sample.html"><button class="btn btn-default">Previous</button></a>
+<a href="appendix.html"><button class="btn btn-default">Next</button></a>
 </p>
 </div>
 </div>

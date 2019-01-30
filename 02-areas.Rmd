@@ -14,6 +14,7 @@ library(raster)
 library(leaflet)
 library(magrittr)
 library(kableExtra)
+library(xml2)
 library(gridExtra)
 library(bookdown)
 library(webshot)
@@ -53,6 +54,10 @@ moz_adm0 <- readOGR("../../gadm/suppl_files/MOZ/gadm36_MOZ_0.shp")
 # zam_pop=raster("../../Zambia~/ZMB_ppp_v2c_2015_UNadj.tif")
 # tan_pop=raster('../../United~/TZA_popmap15adj_v2b.tif')
 # maw_pop=raster('../../Malawi~/MWI_ppp_2015_adj_v2.tif')
+
+maw_zam=malawi_adm0 %>% 
+    as("SpatialLines") %>% 
+    crop(buffer_shape(zambia_adm0,0.001)[[2]])
 
 city_table <- list(c(city="Lilongwe",long=33.783333,lat=-13.983333),
   c(city="Lusaka",long=28.283333,lat=-15.416667),
@@ -179,58 +184,138 @@ lusaka_bins <- prepare_sampling_bins_city(
   radius_outer_circle=50)
 ```
 
-```{r borderktplot,fig.margin=TRUE,echo=FALSE,fig.cap="Kenya and Tanzania with shared land border in red.",cache=TRUE}
+```{r borderktplot,fig.margin=TRUE,echo=FALSE,fig.cap="Kenya and Tanzania with shared land border in red.",cache=TRUE,eval=FALSE}
 # load polygons
-shared_border1_with_kenya <- tanzania_adm3
+# shared_border1_with_kenya <- tanzania_adm3
 
 # remove water bodies and unify Polygons
-shared_border_with_kenya <- 
-  shared_border1_with_kenya[shared_border1_with_kenya$TYPE_3!='Water body',] %>% 
-  gUnaryUnion
-
-
-border_tanz_ken <- shared_border_with_kenya %>% 
-  as("SpatialLines") %>% # transform to SpatialLines
-  crop(buffer_shape(kenya_adm0,0.001)[[2]]) # crop by Kenya
-
-# select coordinates of border
-border_tanz_ken_geom <- geom(border_tanz_ken) %>% 
-    as.data.frame %>% 
-    dplyr::select(x,y)
-
-# select most Western and Eastern point. Here: start and end point of line
-start_end <- border_tanz_ken_geom[c(1,nrow(border_tanz_ken_geom)),]
-
-border_tanz_ken_df <- 
-  SpatialLinesDataFrame(border_tanz_ken,data=data.frame(x=1)) %>% 
-  fortify
-
-
-ggplot() +
-  geom_sf(fill="#89b6ff",color="#89b6ff",data=bind(tanzania_adm0a,kenya_adm0a) %>% 
-            st_as_sf()) +
-  geom_sf(data=bind(tanzania_adm0,kenya_adm0) %>% 
-            sf::st_as_sf(),
-          fill="grey60",color="grey60") +
-  geom_path(data=border_tanz_ken_geom,
-            aes(x=x,y=y),#,group=group),
-            color="red") +
-  coord_sf() +
-  theme_map()
+# shared_border_with_kenya <- 
+#   shared_border1_with_kenya[shared_border1_with_kenya$TYPE_3!='Water body',] %>% 
+#   gUnaryUnion
+# 
+# 
+# border_tanz_ken <- shared_border_with_kenya %>% 
+#   as("SpatialLines") %>% # transform to SpatialLines
+#   crop(buffer_shape(kenya_adm0,0.001)[[2]]) # crop by Kenya
+# 
+# # select coordinates of border
+# border_tanz_ken_geom <- geom(border_tanz_ken) %>% 
+#     as.data.frame %>% 
+#     dplyr::select(x,y)
+# 
+# # select most Western and Eastern point. Here: start and end point of line
+# start_end <- border_tanz_ken_geom[c(1,nrow(border_tanz_ken_geom)),]
+# 
+# border_tanz_ken_df <- 
+#   SpatialLinesDataFrame(border_tanz_ken,data=data.frame(x=1)) %>% 
+#   fortify
+# 
+# 
+# ggplot() +
+#   geom_sf(fill="#89b6ff",color="#89b6ff",data=bind(tanzania_adm0a,kenya_adm0a) %>% 
+#             st_as_sf()) +
+#   geom_sf(data=bind(tanzania_adm0,kenya_adm0) %>% 
+#             sf::st_as_sf(),
+#           fill="grey60",color="grey60") +
+#   geom_path(data=border_tanz_ken_geom,
+#             aes(x=x,y=y),#,group=group),
+#             color="red") +
+#   coord_sf() +
+#   theme_map()
 
 
 ```
 
-
-Figure \@ref(fig:darraw) shows the sampling areas for Dar Es Salaam. In Panel A Dar es Salaam has 7 different sampling areas, but one is rather small and is merged with its neighboring area (B and C).^[[Map style borrowed from Timo Grossenbacher.](https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/)]  
-The sampling areas for all three cities are visualized in Figure \@ref(fig:leafletmap).  
-
+>Figure \@ref(fig:darraw) shows the sampling areas for Dar Es Salaam. In Panel A Dar es Salaam has 7 different sampling areas, but one is rather small and is merged with its neighboring area (B and C).^[[Map style borrowed from Timo Grossenbacher.](https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/)]  
+>The sampling areas for all three cities are visualized in Figure \@ref(fig:leafletmap).  
 
 
-## Malawi-Tanzania-Zambia border
+
+## Malawi-Zambia border
+
+```{r executehereshowlater,include=FALSE}
+
+# extract the border that Tanzania shares with Zambia and Malawi
+shared_border1_of_tanz <- tanzania_adm3
+
+shared_border_of_tanz2 <- shared_border1_of_tanz[shared_border1_of_tanz$TYPE_3!='Water body',]
+
+shared_border_of_tanz <- gUnaryUnion(shared_border_of_tanz2)
+
+border_for_tanz <- bind(zambia_adm0,malawi_adm0)
+
+# identify lake Tanganyika
+tanganyika_full <- lakes[grep("Tanganyika",lakes$name_en),]
+
+# Zambian side
+tanganyika_zambia <- border_for_tanz %>% 
+  as("SpatialLines") %>% 
+  crop(buffer_shape(tanganyika_full,0.1)[[2]])
+
+# need to prolong border from Zambia
+zam_line_to_lake <- tanganyika_zambia@lines[[1]]@Lines[[1]]@coords[1:2,] %>% 
+  as.data.frame()
+
+split_line_tanzania_tangayika<-
+  rbind(new_line_thru_math(lm(y~x,data=zam_line_to_lake)$coef,
+                           x_vector = 40,
+                           p4s = proj4string(tanganyika_zambia)
+  )@lines[[1]]@Lines[[1]]@coords,
+  zam_line_to_lake) %>%
+  coords_to_line(p4s = proj4string(tanganyika_zambia))
+
+# shore line tangayika tanzani
+tanganyika_tanzania<-crop(tanzania_adm0 %>%
+                            as("SpatialLines"),
+                          buffer_shape(tanganyika_full,10)[[2]])
+# 
+# # coordinates of the intersection between the prolonged border line and the Tanganyika shore
+tanganyika_tanzania_split_point <-
+  gIntersection(tanganyika_tanzania,split_line_tanzania_tangayika)@coords
+# 
+# clip tanganyika_tanzania at tanganyika_tanzania_split_point
+line_list<-lapply(1:length(tanganyika_tanzania@lines[[1]]@Lines),function(x) {
+  l1<-tanganyika_tanzania@lines[[1]]@Lines[[x]]@coords %>%
+    as.data.frame() %>%
+    filter(y<=tanganyika_tanzania_split_point[1,2])
+  if (nrow(l1)==0) return()
+  list(coords_to_line(l1,proj4string(tanganyika_zambia)))
+})
+
+# Sampling line for the Tanganyika line on the Tanzanian side
+tan_line_to_lake<-from_list_to_poly3(line_list) %>%
+  crop(tanzania_adm0a) %>%
+  gDifference(buffer_shape(zambia_adm0a,0.01)[[2]])
 
 
-```{r lineTZtanganyikaplot,cache=TRUE,fig.margin=TRUE,echo=FALSE,fig.cap="Sampling line at lake Tanganyika for Zambia (A) and Tanzania (B). The blue line indicates the prolonged DRC-Zambian border to limit the sampling line on the Tanzanian side of Lake Tanganyika."}
+# Zambia
+border_for_zamb1 <- shared_border_of_tanz %>% 
+  as("SpatialLines") %>% 
+  crop(buffer_shape(zambia_adm0,0.001)[[2]])
+
+border_for_zamb2 <- bind(border_for_zamb1,tanganyika_zambia,maw_zam) 
+
+# Tanzania
+border_for_tanz_line1 <- border_for_tanz %>%
+  as("SpatialLines")
+
+border_for_tanz_line2 <- crop(border_for_tanz_line1,
+                              buffer_shape(tanzania_adm0,0.001)[[2]])
+
+border_for_tanz3 <- bind(tan_line_to_lake,border_for_tanz_line2)
+
+# Malawi
+border_for_maw1 <- shared_border_of_tanz %>% 
+  as("SpatialLines") %>% 
+  crop(buffer_shape(malawi_adm0,0.001)[[2]])
+
+border_for_maw2 <- list(border_for_maw1,maw_zam) %>% 
+  do.call(bind,.)
+
+
+```
+
+```{r lineTZtanganyikaplot,cache=TRUE,fig.margin=TRUE,echo=FALSE,fig.cap="Sampling line at lake Tanganyika for Zambia. \\label{fig:zambiaztanganyikashore}"}
 lakes_crop<-crop(lakes,extent_to_polygon(bind(tanzania_adm0,zambia_adm0,drc_adm0)))
 label_tanganyika <- list(c(30.7,-9,"Zambia"),
   c(30.15,-8,"DRC"),
@@ -254,27 +339,29 @@ g_base<-ggplot() +
     theme_map() + 
   geom_text(data=label_tanganyika,aes(x=x,y=y,label=label)) 
 
-g_zamb <- g_base +
+# g_zamb <- 
+g_base +
   geom_sf(color="red",size=1.2,data=tanganyika_zambia %>%
             st_as_sf()) +
   coord_sf(xlim = bbox(tanganyika_full)[1,]+c(1,0.5),
            ylim = bbox(tanganyika_full)[2,]+c(-0.5,-4)) +
   ggtitle("A")
 
-g_tanz<-g_base +
-  geom_sf(size=1.2,color="blue",data=split_line_tanzania_tangayika %>% 
-            st_as_sf()) +
-  geom_sf(size=1.2,color="red",data=tan_line_to_lake %>% 
-            st_as_sf()) +
-    coord_sf(xlim = bbox(tanganyika_full)[1,]+c(1,0.5),
-           ylim = bbox(tanganyika_full)[2,]+c(-0.5,-4)) +
-  ggtitle("B")
+# g_tanz<-g_base +
+#   geom_sf(size=1.2,color="blue",data=split_line_tanzania_tangayika %>% 
+#             st_as_sf()) +
+#   geom_sf(size=1.2,color="red",data=tan_line_to_lake %>% 
+#             st_as_sf()) +
+#     coord_sf(xlim = bbox(tanganyika_full)[1,]+c(1,0.5),
+#            ylim = bbox(tanganyika_full)[2,]+c(-0.5,-4)) +
+#   ggtitle("B")
 
 
-grid.arrange(g_zamb,g_tanz,nrow=1)
+# grid.arrange(g_zamb,g_tanz,nrow=1)
 ```
 
-The approach for the whole Southern border situation is a bit more complicated since there are no natural cut-off points such as the sea for the Northern border area. Furthermore, the shore of lake Tanganyika in the Western border area between Tanzania and Zambia is part of the line that will be used to draw the sampling area. On the Zambian side, the sampling line stops at the point where Zambia shares a border with the Democratic Republic of the Congo (DRC). The cut-off for the sampling line on the Tanzanian side is determined by the prolonged border line between the DRC and Zambia.
+> The approach for the whole Southern border situation is a bit more complicated since there are no natural cut-off points such as the sea for the Northern border area. Furthermore, the shore of lake Tanganyika in the Western border area between Tanzania and Zambia is part of the line that will be used to draw the sampling area. On the Zambian side, the sampling line stops at the point where Zambia shares a border with the Democratic Republic of the Congo (DRC). The cut-off for the sampling line on the Tanzanian side is determined by the prolonged border line between the DRC and Zambia.
+
 
 ```{r lineTZtanganyika,eval=FALSE}
 
@@ -333,6 +420,7 @@ tan_line_to_lake<-from_list_to_poly3(line_list) %>%
 
 ```
 
+For Zambian, the sampling area extends to all areas that are adjunct to the Tanzanian and Malawian border. The border line starts in the West as the shore of the Tanganyika lake (\ref{fig:zambiaztanganyikashore}).  
 The rest of the sampling line is extracted by defining one end at where the border between Malawi, Tanzania, and the shore of lake Malawi meet and the other where Malawi, Zambia, and Mozambique cross.
 
 
@@ -676,9 +764,9 @@ southern_tanzania_sampling_bins <- bind(southern_tanzania_sampling_bins1[c(1:5,8
 
 ```
 
-### Tanzania Southern border area
+> ### Tanzania Southern border area
 
-```{r tanzsouthern,echo=FALSE,cache=TRUE,fig.margin=TRUE,fig.cap="Southern border area of Tanzania. Panel A shows the cut-off facilitated by the prolonged Zambian border line (red). Panel B shows the final sampling area which is divided in 9 bins, because the most Western 50-100 km bins were merged due to the small size of one of them."}
+```{r tanzsouthern,echo=FALSE,cache=TRUE,fig.margin=TRUE,fig.cap="Southern border area of Tanzania. Panel A shows the cut-off facilitated by the prolonged Zambian border line (red). Panel B shows the final sampling area which is divided in 9 bins, because the most Western 50-100 km bins were merged due to the small size of one of them.",eval=FALSE}
 
 split_line_tanzania_tangayika_bf<-buffer_shape(split_line_tanzania_tangayika,
                                                0.001)
@@ -763,9 +851,9 @@ g2 <- g0 +
 grid.arrange(g1,g2,nrow=1)
 ```
 
-The Southern border area of Tanzania is also cutted off. In general, the lake sides might provide interesting variation, however this is not true if the country on the opposite shore does not belong to the countries under investigation. Hence, the prolonged Zambian border line is used to clipp the buffer zone (Figure \@ref(fig:tanzsouthern) Panel A). Note that the two most Western 50-100 km bins were merged, because of the small size of one of them (Panel B).
+>The Southern border area of Tanzania is also cutted off. In general, the lake sides might provide interesting variation, however this is not true if the country on the opposite shore does not belong to the countries under investigation. Hence, the prolonged Zambian border line is used to clipp the buffer zone (Figure \@ref(fig:tanzsouthern) Panel A). Note that the two most Western 50-100 km bins were merged, because of the small size of one of them (Panel B).
 
-```{r tanzsouthernshow1,eval=FALSE}
+```{r tanzsouthernshow1,eval=FALSE,echo=FALSE}
 
 coords1 <- split_line_tanzania_tangayika@lines[[1]]@Lines[[1]]@coords %>% 
   as.data.frame()

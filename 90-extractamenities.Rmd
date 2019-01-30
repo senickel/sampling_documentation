@@ -1,6 +1,8 @@
-# Extract amenities from OpenStreetMap
+# Appendix
 
-For the surveying 
+## Extract amenities from OpenStreetMap
+
+The survey going to be conducted focuses on local formal and informal institutions. Some secondary information can be collected by government but OpenStreetMap is a great resource which also habors a lot of those data.
 
 ```{r extractfromosm,eval=FALSE}
 extract_from_osm <- function(sp_obj) {
@@ -87,7 +89,7 @@ nairobi_amenities <- extract_from_osm(nairobi_1k_sample_complete)
 lusaka_amenities <- extract_from_osm(lusaka_1k_sample_complete)
 lilongwe_amenities <- extract_from_osm(lilongwe_1k_sample_complete)
 zambia_amenities <- extract_from_osm(zambia_5k_1k_sample_200_complete)
-
+malawi_amenities <- extract_from_osm(malawi_5k_1k_sample_200_complete)
 
 ```
 
@@ -261,6 +263,8 @@ apply(lusaka_close_schools[[2]],1,function(x) {
 saveRDS(nairobi_amenities,"output/nairobi_amenities.RData")
 saveRDS(lusaka_amenities,"output/lusaka_amenities.RData")
 saveRDS(lilongwe_amenities,"output/lilongwe_amenities.RData")
+saveRDS(zambia_amenities,"output/zambia_amenities.RData")
+saveRDS(malawi_amenities,"output/malawi_amenities.RData")
 
 ```
 
@@ -268,6 +272,8 @@ saveRDS(lilongwe_amenities,"output/lilongwe_amenities.RData")
 nairobi_amenities <- readRDS("output/nairobi_amenities.RData")
 lusaka_amenities <- readRDS("output/lusaka_amenities.RData")
 lilongwe_amenities <- readRDS("output/lilongwe_amenities.RData")
+zambia_amenities <- readRDS("output/zambia_amenities.RData")
+malawi_amenities <- readRDS("output/malawi_amenities.RData")
 
 ```
 
@@ -309,6 +315,19 @@ sapply(lilongwe_amenities$cat %>%
        FUN = split_amenity,
        amenity = lilongwe_amenities,
        where = "lilongwe")
+
+sapply(zambia_amenities$cat %>%
+         unique,
+       FUN = split_amenity,
+       amenity = zambia_amenities,
+       where = "zambia")
+
+sapply(malawi_amenities$cat %>%
+         unique,
+       FUN = split_amenity,
+       amenity = malawi_amenities,
+       where = "malawi")
+
 
 ```
 

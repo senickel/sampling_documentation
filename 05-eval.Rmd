@@ -280,12 +280,7 @@ include_graphics_thru_child(type = "replaced",
 
 
 
-```{r add100m,cache=TRUE}
 
-# nairobi_1k_sample_complete_100m <- add_100m_units(nairobi_1k_sample_complete)
-
-
-```
 
 ```{r nairobidfgs}
 
@@ -351,23 +346,6 @@ coord_decimal <- coord_matrix[!grepl("°",coord_matrix[,1]),] %>%
 
 
 
-```{r add100msave,echo=FALSE}
-# writeOGR(nairobi_1k_sample_complete_100m[nairobi_1k_sample_complete_100m$type=="Unit_1",],
-#          "output/nairobi_1k_sample_complete_only_100m.kml",
-#          layer = "nairobi",
-#          overwrite_layer = TRUE,
-#          driver = "KML")
-# 
-# 
-# writeOGR(nairobi_1k_sample_complete_100m,
-#          "output/nairobi_1k_sample_complete_with_100m.kml",
-#          layer = "nairobi",
-#          overwrite_layer = TRUE,
-#          driver = "KML")
-
-
-
-```
 
 ## Lusaka
 
@@ -564,7 +542,6 @@ include_graphics_thru_child(type = "replaced",
 
 ```{r lusakaadd100m,cache=TRUE}
 
-# lusaka_1k_sample_complete_100m <- add_100m_units(lusaka_1k_sample_complete)
 
 zambia_fdgs <- readKML("data/fdgs/Zambia Northern Eastern FGD Locations.kml") %>%
   as("SpatialPoints")
@@ -579,23 +556,7 @@ if (over(lusaka_1k_sample_complete,zambia_fdgs) %>%
 
 ```
 
-```{r lusakaadd100msave,echo=FALSE}
-# writeOGR(lusaka_1k_sample_complete_100m[lusaka_1k_sample_complete_100m$type == "Unit_1",],
-#          "output/lusaka_1k_sample_complete_only_100m.kml",
-#          layer = "lusaka",
-#          overwrite_layer = TRUE,
-#          driver = "KML")
-# 
-# 
-# writeOGR(lusaka_1k_sample_complete_100m,
-#          "output/lusaka_1k_sample_complete_with_100m.kml",
-#          layer = "lusaka",
-#          overwrite_layer = TRUE,
-#          driver = "KML")
 
-
-
-```
 
 
 ## Lilongwe
@@ -652,7 +613,8 @@ include_graphics_thru_child(type = "Almost Empty",
                             nameadd = "Lilongwe")
 
 
-
+# lilongwe_sample_150 <- bind(readKML("output/lilongwe_sample_150_sample.kml"),
+#                             readKML("output/lilongwe_sample_150_replacement.kml"))
 
 ```
 
@@ -676,7 +638,6 @@ lilongwe_replacement_units <- readLines(
                                                  change.first.letters(),")"),""))
 
   
-
 lilongwe_1k_sample_complete <- 
   bind(lilongwe_sample_150[
     lilongwe_sample_150$pick=="Sample"&
@@ -746,35 +707,17 @@ include_graphics_thru_child(type = "replaced",
 
 ```{r lilongweadd100m,cache=TRUE}
 
-# lilongwe_1k_sample_complete_100m <- add_100m_units(lilongwe_1k_sample_complete)
 # 
-# malawi_fdgs <- readKML("data/fdgs/Zambia Northern Eastern FGD Locations.kml") %>%
-#   as("SpatialPoints")
-# 
-# 
-# if (over(lilongwe_1k_sample_complete_100m,zambia_fdgs) %>% 
-#   is.na %>% 
-#   `!` %>% 
-#   which() %>% 
-#   length() == 0) cat("No overlap between sample and FDGs.")
-
-
-```
-
-```{r lilongweadd100msave,echo=FALSE}
-# writeOGR(lilongwe_1k_sample_complete_100m[lilongwe_1k_sample_complete_100m$type == "Unit_1",],
-#          "output/lilongwe_1k_sample_complete_only_100m.kml",
-#          layer = "lilongwe",
-#          overwrite_layer = TRUE,
-#          driver = "KML")
+malawi_fdgs <- read.csv("data/fdgs/GLD_FDGs_GPS Recordings.csv") %>% head %>% 
+  dplyr::select(gps.Longitude,gps.Latitude) %>% 
+  SpatialPoints(proj4string = CRS(proj4string(lilongwe_1k_sample_complete)))
 # 
 # 
-# writeOGR(lilongwe_1k_sample_complete_100m,
-#          "output/lilongwe_1k_sample_complete_with_100m.kml",
-#          layer = "lilongwe",
-#          overwrite_layer = TRUE,
-#          driver = "KML")
-
+if (over(lilongwe_1k_sample_complete[lilongwe_1k_sample_complete$type=="Unit_2",],malawi_fdgs) %>%
+  is.na %>%
+  `!` %>%
+  which() %>%
+  length() == 0) cat("No overlap between sample and FDGs.")
 
 
 ```
@@ -923,7 +866,8 @@ writeOGR(zambia_5k_1k_sample_200_complete,
          layer = "zambia",overwrite_layer = TRUE)
 
 ```
-```{r sampled_enough,echo=FALSE}
+
+```{r zambia_sampled_enough,echo=FALSE}
 zambia_5k_1k_sample_200_complete %>% 
   st_as_sf() %>% 
   filter(almost_empty=="Full"&type=="Unit_2") %>% 
@@ -975,32 +919,198 @@ resample_check(nairobi_1k_sample_complete,nairobi_sample_150)
   
 ```
 
-```{r}
-# tf <- readLines("data/fdgs/malawi.txt") %>% 
-#   matrix(ncol=2,byrow=TRUE) %>% 
-#   apply(2,function(x) strsplit(x,":") %>% 
-#           sapply(`[[`,2) %>% 
-#           gsub(" ","",.) %>% 
-#           gsub("S","-",.) %>% 
-#           gsub("E","",.))
-# 
-# tf[1:3,1] %>% strsplit("'") %>% 
-#   sapply(function(x) {
-#     x <- x %>% as.numeric
-#     if (x[1]<0) {
-#       (abs(x[1])+x[2]/60+x[3]/3600)*(-1)
-#     } else {
-#       x[1]+x[2]/60+x[3]/3600
-#     }
-#   })
-# 
-# 
-# 
-#   apply(2,function(x) strsplit(x,"'") 
-#         
-#         
-#         %>% 
-#           sapply(function(y) y[1]as.numeric(y[2])/60)))
+
+## Malawi
+
+```{r malawicheck}
+maw_check <- readLines("output/malawi_check.txt",warn=FALSE)
+maw_check <- maw_check[maw_check!=""]
+malawi_checking <- maw_check %>% 
+  strsplit(" ") %>% 
+  lapply(function(x) {
+    if (length(x)==1) return(data.frame(ID=x[1],Full="Full"))
+    if (x[2]=="a") return(data.frame(ID=x[1],Full="Almost Full"))
+    return(NULL)
+  }) %>% 
+  do.call(rbind,.)
+
+malawi_checking$unit3 <- malawi_checking[,1] %>% 
+  strsplit("@") %>% 
+  lapply(function(x) paste(x[1],x[2],x[3],sep="@")) %>% 
+  unlist()
+
+malawi_checking$unit2 <- malawi_checking[,1] %>% 
+  strsplit("@") %>% 
+  lapply(function(x) paste(x[1],x[2],sep="@")) %>% 
+  unlist()
+  
+
+maw_to_be_replaced <- malawi_checking %>% 
+  filter(Full=="Full") %>% 
+  group_by(unit3) %>% 
+  summarise(Full=n()) %>%
+  filter(Full<2) 
+
+empty_units <- maw_check[grepl("repl",maw_check)] %>% gsub(" repl","",.)
+# no units to replace
+
 
 ```
 
+
+
+```{r malawiaddreplacementunits,cache=TRUE}
+# zambia_replacement_units <- readLines(
+#   "output/zambia_replacement.txt",warn=FALSE) %>% 
+#   strsplit("\n") %>% 
+#   unlist() %>%
+#   strsplit(" ") %>% 
+#   lapply(function(x) {
+#     if (length(x)==1) return(data.frame(ID=x[1],Full="Full"))
+#     if (x[2]=="a") return(data.frame(ID=x[1],Full="Almost Empty"))
+#     return(NULL)
+#   }) %>% 
+#   do.call(rbind,.) %>% 
+#   mutate(bin = sapply(ID,function(x) {
+#     strsplit(x,"@") %>% 
+#       lapply(function(y) paste(y[1],y[2],sep="@")) %>% 
+#       unlist()}),
+#     unit3 = sapply(ID,function(x) {
+#     strsplit(x,"@") %>% 
+#       lapply(function(y) paste(y[1],y[2],y[3],sep="@")) %>% 
+#       unlist()
+#   }))
+  
+
+malawi_sample_200_complete <- 
+  malawi_sample_200[malawi_sample_200$pick=="Sample"&
+                      (malawi_sample_200$Name%in%
+                         c(malawi_checking$ID,
+                           malawi_checking$unit3,
+                           malawi_checking$unit2)|
+                         malawi_sample_200$type=="Bin"),]
+
+malawi_sample_200_complete$almost_empty <- "Full"
+malawi_sample_200_complete$almost_empty[
+  malawi_sample_200_complete$Name%in%
+    malawi_checking$ID[malawi_checking$Full == "Almost Full"]] <- 
+  "Almost Empty"
+
+
+malawi_sample_200_complete$Description <- 
+  paste0(malawi_sample_200_complete$Description,"; Replacement Status: ",
+         malawi_sample_200_complete$almost_empty)
+
+malawi_sample_200_complete <- 
+  malawi_sample_200_complete[order(malawi_sample_200_complete$Name),]
+
+
+if (over(malawi_sample_200_complete[malawi_sample_200_complete$type=="Unit_2",],malawi_fdgs) %>%
+  is.na %>%
+  `!` %>%
+  which() %>%
+  length() == 0) cat("No overlap between sample and FDGs.") else cat("There are units that overlap with the FDGs.")
+
+
+
+overl <- over(malawi_sample_200_complete[malawi_sample_200_complete$type=="Unit_2",],
+     malawi_fdgs) %>%
+  is.na %>%
+  `!` %>%
+  which() %>% sapply(function(x)
+    malawi_sample_200_complete$Name[
+  which(malawi_sample_200_complete$type=="Unit_2")[x]])
+
+
+# 
+if (length(overl)>0) malawi_5k_1k_sample_200_complete <-
+  malawi_sample_200_complete[!malawi_sample_200_complete$Name%in%overl,]
+
+# 
+overl
+writeOGR(malawi_sample_200_complete,
+         "output/malawi_5k_1k_sample_200_complete.kml",
+         driver = "KML",
+         layer = "malawi",overwrite_layer = TRUE)
+
+```
+
+```{r malawi_sampled_enough,echo=FALSE}
+malawi_replacement_units <- readLines(
+  "output/malawi_replacement.txt",warn=FALSE) %>% 
+  strsplit("\n") %>% 
+  unlist() %>%
+  strsplit(" ") %>% 
+  lapply(function(x) {
+    if (length(x)==1) return(data.frame(ID=x[1],Full="Full"))
+    if (x[2]=="a") return(data.frame(ID=x[1],Full="Almost Empty"))
+    return(NULL)
+  }) %>% 
+  do.call(rbind,.) %>% 
+  mutate(bin = sapply(ID,function(x) {
+    strsplit(x,"@") %>% 
+      lapply(function(y) paste(y[1],y[2],sep="@")) %>% 
+      unlist()}),
+    unit3 = sapply(ID,function(x) {
+    strsplit(x,"@") %>% 
+      lapply(function(y) paste(y[1],y[2],y[3],sep="@")) %>% 
+      unlist()}),
+    unit2 = sapply(ID,function(x) {
+    strsplit(x,"@") %>% 
+      lapply(function(y) paste(y[1],y[2],sep="@")) %>% 
+      unlist()
+  }))
+  
+
+
+
+# zambia_5k_1k_sample_200_complete %>% 
+#   st_as_sf() %>% 
+#   filter(almost_empty=="Full"&type=="Unit_2") %>% 
+#   mutate(unit3=sapply(Name,function(x) strsplit(x,"@") %>% 
+#                        sapply(function(y) paste(y[1],y[2],y[3],sep="@")))) %$% 
+#   table(unit3) %>% 
+#   data.frame(value=.,Name=names(.)) %>% 
+#   dplyr::rename(value=value.Freq) %>% 
+#   filter(value>1) %$% strsplit(Name,"@") %>% 
+#   lapply(`[[`,2) %>% 
+#   unlist() %>% 
+#   table() %>% 
+#   as.data.frame() %>% 
+#   rename(Bin=".",Sampled=Freq) %>% 
+#   mutate(Bin=as.numeric(as.character(Bin))) %>% 
+#   left_join(zambia_sample_200 %>% 
+#               respondents_per_bin("Zambia",onlydf = TRUE),
+#             by="Bin") %>% 
+#   arrange(Bin) %>% 
+#   rename(`To Sample`=`Sampling Units`) %>% 
+#   dplyr::select(-`Number of Households`)
+# 
+# 
+# resample_check <- function(sp_obj1,sp_obj2) {
+# sp_obj1 %>% 
+#   st_as_sf() %>% 
+#   filter(almost_empty=="Full"&type=="Unit_2") %>% 
+#   mutate(Bin=sapply(Name,function(x) strsplit(x,"@") %>% 
+#                       sapply(function(y) y[2]))) %$%
+#   table(Bin) %>% 
+#   as.data.frame() %>% 
+#     dplyr::rename(Sampled=Freq) %>% 
+#   mutate(Bin= Bin %>% 
+#            as.character() %>% 
+#            as.numeric()) %>% 
+#   left_join(sp_obj2 %>% 
+#               respondents_per_bin("t",onlydf = TRUE),
+#             by="Bin") %>% 
+#   arrange(Bin) %>% 
+#   rename(`To Sample`=`Sampling Units`) %>% 
+#   dplyr::select(-`Number of Households`)
+# }
+# resample_check(lilongwe_1k_sample_complete,lilongwe_sample_150)
+# resample_check(lusaka_1k_sample_complete,lusaka_sample_150)
+# resample_check(nairobi_1k_sample_complete,nairobi_sample_150)
+# 
+
+
+  
+```

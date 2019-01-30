@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Chapter 5 Malawi and Zambia | Geographic sampling" />
+<meta property="og:type" content="book" />
+
+
+
+<meta name="github-repo" content="senickel/geosampling_book" />
+
+<meta name="author" content="Sebastian Nickel" />
+
+<meta name="date" content="2019-01-10" />
+
+
+<meta name="description" content="Chapter 5 Malawi and Zambia | Geographic sampling">
+
+<title>Chapter 5 Malawi and Zambia | Geographic sampling</title>
+
+<link href="libs/tufte-css-2015.12.29/tufte-fonts.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/tufte-background.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/tufte-italics.css" rel="stylesheet" />
+<link href="libs/tufte-css-2015.12.29/tufte.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+<script src="libs/jquery-1.12.4/jquery.min.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.1.17/leaflet-providers.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.2/leaflet-providers-plugin.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script type="text/javascript">
+
+// toggle visibility of R source blocks in R Markdown output
+function toggle_R() {
+  var x = document.getElementsByClassName('r');
+  if (x.length == 0) return;
+  function toggle_vis(o) {
+    var d = o.style.display;
+    o.style.display = (d == 'block' || d == '') ? 'none':'block';
+  }
+
+  for (i = 0; i < x.length; i++) {
+    var y = x[i];
+    if (y.tagName.toLowerCase() === 'pre') toggle_vis(y);
+  }
+
+    var elem = document.getElementById("myButton1");
+    if (elem.value === "Hide Global") elem.value = "Show Global";
+    else elem.value = "Hide Global";
+}
+
+document.write('<input onclick="toggle_R();" type="button" value="Hide Global" id="myButton1" style="position: absolute; top: 10%; right: 2%; z-index: 200"></input>')
+
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+<link rel="stylesheet" href="my_tufte.css" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div class="row">
+<div class="col-sm-12">
+<div id="TOC">
+<ul>
+<li class="has-sub"><a href="index.html#prerequisites">Prerequisites</a><ul>
+<li><a href="index.html#study-area"><span class="toc-section-number">0.1</span> Study Area</a></li>
+<li><a href="index.html#data"><span class="toc-section-number">0.2</span> Data</a></li>
+<li><a href="index.html#geosampling-package"><span class="toc-section-number">0.3</span> geosampling package</a></li>
+</ul></li>
+<li><a href="introduction.html#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li class="has-sub"><a href="areas.html#areas"><span class="toc-section-number">2</span> Spatial polygon areas</a><ul>
+<li><a href="areas.html#cities"><span class="toc-section-number">2.1</span> Cities</a></li>
+<li class="has-sub"><a href="areas.html#malawi-zambia-border"><span class="toc-section-number">2.2</span> Malawi-Zambia border</a><ul>
+<li><a href="areas.html#malawi"><span class="toc-section-number">2.2.1</span> Malawi</a></li>
+<li><a href="areas.html#zambia"><span class="toc-section-number">2.2.2</span> Zambia</a></li>
+</ul></li>
+<li><a href="areas.html#summarising-sampling-border-areas"><span class="toc-section-number">2.3</span> Summarising: Sampling border areas</a></li>
+<li><a href="areas.html#districts-likely-to-be-sampled"><span class="toc-section-number">2.4</span> Districts likely to be sampled</a></li>
+</ul></li>
+<li><a href="prep.html#prep"><span class="toc-section-number">3</span> Extract Population Data</a></li>
+<li class="has-sub"><a href="sampling.html#sampling"><span class="toc-section-number">4</span> Sampling</a><ul>
+<li><a href="sampling.html#nairobi-lusaka-and-lilongwe"><span class="toc-section-number">4.1</span> Nairobi, Lusaka, and Lilongwe</a></li>
+</ul></li>
+<li><a href="malawi-and-zambia.html#malawi-and-zambia"><span class="toc-section-number">5</span> Malawi and Zambia</a></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#evaluating-the-sample"><span class="toc-section-number">6</span> Evaluating the Sample</a><ul>
+<li class="has-sub"><a href="evaluating-the-sample.html#nairobi"><span class="toc-section-number">6.1</span> Nairobi</a><ul>
+<li><a href="evaluating-the-sample.html#identifying-empty-and-underpopulated-units"><span class="toc-section-number">6.1.1</span> Identifying empty and underpopulated units</a></li>
+<li><a href="evaluating-the-sample.html#replacement-units"><span class="toc-section-number">6.1.2</span> Replacement units</a></li>
+</ul></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#lusaka"><span class="toc-section-number">6.2</span> Lusaka</a><ul>
+<li><a href="evaluating-the-sample.html#replacement-units-1"><span class="toc-section-number">6.2.1</span> Replacement units</a></li>
+</ul></li>
+<li class="has-sub"><a href="evaluating-the-sample.html#lilongwe"><span class="toc-section-number">6.3</span> Lilongwe</a><ul>
+<li><a href="evaluating-the-sample.html#replacement-units-2"><span class="toc-section-number">6.3.1</span> Replacement units</a></li>
+</ul></li>
+<li><a href="evaluating-the-sample.html#zambia-1"><span class="toc-section-number">6.4</span> Zambia</a></li>
+<li><a href="evaluating-the-sample.html#malawi-1"><span class="toc-section-number">6.5</span> Malawi</a></li>
+</ul></li>
+<li><a href="meter-units.html#meter-units"><span class="toc-section-number">7</span> 100 meter units</a></li>
+<li class="has-sub"><a href="appendix.html#appendix"><span class="toc-section-number">8</span> Appendix</a><ul>
+<li><a href="appendix.html#extract-amenities-from-openstreetmap"><span class="toc-section-number">8.1</span> Extract amenities from OpenStreetMap</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="malawi-and-zambia" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Malawi and Zambia</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">zambia_sample_<span class="dv">200</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Zambia&quot;</span>,
+                            <span class="dt">bins =</span> zambia_sampling_bin,
+                            <span class="dt">raster_1 =</span> zambia_population,
+                            <span class="dt">raster_2 =</span> zambia_population_1k,
+                            <span class="dt">raster_3 =</span> zambia_population_5k,
+                            <span class="dt">random_number =</span> <span class="dv">680</span>,
+                            <span class="dt">original_min_unit3 =</span> <span class="dv">1</span>,
+                            <span class="dt">original_sample_unit3 =</span> <span class="dv">100</span>,
+                            <span class="dt">by_factor=</span><span class="fl">1.1</span>,
+                            <span class="dt">verbose=</span><span class="dv">2</span>)
+
+malawi_sample_<span class="dv">200</span> &lt;-<span class="st"> </span><span class="kw">oversample_wrapper_pair</span>(<span class="dt">name =</span> <span class="st">&quot;Malawi&quot;</span>,
+                            <span class="dt">bins =</span> maw_sampling_bin,
+                            <span class="dt">raster_1 =</span> malawi_population,
+                            <span class="dt">raster_2 =</span> malawi_population_1k,
+                            <span class="dt">raster_3 =</span> malawi_population_5k,
+                            <span class="dt">random_number =</span> <span class="dv">680</span>,
+                            <span class="dt">original_min_unit3 =</span> <span class="dv">1</span>,
+                            <span class="dt">original_sample_unit3 =</span> <span class="dv">100</span>,
+                            <span class="dt">by_factor=</span><span class="fl">1.1</span>,
+                            <span class="dt">verbose=</span><span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">respondents_per_bin &lt;-<span class="st"> </span><span class="cf">function</span>(sp_obj,name,<span class="dt">onlydf=</span><span class="ot">FALSE</span>) {
+  <span class="cf">if</span> (<span class="kw">any</span>(<span class="st">&quot;Unit_3&quot;</span><span class="op">==</span>sp_obj<span class="op">$</span>type)) {
+
+    tab1 &lt;-<span class="st"> </span>sp_obj <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">st_as_sf</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(pick<span class="op">==</span><span class="st">&quot;Sample&quot;</span><span class="op">&amp;</span>type<span class="op">==</span><span class="st">&quot;Unit_3&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Bin =</span> <span class="kw">sapply</span>(Name,<span class="cf">function</span>(x) {
+      <span class="kw">strsplit</span>(x,<span class="st">&quot;@&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">lapply</span>(<span class="cf">function</span>(y) y[<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">unlist</span>()
+    })) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">group_by</span>(Bin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">Sampling Units</span><span class="st">`</span>=<span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Number of Households</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Sampling Units</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Bin =</span> <span class="kw">as.numeric</span>(Bin)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">arrange</span>(Bin)
+} <span class="cf">else</span> {
+  tab1 &lt;-<span class="st"> </span>sp_obj <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">st_as_sf</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(pick<span class="op">==</span><span class="st">&quot;Sample&quot;</span><span class="op">&amp;</span>type<span class="op">!=</span><span class="st">&quot;Bin&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Bin =</span> <span class="kw">sapply</span>(Name,<span class="cf">function</span>(x) {
+      <span class="kw">strsplit</span>(x,<span class="st">&quot;@&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">lapply</span>(<span class="cf">function</span>(y) y[<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">unlist</span>()
+    })) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">group_by</span>(Bin) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">Sampling Units</span><span class="st">`</span>=<span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Number of Households</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Sampling Units</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">25</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Bin =</span> <span class="kw">as.numeric</span>(Bin)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">arrange</span>(Bin)
+}
+  <span class="cf">if</span>(onlydf) <span class="kw">return</span>(tab1)
+  
+  <span class="kw">kable</span>(tab1,<span class="dt">caption =</span> <span class="kw">paste0</span>(<span class="st">&quot;Number of Respondents and sampling units in &quot;</span>,
+                              name,<span class="st">&quot;. (n = &quot;</span>,
+                              tab1 <span class="op">%$%</span><span class="st"> </span>
+<span class="st">                                </span><span class="kw">sum</span>(<span class="st">`</span><span class="dt">Number of Households</span><span class="st">`</span>),<span class="st">&quot;)&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable_styling</span>(<span class="dt">full_width =</span> <span class="ot">FALSE</span>,<span class="dt">position =</span> <span class="st">&quot;left&quot;</span>)
+  
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nairobi_sample_<span class="dv">150</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">respondents_per_bin</span>(<span class="st">&quot;Nairobi&quot;</span>) </code></pre></div>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:sampletables">Table 5.1: </span>Number of Respondents and sampling units in Nairobi. (n = 3750)</span><!--</caption>--></p>
+<table class="table" style="width: auto !important; ">
+
+
+<thead>
+<tr>
+<th style="text-align:right;">
+Bin
+</th>
+<th style="text-align:right;">
+Sampling Units
+</th>
+<th style="text-align:right;">
+Number of Households
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+425
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+1150
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+550
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+575
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+250
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+550
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+200
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lusaka_sample_<span class="dv">150</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">respondents_per_bin</span>(<span class="st">&quot;Lusaka&quot;</span>) </code></pre></div>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:sampletables">Table 5.1: </span>Number of Respondents and sampling units in Lusaka. (n = 3750)</span><!--</caption>--></p>
+<table class="table" style="width: auto !important; ">
+
+
+<thead>
+<tr>
+<th style="text-align:right;">
+Bin
+</th>
+<th style="text-align:right;">
+Sampling Units
+</th>
+<th style="text-align:right;">
+Number of Households
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+600
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+1125
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+825
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+600
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+175
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+175
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+150
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lilongwe_sample_<span class="dv">150</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">respondents_per_bin</span>(<span class="st">&quot;Lilongwe&quot;</span>) </code></pre></div>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:sampletables">Table 5.1: </span>Number of Respondents and sampling units in Lilongwe. (n = 3750)</span><!--</caption>--></p>
+<table class="table" style="width: auto !important; ">
+
+
+<thead>
+<tr>
+<th style="text-align:right;">
+Bin
+</th>
+<th style="text-align:right;">
+Sampling Units
+</th>
+<th style="text-align:right;">
+Number of Households
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+450
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+400
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+650
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+325
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+500
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+550
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+450
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+425
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">zambia_sample_<span class="dv">200</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">respondents_per_bin</span>(<span class="st">&quot;Zambia&quot;</span>)</code></pre></div>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:sampletables">Table 5.1: </span>Number of Respondents and sampling units in Zambia. (n = 5000)</span><!--</caption>--></p>
+<table class="table" style="width: auto !important; ">
+
+
+<thead>
+<tr>
+<th style="text-align:right;">
+Bin
+</th>
+<th style="text-align:right;">
+Sampling Units
+</th>
+<th style="text-align:right;">
+Number of Households
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+500
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+600
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+600
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+450
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+1150
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+300
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+350
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+200
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+350
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+500
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">malawi_sample_<span class="dv">200</span> <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">respondents_per_bin</span>(<span class="st">&quot;Malawi&quot;</span>)</code></pre></div>
+<p><!--
+<caption>--><span class="marginnote shownote"><span id="tab:sampletables">Table 5.1: </span>Number of Respondents and sampling units in Malawi. (n = 5000)</span><!--</caption>--></p>
+<table class="table" style="width: auto !important; ">
+
+
+<thead>
+<tr>
+<th style="text-align:right;">
+Bin
+</th>
+<th style="text-align:right;">
+Sampling Units
+</th>
+<th style="text-align:right;">
+Number of Households
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+1050
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+350
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+550
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+400
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+500
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+500
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+550
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+300
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+550
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+250
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<p style="text-align: center;">
+<a href="sampling.html"><button class="btn btn-default">Previous</button></a>
+<a href="evaluating-the-sample.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+# 100 meter units
+For now, 1 km squares are sampled in all survey areas. These 1 kilometer squares are abstractions for a village or neighborhood and the aim is to interview 25 people in each. However, there is a need to get a more diverse picture of each 1 km square and hence, they will be sliced up into smaller 100 meter squares that in turn get drawn by PPS. The 100 meter squares are eyeballed by using Google Earth Pro, to check if those are inhabited.  
+The sampling of the 100 meter square units is done by the function `add_100m_units`. Here, missing or `0` values in WorldPop are set to `0.0001` to make sure that all 100 meter squares are taking into account that are lying in the sampling areas.  
+
+The function `preapre_100m_eyeballing` reduces the SpatialPolygonsDataFrame to a CSV file. The source files can be loaded from [GitHub](https://github.com/senickel/Select10by10) and the executable exe from [here]().\footnote{Only works on Windows.}
+
+
+The border regions need to be reduced because otherwise they are too many units to control. Since there should be two 1 km units per 5 km square, we oversample to have three units in each 5 km square that have 25 houses or more. 
+
+```{r reduceborderareas}
+
+reduce_border_areas <-function(m2) { 
+  unit3names <- m2$Name[m2$type=="Unit_3"]
+  
+  keep_names <- lapply(unit3names,function(x) {
+    m3 <- m2[grepl(paste0(x,"@"),m2$Name),]
+    full <- 0
+    sample_names <- c()
+    for (i in 1:length(m3$Name)) {
+      nam <- m3$Name[i]
+      sample_names[i] <- nam
+      if (m3$almost_empty[m3$Name==nam]=="Full") {
+        full <- full + 1 
+      }
+      if (full==3) break
+    }
+    sample_names
+  }) %>% 
+    unlist
+  
+  m4 <- m2[m2$type=="Bin"|m2$type=="Unit_3"|m2$Name%in%keep_names,]
+  
+  return(m4)
+}
+
+
+
+lilongwe_1k_sample_complete <- readKML("output/lilongwe_1k_sample_complete.kml")
+lusaka_1k_sample_complete <- readKML("output/lusaka_1k_sample_complete.kml")
+nairobi_1k_sample_complete <- readKML("output/nairobi_1k_sample_complete.kml")
+malawi_sample_200_complete <- readKML("output/malawi_5k_1k_sample_200_complete.kml")
+zambia_sample_200_complete <- readKML("output/zambia_5k_1k_sample_200_complete.kml")
+
+malawi_sample_200_complete_reduced <- reduce_border_areas(malawi_sample_200_complete)
+zambia_sample_200_complete_reduced <- reduce_border_areas(zambia_sample_200_complete)
+
+
+```
+
+
+
+```{r lilongweadd100msave}
+lusaka_1k_sample_complete_100m <- add_100m_units(lusaka_1k_sample_complete,lusaka_population)
+nairobi_1k_sample_complete_100m <- add_100m_units(nairobi_1k_sample_complete,nairobi_population)
+lilongwe_1k_sample_complete_100m <- add_100m_units(lilongwe_1k_sample_complete,lilongwe_population)
+malawi_1k_sample_complete_100m <- add_100m_units(malawi_sample_200_complete_reduced,malawi_population)
+zambia_1k_sample_complete_100m <- add_100m_units(zambia_sample_200_complete_reduced,zambia_population)
+
+```
+
+
+```{r add100msave,echo=FALSE}
+save_100m <- function(poly,name,split_by=NULL) {
+  
+  if (!dir.exists(paste0("output/100m/",name,"/"))) dir.create(paste0("output/100m/",name,"/"))
+  if (is.null(split_by)) {
+  writeOGR(poly[poly$type == "Unit_1",],
+           paste0("output/100m/",name,"/",name,"_sample_complete_only_100m.kml"),
+           layer = name,
+           overwrite_layer = TRUE,
+           driver = "KML")
+  
+  writeOGR(poly,
+           paste0("output/100m/",name,"/",name,"_sample_complete_with_100m.kml"),
+           layer = name,
+           overwrite_layer = TRUE,         
+           driver = "KML")
+  } else {
+    # get Unit_2
+    # determine_case <- poly$Name[poly$type=="Unit_2"][1] %>% 
+    #   gregexpr("@",.) %>% 
+    #   unlist %>% 
+    #   length
+    
+    # if (determine_case==3) {
+    all_names <- poly$Name[poly$type=="Unit_2"]
+    len <- all_names %>% 
+      length
+    steps <- round(len/(split_by+1))
+    splits <- c(seq(1,steps*(split_by),steps),len)
+    splits[1] <- 0
+    for (i in 2:length(splits)) {
+      sp <- splits[(i-1):i]
+      sp[1] <- sp[1]+1
+      a_n <- all_names[sp[1]:sp[2]]
+      p <- poly[poly$type=="Bin"|
+                  poly$Name%in%a_n|
+                  multigrepl(poly$Name,paste0(a_n,"@")),]
+      
+      writeOGR(p[p$type == "Unit_1",],
+               paste0("output/100m/",name,"/",name,"_sample_complete_only_100m_part",i-1,".kml"),
+               layer = name,
+               overwrite_layer = TRUE,
+               driver = "KML")
+      
+      writeOGR(p,
+               paste0("output/100m/",name,"/",name,"_sample_complete_with_100m_part",i-1,".kml"),
+               layer = name,
+               overwrite_layer = TRUE,         
+               driver = "KML")
+      
+    }
+    
+    
+  }
+  
+  
+}
+
+lusaka_1k_sample_complete_100m %>% 
+  save_100m("Lusaka")
+
+nairobi_1k_sample_complete_100m %>% 
+  save_100m("Nairobi")
+
+lilongwe_1k_sample_complete_100m %>% 
+  save_100m("Lilongwe")
+
+malawi_1k_sample_complete_100m %>% 
+  save_100m("Malawi",20)
+
+zambia_1k_sample_complete_100m %>% 
+  save_100m("Zambia",20)
+```
+
+```{r}
+
+
+lusaka_1k_sample_complete_100m <- readKML("output/100m/Lilongwe/Lilongwe_sample_complete_with_100m.kml")
+nairobi_1k_sample_complete_100m <- readKML("output/100m/Nairobi/Nairobi_sample_complete_with_100m.kml")
+lilongwe_1k_sample_complete_100m <- readKML("output/100m/Lilongwe/Lilongwe_sample_complete_with_100m.kml")
+
+
+kml_file <- zambia_1k_sample_complete_100m
+create_check_file <- function(kml_file) {
+  dat2 <- kml_file@data %>% 
+    dplyr::select(long,lat,Name,type) %>% 
+    mutate(lat = as.numeric(lat),
+           long = as.numeric(long))
+  
+  
+  distance <- 0.0008333
+  # define corners
+  unit2s <- dat2 %>% 
+    filter(type == "Unit_2") %>% 
+    dplyr::select(Name) %>% 
+    unlist()
+  u1 <- unit2s[1]
+  
+  select_matrix <- matrix(1:100,ncol=10,byrow = TRUE)
+  
+  # l1
+  only100s <- lapply(unit2s,function(u1) {
+    dat3 <- dat2 %>% 
+      filter(Name == u1)
+    
+    longlat_u1 <- dat3 %>% 
+      dplyr::select(long,lat)
+    longs <- c(longlat_u1$long + distance * 4.5,
+               longlat_u1$long - distance * 4.5) %>% 
+      sort
+    lats <- c(longlat_u1$lat + distance * 4.5,
+              longlat_u1$lat - distance * 4.5) %>% 
+      sort
+    
+    grid_lats <- seq(lats[1],lats[2],distance) %>% 
+      sort(decreasing = TRUE)
+    
+    
+    grid_longs <- seq(longs[1],longs[2],distance) %>% 
+      sort
+    
+    
+    p1s <- dat2 %>% 
+      filter(grepl(paste0(u1,"@"),Name)) 
+    
+    # l2
+    p1 <- p1s$Name[2]
+    p1s$geo_order <- sapply(p1s$Name,function(p1) {
+      p2 <- p1s %>% 
+        filter(Name==p1)
+      select_matrix[abs(grid_lats-p2$lat) %>% which.min,
+                    abs(grid_longs-p2$long) %>% which.min]
+    })
+    p1s
+  }) %>% 
+    do.call(rbind,.)
+  
+  head(only100s)
+  if (gregexpr("@",kml_file@data$Name[kml_file$type=="Unit_1"][1])[[1]] %>% 
+      length == 3) {
+    only100s2 <- only100s %>% 
+      dplyr::select(Name,type,geo_order,long,lat) %>% 
+      mutate(Topunit = strsplit(Name,"@") %>% 
+               lapply(function(x) paste(x[1],x[2],x[3],sep = "@")) %>% 
+               unlist())
+  } else {
+    only100s2 <- only100s %>% 
+      dplyr::select(Name,type,geo_order,long,lat) %>% 
+      mutate(Topunit = strsplit(Name,"@") %>% 
+               lapply(function(x) paste(x[1],x[2],x[3],x[4],sep = "@")) %>% 
+               unlist())
+  }
+  
+
+  
+  only100s3 <- only100s2 %>% 
+    dplyr::select(Topunit,Name,geo_order) %>% 
+    mutate(Full = 0)
+  
+  only100s4 <- only100s3$Topunit %>% unique %>% 
+    lapply(function(x) {
+      help_df <- only100s3 %>% 
+        filter(Topunit == x)
+      data.frame(Topname=x,
+                 Name = paste0(help_df$Name,collapse=";"),
+                 geo_order = paste0(help_df$geo_order,collapse=";"),
+                 Full = paste0(help_df$Full,collapse=";"))
+      
+      
+    }) %>% 
+    do.call(rbind,.)
+}
+write_check <- function(check,name,name2=NULL) {
+  if (is.null(name2)) name2 <- name
+  if (!dir.exists(paste0("output/checking_100m/",name))) dir.create(paste0("output/checking_100m/",name))
+  write.csv(check,
+          paste0("output/checking_100m/",name,"/",name2,"_check_file.csv"),
+          row.names = FALSE)
+}
+
+lusaka_1k_sample_complete_100m_check <- create_check_file(lusaka_1k_sample_complete_100m)
+lilongwe_1k_sample_complete_100m_check <- create_check_file(lilongwe_1k_sample_complete_100m)
+nairobi_1k_sample_complete_100m_check <- create_check_file(nairobi_1k_sample_complete_100m)
+malawi_1k_sample_complete_100m_check <- create_check_file(malawi_1k_sample_complete_100m)
+zambia_1k_sample_complete_100m_check <- create_check_file(zambia_1k_sample_complete_100m)
+write_check(lusaka_1k_sample_complete_100m_check,"Lusaka")
+write_check(lilongwe_1k_sample_complete_100m_check,"Lilongwe")
+write_check(nairobi_1k_sample_complete_100m_check,"Nairobi")
+write_check(malawi_1k_sample_complete_100m_check,"Malawi")
+write_check(zambia_1k_sample_complete_100m_check,"Zambia")
+
+write_check(zambia_1k_sample_complete_100m_check[1:85,],"Zambia","1_Zambia")
+write_check(zambia_1k_sample_complete_100m_check[86:nrow(zambia_1k_sample_complete_100m_check),],"Zambia","2_Zambia")
+
+
+
+
+
+```
+

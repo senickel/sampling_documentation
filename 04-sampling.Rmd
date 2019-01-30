@@ -7,9 +7,8 @@ The risk of sampling "empty" units should be rather small because of the probabi
 # Another issue important for the sampling are traveling costs. The question is whether those costs can be reduced by sampling in pairs: instead of picking the 1 km units freely, 5 km units are picked first. In each of the 5 km units two 1 km units are picked. This way the travel time and thus the cost can be reduced. However, the question remains whether this alternative method who yield different results -- this issue will be discussed in the next chapter.  
 ---
 
-Here, we focus on Nairobi first
 
-## Nairobi and Lusaka
+## Nairobi, Lusaka, and Lilongwe
 
 ```{r sampling,cache=TRUE,include=TRUE,message=FALSE}
 
@@ -46,22 +45,7 @@ lilongwe_sample_150 <- oversample_wrapper_non_pair(name = "Lilongwe",
 
 ```
 
-```{r zambiasmaplingxx,cache=TRUE,include=TRUE,message=FALSE}
-
-# zambia_sample_200 <- oversample_wrapper_non_pair(name = "Zambia",
-#                             bins = zambia_sampling_bin,
-#                             raster_1 = zambia_population,
-#                             raster_2 = zambia_population_1k,
-#                             random_number = 680,
-#                             original_min_unit2=2,
-#                             original_sample_unit2=200,
-#                             by_factor=1.1,
-#                             verbose=2)
-
-
-
-```
-
+# Malawi and Zambia
 ```{r malawizambiasmapling,cache=TRUE,include=TRUE,message=FALSE}
 
 zambia_sample_200 <- oversample_wrapper_pair(name = "Zambia",
@@ -145,10 +129,6 @@ zambia_sample_200 %>%
   respondents_per_bin("Zambia")
 malawi_sample_200 %>% 
   respondents_per_bin("Malawi")
-
-```
-
-```{r}
 
 ```
 
